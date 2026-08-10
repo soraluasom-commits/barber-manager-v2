@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#15111e" />
+<title>Barber Manager V2.0.2 Web — IndexedDB PWA</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="application-name" content="Barber Manager">
+<meta name="apple-mobile-web-app-title" content="Barber Manager">
+<link rel="stylesheet" href="./css/01.css">
+<link rel="stylesheet" href="./css/02.css">
+<link rel="stylesheet" href="./css/03.css">
+<link rel="stylesheet" href="./css/04.css">
+<link rel="stylesheet" href="./css/05.css">
+</head>
+<body data-theme="light">
+<div class="app">
+<aside class="side" id="side">
+ <div class="brand"><b class="brand-mark">✂</b><span class="brand-text">BARBER MANAGER<br><small class="brand-kicker">V2.0.2 WEB • IndexedDB • PWA</small></span></div>
+ <nav class="nav" id="nav"></nav>
+</aside>
+<main class="main">
+ <header class="top"><div class="top-left"><div class="mobilebar"><button class="btn iconbtn" onclick="toggleSide()">☰</button></div><div><div class="eyebrow">White Base Burnt Orange Sage UI v1.10.2</div><h1 id="pageTitle">หน้าหลัก</h1></div></div><div class="top-actions"><span class="pill hero-pill" id="storagePill">🗄️ IndexedDB</span><span class="pill hero-pill" id="todayPill"></span><button class="btn ghost themebtn" id="themeToggle" onclick="toggleTheme()">☀️ โหมดสว่าง</button><button class="btn alt-sage glow" onclick="openEntryModal()">＋ บันทึกงาน</button></div></header>
+ <div class="wrap" id="content"></div>
+</main>
+</div>
+<div class="bottomnav hidden" id="bottomnav"></div>
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div class="modalbox" id="modalbox"></div></div>
+<div class="toast" id="toast"></div>
+<script src="./js/01.js"></script>
+<script src="./js/02.js"></script>
+<script src="./js/03.js"></script>
+<script src="./js/04.js"></script>
+<script src="./js/05.js"></script>
+<script src="./js/06.js"></script>
+<script src="./js/07.js"></script>
+</body></html>
