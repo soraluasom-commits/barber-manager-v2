@@ -1,4 +1,4 @@
-name: Deploy Barber Manager to GitHub Pages
+name: Deploy Barber Manager V1.10.8 Web to GitHub Pages
 
 on:
   push:
@@ -23,12 +23,22 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Rebuild V1.10.8 Web index
+        shell: bash
+        run: |
+          cat .deploy/index.part01 .deploy/index.part02 .deploy/index.rest01 .deploy/index.rest02 .deploy/index.rest03 \
+            | base64 --decode \
+            | gzip --decompress > index.html
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v4
         with:
           path: '.'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
