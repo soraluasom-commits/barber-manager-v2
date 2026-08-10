@@ -1,19 +1,12 @@
-# Barber Manager V2.0.1 — GitHub Pages Ready
+# Barber Manager V1.10.8 Web
 
-ระบบจัดการร้านตัดผมแบบ Static Web App ใช้ IndexedDB เป็นฐานข้อมูลในเบราว์เซอร์ และรองรับ PWA/Offline
+พัฒนาจาก **Barber Manager V1.10.7** โดยคง UI และฟังก์ชันล่าสุดไว้ และปรับสำหรับใช้งานบน GitHub Pages
 
-## ฟรีทั้งหมด
-- GitHub repository: Public
-- GitHub Pages: ใช้สำหรับ static site
-- Database: IndexedDB ในเครื่องผู้ใช้
-- Backup: IndexedDB snapshots + Export/Import JSON
+- Public package ไม่มีข้อมูลร้านจริงฝังในไฟล์
+- ข้อมูลหลักเก็บใน browser localStorage
+- สำรอง Snapshot ใน IndexedDB สูงสุด 20 ชุด
+- Export / Import JSON สำหรับสำรองและย้ายข้อมูลข้ามเครื่อง
+- รองรับ PWA / Offline ผ่าน Service Worker
+- ใช้งานบน GitHub Pages ได้โดยไม่ต้องใช้ฐานข้อมูลออนไลน์แบบเสียเงิน
 
-## หมายเหตุสำคัญ
-IndexedDB ไม่ซิงก์ข้อมูลข้ามเครื่องโดยอัตโนมัติ ข้อมูลของแต่ละ browser/device แยกจากกัน
-
-## เปิด GitHub Pages
-1. สร้าง Public repository ชื่อ `barber-manager-v2`
-2. ใส่ไฟล์ทั้งหมดในโฟลเดอร์นี้ที่ root ของ repository
-3. ไปที่ Settings → Pages → Build and deployment → Source = GitHub Actions
-4. Push ไป branch `main`
-5. Workflow `Deploy Barber Manager to GitHub Pages` จะ deploy ให้อัตโนมัติ
+> IndexedDB และ localStorage เป็นข้อมูลเฉพาะ browser/device จึงไม่ sync ข้ามเครื่องอัตโนมัติ
