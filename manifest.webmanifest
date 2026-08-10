@@ -1,16 +1,15 @@
 {
-  "name": "Barber Manager V2.0.2",
+  "name": "Barber Manager V1.10.8 Web",
   "short_name": "Barber Manager",
-  "description": "ระบบจัดการร้านตัดผมแบบ Web + IndexedDB + Offline PWA",
+  "description": "Barber shop management PWA based on V1.10.7. Data stays in the browser with IndexedDB snapshots.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#f7f5f2",
   "theme_color": "#262322",
-  "lang": "th",
   "icons": [
     {
-      "src": "icon.svg",
+      "src": "./icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
