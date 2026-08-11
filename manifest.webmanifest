@@ -1,5 +1,5 @@
 {
-  "name": "Barber Manager V1.10.8 Web",
+  "name": "Barber Manager V1.10.8.1 Web",
   "short_name": "Barber Manager",
   "description": "Barber shop management PWA based on V1.10.7. Data stays in the browser with IndexedDB snapshots.",
   "start_url": "./",
