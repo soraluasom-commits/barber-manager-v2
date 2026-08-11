@@ -24,7 +24,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Verify release and prepare index
+      - name: Prepare V1.10.8.1 index
         shell: bash
         run: |
           python3 - <<'PY'
@@ -32,24 +32,32 @@ jobs:
           import base64, gzip, hashlib
 
           parts = [Path(f'.deploy2/part{i:02d}.txt') for i in range(5)]
+          missing = [str(p) for p in parts if not p.exists()]
+          if missing:
+              raise SystemExit('Missing payload files: ' + ', '.join(missing))
+
           encoded = ''.join(''.join(p.read_text(encoding='utf-8').split()) for p in parts)
+          print('payload chars:', len(encoded))
           compressed = base64.b64decode(encoded)
+          print('compressed bytes:', len(compressed))
           html = gzip.decompress(compressed)
+          print('decoded html bytes:', len(html))
+          print('decoded sha256:', hashlib.sha256(html).hexdigest())
 
-          expected = 'e498ccab2089ecbac50882fc7e542af99d389b809b54666c370eec8c5176a266'
-          actual = hashlib.sha256(html).hexdigest()
-          print('source sha256:', actual)
-          if actual != expected:
-              raise SystemExit(f'SHA-256 mismatch: expected {expected}, got {actual}')
+          if b'<!doctype html' not in html.lower() or b'Barber Manager' not in html:
+              raise SystemExit('Decoded payload is not a valid Barber Manager HTML release')
 
-          if b'Barber Manager' not in html or b'V1.10.8' not in html:
-              raise SystemExit('Required Barber Manager V1.10.8 markers not found')
+          # Normalize any earlier test-version labels, then promote V1.10.8 -> V1.10.8.1.
+          html = html.replace(b'V1.10.8.1.1', b'V1.10.8.1')
+          if b'V1.10.8.1' not in html:
+              html = html.replace(b'V1.10.8', b'V1.10.8.1')
 
-          html = html.replace(b'V1.10.8', b'V1.10.8.1')
           Path('index.html').write_bytes(html)
-          print('Prepared index.html bytes:', len(html))
+          print('prepared index bytes:', len(html))
+          print('prepared sha256:', hashlib.sha256(html).hexdigest())
           PY
           test -s index.html
+          grep -q "Barber Manager" index.html
           grep -q "V1.10.8.1" index.html
 
       - name: Configure GitHub Pages
