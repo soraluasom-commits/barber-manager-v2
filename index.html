@@ -1,1 +1,49 @@
-<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Barber Manager V1.10.8 Web Build</title></head><body><p>GitHub Pages จะสร้าง Barber Manager V1.10.8 Web จากไฟล์ใน .deploy ผ่าน GitHub Actions อัตโนมัติ</p></body></html>
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#262322">
+<title>Barber Manager V1.10.8 Web</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<style>
+html,body{height:100%;margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#f7f5f2;color:#262322}main{min-height:100%;display:grid;place-items:center;padding:24px;box-sizing:border-box}.card{max-width:620px;background:white;border:1px solid #e5dfd9;border-radius:20px;padding:28px;box-shadow:0 14px 40px rgba(38,35,34,.08)}h1{margin:0 0 10px;font-size:24px}.bar{height:8px;background:#ece7e2;border-radius:999px;overflow:hidden;margin-top:18px}.bar>i{display:block;height:100%;width:45%;background:#a8b89f;border-radius:999px;animation:load 1.1s ease-in-out infinite alternate}@keyframes load{to{transform:translateX(120%)}}#msg{margin-top:12px;color:#6d645e;font-size:14px}.error{color:#b42318!important;white-space:pre-wrap}
+</style>
+</head>
+<body>
+<main><section class="card"><h1>✂ Barber Manager V1.10.8 Web</h1><div>กำลังเปิดระบบจากฐาน V1.10.7…</div><div class="bar"><i></i></div><div id="msg">กำลังโหลดข้อมูลโปรแกรม</div></section></main>
+<script>
+(async()=>{
+  const msg=document.getElementById('msg');
+  const parts=[
+    './payload/index.part01','./payload/index.part02','./payload/index.rest01','./payload/index.rest02','./payload/index.rest03'
+  ];
+  try{
+    if(typeof DecompressionStream==='undefined') throw new Error('เบราว์เซอร์นี้ไม่รองรับ DecompressionStream กรุณาใช้ Chrome, Edge หรือเบราว์เซอร์รุ่นใหม่');
+    const chunks=[];
+    for(let i=0;i<parts.length;i++){
+      msg.textContent=`กำลังโหลดโปรแกรม ${i+1}/${parts.length}`;
+      const r=await fetch(parts[i]);
+      if(!r.ok) throw new Error(`โหลดไฟล์ ${parts[i]} ไม่สำเร็จ (${r.status})`);
+      chunks.push((await r.text()).replace(/\s+/g,''));
+    }
+    msg.textContent='กำลังเริ่มโปรแกรม…';
+    const b64=chunks.join('');
+    const raw=atob(b64);
+    const bytes=new Uint8Array(raw.length);
+    for(let i=0;i<raw.length;i++) bytes[i]=raw.charCodeAt(i);
+    const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+    const html=await new Response(stream).text();
+    if(!html.includes('Barber Manager')) throw new Error('ไฟล์โปรแกรมไม่สมบูรณ์');
+    document.open();
+    document.write(html);
+    document.close();
+  }catch(err){
+    console.error(err);
+    msg.className='error';
+    msg.textContent='เปิดโปรแกรมไม่สำเร็จ: '+(err&&err.message?err.message:String(err));
+  }
+})();
+</script>
+</body>
+</html>
