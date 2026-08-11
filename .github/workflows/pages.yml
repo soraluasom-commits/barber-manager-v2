@@ -24,17 +24,29 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Prepare public payload
+      - name: Build full V1.10.8 index
         shell: bash
         run: |
-          mkdir -p payload
-          cp .deploy/index.part01 payload/index.part01
-          cp .deploy/index.part02 payload/index.part02
-          cp .deploy/index.rest01 payload/index.rest01
-          cp .deploy/index.rest02 payload/index.rest02
-          cp .deploy/index.rest03 payload/index.rest03
+          python3 - <<'PY'
+          from pathlib import Path
+          import base64, gzip
+
+          parts = [
+              '.deploy/index.part01',
+              '.deploy/index.part02',
+              '.deploy/index.rest01',
+              '.deploy/index.rest02',
+              '.deploy/index.rest03',
+          ]
+          encoded = ''.join(Path(p).read_text(encoding='utf-8').strip() for p in parts)
+          compressed = base64.b64decode(encoded, validate=True)
+          html = gzip.decompress(compressed)
+          if b'Barber Manager' not in html:
+              raise SystemExit('Barber Manager marker not found in rebuilt index')
+          Path('index.html').write_bytes(html)
+          print(f'Rebuilt index.html: {len(html)} bytes')
+          PY
           test -s index.html
-          test -s payload/index.part01
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
