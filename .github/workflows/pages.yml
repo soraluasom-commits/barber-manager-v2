@@ -38,15 +38,29 @@ jobs:
               '.deploy/index.rest02',
               '.deploy/index.rest03',
           ]
-          encoded = ''.join(Path(p).read_text(encoding='utf-8').strip() for p in parts)
-          compressed = base64.b64decode(encoded, validate=True)
+
+          # Remove ALL whitespace from every Base64 part before joining.
+          # The payload files may contain wrapped lines/newlines from transport.
+          encoded = ''.join(
+              ''.join(Path(p).read_text(encoding='utf-8').split())
+              for p in parts
+          )
+          print(f'Base64 payload characters: {len(encoded)}')
+
+          compressed = base64.b64decode(encoded)
+          print(f'Compressed payload bytes: {len(compressed)}')
+
           html = gzip.decompress(compressed)
           if b'Barber Manager' not in html:
               raise SystemExit('Barber Manager marker not found in rebuilt index')
+          if b'V1.10.8' not in html:
+              raise SystemExit('V1.10.8 marker not found in rebuilt index')
+
           Path('index.html').write_bytes(html)
           print(f'Rebuilt index.html: {len(html)} bytes')
           PY
           test -s index.html
+          grep -q "Barber Manager V1.10.8" index.html
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
