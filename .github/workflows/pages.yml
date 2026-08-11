@@ -1,4 +1,4 @@
-name: Deploy Barber Manager V1.10.8 Web to GitHub Pages
+name: Deploy Barber Manager V1.10.8.1 Web to GitHub Pages
 
 on:
   push:
@@ -24,43 +24,33 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build full V1.10.8 index
+      - name: Verify release and prepare index
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          import base64, gzip
+          import base64, gzip, hashlib
 
-          parts = [
-              '.deploy/index.part01',
-              '.deploy/index.part02',
-              '.deploy/index.rest01',
-              '.deploy/index.rest02',
-              '.deploy/index.rest03',
-          ]
-
-          # Remove ALL whitespace from every Base64 part before joining.
-          # The payload files may contain wrapped lines/newlines from transport.
-          encoded = ''.join(
-              ''.join(Path(p).read_text(encoding='utf-8').split())
-              for p in parts
-          )
-          print(f'Base64 payload characters: {len(encoded)}')
-
+          parts = [Path(f'.deploy2/part{i:02d}.txt') for i in range(5)]
+          encoded = ''.join(''.join(p.read_text(encoding='utf-8').split()) for p in parts)
           compressed = base64.b64decode(encoded)
-          print(f'Compressed payload bytes: {len(compressed)}')
-
           html = gzip.decompress(compressed)
-          if b'Barber Manager' not in html:
-              raise SystemExit('Barber Manager marker not found in rebuilt index')
-          if b'V1.10.8' not in html:
-              raise SystemExit('V1.10.8 marker not found in rebuilt index')
 
+          expected = 'e498ccab2089ecbac50882fc7e542af99d389b809b54666c370eec8c5176a266'
+          actual = hashlib.sha256(html).hexdigest()
+          print('source sha256:', actual)
+          if actual != expected:
+              raise SystemExit(f'SHA-256 mismatch: expected {expected}, got {actual}')
+
+          if b'Barber Manager' not in html or b'V1.10.8' not in html:
+              raise SystemExit('Required Barber Manager V1.10.8 markers not found')
+
+          html = html.replace(b'V1.10.8', b'V1.10.8.1')
           Path('index.html').write_bytes(html)
-          print(f'Rebuilt index.html: {len(html)} bytes')
+          print('Prepared index.html bytes:', len(html))
           PY
           test -s index.html
-          grep -q "Barber Manager V1.10.8" index.html
+          grep -q "V1.10.8.1" index.html
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
