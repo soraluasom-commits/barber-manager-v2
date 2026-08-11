@@ -24,41 +24,44 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Prepare V1.10.8.1 index
+      - name: Prepare V1.10.8.1 release
         shell: bash
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import base64, gzip, hashlib
+          set -euo pipefail
 
-          parts = [Path(f'.deploy2/part{i:02d}.txt') for i in range(5)]
-          missing = [str(p) for p in parts if not p.exists()]
-          if missing:
-              raise SystemExit('Missing payload files: ' + ', '.join(missing))
+          # Verify every source chunk before assembling the release.
+          test "$(git hash-object .release_v11081_4k/part00.txt)" = "faeb766882485eaf5748c9a9869a2d20a5e244fb"
+          test "$(git hash-object .release_v11081_4k/part01.txt)" = "8bf66b7e943e0ed38348bcdd172d6a4f6d3c2d5b"
+          test "$(git hash-object .release_v11081_4k/part02.txt)" = "23f7fa88628ae16c5bbfb613217e08fa14cffbb1"
+          test "$(git hash-object .release_v11081_4k/part05.txt)" = "93d3238d953f3ca2990d5afce900d96644076562"
+          test "$(git hash-object .release_v11081_4k/part06.txt)" = "3f1722633704a4d86461bb679587eadd972183ea"
+          test "$(git hash-object .release_v11081_4k/part07.txt)" = "2224d9d44ed6d3585012f2232bf368780e3135b9"
+          test "$(git hash-object .release_b64_v11081/part01.txt)" = "8dc5becec7e1519807627af470a0978d22bec97c"
+          test "$(git hash-object .release_b64_v11081/part03.txt)" = "819f33c2dfe1834a94c54f5b3602d792647e13c9"
+          test "$(git hash-object .release_b64_v11081/part04.txt)" = "af8fd46c52fa6d536d893333cd26ea91a1216eb4"
 
-          encoded = ''.join(''.join(p.read_text(encoding='utf-8').split()) for p in parts)
-          print('payload chars:', len(encoded))
-          compressed = base64.b64decode(encoded)
-          print('compressed bytes:', len(compressed))
-          html = gzip.decompress(compressed)
-          print('decoded html bytes:', len(html))
-          print('decoded sha256:', hashlib.sha256(html).hexdigest())
+          : > /tmp/index.b64
+          cat .release_v11081_4k/part00.txt >> /tmp/index.b64
+          cat .release_v11081_4k/part01.txt >> /tmp/index.b64
+          head -c 2000 .release_v11081_4k/part02.txt >> /tmp/index.b64
+          cat .release_b64_v11081/part01.txt >> /tmp/index.b64
+          cat .release_v11081_4k/part05.txt >> /tmp/index.b64
+          cat .release_v11081_4k/part06.txt >> /tmp/index.b64
+          head -c 2000 .release_v11081_4k/part07.txt >> /tmp/index.b64
+          cat .release_b64_v11081/part03.txt >> /tmp/index.b64
+          cat .release_b64_v11081/part04.txt >> /tmp/index.b64
 
-          if b'<!doctype html' not in html.lower() or b'Barber Manager' not in html:
-              raise SystemExit('Decoded payload is not a valid Barber Manager HTML release')
+          test "$(wc -c < /tmp/index.b64)" -eq 49064
+          echo "6ee8e8a16bdb193d0e864217555536d0df774233c37fa0ce3fa1d621259d5e81  /tmp/index.b64" | sha256sum -c -
 
-          # Normalize any earlier test-version labels, then promote V1.10.8 -> V1.10.8.1.
-          html = html.replace(b'V1.10.8.1.1', b'V1.10.8.1')
-          if b'V1.10.8.1' not in html:
-              html = html.replace(b'V1.10.8', b'V1.10.8.1')
+          mkdir -p site
+          base64 -d /tmp/index.b64 | gzip -dc > site/index.html
+          test "$(wc -c < site/index.html)" -eq 184183
+          echo "7050a1658957c75b980fdb2674b5fbe7668b2d29cf705216ebcf11d2809297fd  site/index.html" | sha256sum -c -
+          grep -q "Barber Manager V1.10.8.1" site/index.html
 
-          Path('index.html').write_bytes(html)
-          print('prepared index bytes:', len(html))
-          print('prepared sha256:', hashlib.sha256(html).hexdigest())
-          PY
-          test -s index.html
-          grep -q "Barber Manager" index.html
-          grep -q "V1.10.8.1" index.html
+          cp manifest.webmanifest icon.svg sw.js site/
+          touch site/.nojekyll
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
@@ -66,7 +69,7 @@ jobs:
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: 'site'
 
       - name: Deploy to GitHub Pages
         id: deployment
