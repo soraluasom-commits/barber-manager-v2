@@ -29,25 +29,30 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Verify every source chunk before assembling the release.
-          test "$(git hash-object .release_v11081_4k/part00.txt)" = "faeb766882485eaf5748c9a9869a2d20a5e244fb"
+          # Verify the exact source chunks used for this release.
+          test "$(git hash-object .release_v11081_4k/part00.txt)" = "93eef75280076ab3b96bea121c93551f9704a2ad"
           test "$(git hash-object .release_v11081_4k/part01.txt)" = "8bf66b7e943e0ed38348bcdd172d6a4f6d3c2d5b"
           test "$(git hash-object .release_v11081_4k/part02.txt)" = "23f7fa88628ae16c5bbfb613217e08fa14cffbb1"
-          test "$(git hash-object .release_v11081_4k/part05.txt)" = "93d3238d953f3ca2990d5afce900d96644076562"
-          test "$(git hash-object .release_v11081_4k/part06.txt)" = "3f1722633704a4d86461bb679587eadd972183ea"
-          test "$(git hash-object .release_v11081_4k/part07.txt)" = "2224d9d44ed6d3585012f2232bf368780e3135b9"
           test "$(git hash-object .release_b64_v11081/part01.txt)" = "8dc5becec7e1519807627af470a0978d22bec97c"
+          test "$(git hash-object .release_v11081_2kfix/part10.txt)" = "5008552941aebc1de659a24e085b43e698b6e92d"
+          test "$(git hash-object .release_v11081_2kfix/part11.txt)" = "b0ac67e614e8b1d58accbccd9ebad2e8cf8668f0"
+          test "$(git hash-object .release_v11081_2kfix/part12.txt)" = "68742004ec4876a2f39cc37608961fd17a1a62e3"
+          test "$(git hash-object .release_v11081_2kfix/part13.txt)" = "be7838d4d47a5cdb0c8847f311e06984e8eed4dd"
+          test "$(git hash-object .release_v11081_2kfix/part14.txt)" = "bb2633deeb6b79654bceb9640ccf838f70b186ab"
           test "$(git hash-object .release_b64_v11081/part03.txt)" = "819f33c2dfe1834a94c54f5b3602d792647e13c9"
           test "$(git hash-object .release_b64_v11081/part04.txt)" = "af8fd46c52fa6d536d893333cd26ea91a1216eb4"
 
+          # Assemble the exact 49,064-character Base64 release without Python.
           : > /tmp/index.b64
           cat .release_v11081_4k/part00.txt >> /tmp/index.b64
           cat .release_v11081_4k/part01.txt >> /tmp/index.b64
           head -c 2000 .release_v11081_4k/part02.txt >> /tmp/index.b64
           cat .release_b64_v11081/part01.txt >> /tmp/index.b64
-          cat .release_v11081_4k/part05.txt >> /tmp/index.b64
-          cat .release_v11081_4k/part06.txt >> /tmp/index.b64
-          head -c 2000 .release_v11081_4k/part07.txt >> /tmp/index.b64
+          cat .release_v11081_2kfix/part10.txt >> /tmp/index.b64
+          cat .release_v11081_2kfix/part11.txt >> /tmp/index.b64
+          cat .release_v11081_2kfix/part12.txt >> /tmp/index.b64
+          cat .release_v11081_2kfix/part13.txt >> /tmp/index.b64
+          cat .release_v11081_2kfix/part14.txt >> /tmp/index.b64
           cat .release_b64_v11081/part03.txt >> /tmp/index.b64
           cat .release_b64_v11081/part04.txt >> /tmp/index.b64
 
