@@ -66,6 +66,8 @@ jobs:
           grep -q "Barber Manager V1.10.8.1" site/index.html
 
           cp manifest.webmanifest icon.svg sw.js site/
+          cp staff-days-off.js site/
+          sed -i 's@</body>@<script src="./staff-days-off.js"></script></body>@' site/index.html
           touch site/.nojekyll
 
       - name: Configure GitHub Pages
