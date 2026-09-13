@@ -16,7 +16,7 @@
       const date = `${month}-${String(day).padStart(2, '0')}`;
       if (date > today) break;
       const absent = names.filter(name => (!selected || name === selected) && !worked.get(date)?.has(name));
-      if (!selected || absent.length) rows.push({ date, absent });
+      if (absent.length) rows.push({ date, absent });
     }
     return { names, rows };
   }
