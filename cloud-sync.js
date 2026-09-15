@@ -20,6 +20,7 @@
   let auth, db, api, user, unsubscribe, reference;
   let base = null, remote = null, pending = null, ready = false, busy = false, remoteLoaded = false;
   let status = 'กำลังเชื่อมต่อบริการ', problem = '';
+  let resetSending = false, resetNotice = '';
   const gate = document.createElement('main');
   gate.id = 'authGate';
   document.body.appendChild(gate);
@@ -71,7 +72,7 @@
   function cloudPage() {
     const login = `<form id="cloudLogin"><div class="field"><label for="cloudEmail">อีเมลบัญชีร้าน</label><input id="cloudEmail" type="email" autocomplete="username" required></div><div class="field"><label for="cloudPassword">รหัสผ่าน</label><input id="cloudPassword" type="password" autocomplete="current-password" required></div><br><button class="btn primary" ${!auth || busy ? 'disabled' : ''}>เข้าสู่ระบบ</button></form>`;
     const actions = !remoteLoaded ? '<span>กำลังตรวจข้อมูลออนไลน์</span>' : !ready && remote ? '<button class="btn primary" onclick="BarberCloud.useRemote()">ใช้ข้อมูลออนไลน์บนเครื่องนี้</button>' : !ready && remote === null ? '<button class="btn primary" onclick="BarberCloud.uploadFirst()">นำข้อมูลเครื่องนี้ขึ้นออนไลน์ครั้งแรก</button>' : '<button class="btn" onclick="BarberCloud.retry()">ซิงก์อีกครั้ง</button>';
-    return `<section style="max-width:640px"><h2>บัญชีร้าน</h2><p role="status">${esc(status)}</p>${problem ? `<p class="bad" role="alert">${esc(problem)}</p>` : ''}${user ? `<p>${esc(user.email)}</p><div class="actions">${busy ? '<span>กำลังบันทึกออนไลน์…</span>' : actions}<button class="btn" onclick="BarberCloud.logout()">ออกจากระบบ</button></div>${pending ? '<p>มีข้อมูลรอซิงก์ในเครื่องนี้</p><button class="btn" onclick="saveBackupAs()">สำรองข้อมูลเครื่องนี้</button><button class="btn" onclick="BarberCloud.useRemote()">ใช้ข้อมูลออนไลน์แทนรายการที่รอ</button>' : ''}` : login}</section>`;
+    return `<section style="max-width:640px"><h2>บัญชีร้าน</h2><p role="status">${esc(status)}</p>${problem ? `<p class="bad" role="alert">${esc(problem)}</p>` : ''}${user ? `<p>${esc(user.email)}</p><div class="actions">${busy ? '<span>กำลังบันทึกออนไลน์…</span>' : actions}<button class="btn" onclick="BarberCloud.changePassword()" ${resetSending ? 'disabled' : ''}>${resetSending ? 'กำลังส่งลิงก์…' : 'เปลี่ยนรหัสผ่าน'}</button><button class="btn" onclick="BarberCloud.logout()">ออกจากระบบ</button></div>${resetNotice ? `<p role="status">${esc(resetNotice)}</p>` : ''}${pending ? '<p>มีข้อมูลรอซิงก์ในเครื่องนี้</p><button class="btn" onclick="saveBackupAs()">สำรองข้อมูลเครื่องนี้</button><button class="btn" onclick="BarberCloud.useRemote()">ใช้ข้อมูลออนไลน์แทนรายการที่รอ</button>' : ''}` : login}</section>`;
   }
   document.addEventListener('submit', async event => {
     if (event.target.id !== 'cloudLogin') return;
@@ -126,6 +127,18 @@
     if (pending && !problem) flush();
   }
   window.BarberCloud = {
+    async changePassword() {
+      if (!user || user.uid !== OWNER || resetSending) return;
+      const email = user.email;
+      if (!confirm(`ส่งลิงก์เปลี่ยนรหัสผ่านไปที่ ${email} หรือไม่?`)) return;
+      resetSending = true; resetNotice = ''; render();
+      try {
+        await api.sendPasswordResetEmail(auth, email);
+        resetNotice = 'ส่งลิงก์แล้ว กรุณาตรวจกล่องจดหมายและอีเมลขยะ หลังเปลี่ยนรหัสผ่านให้เข้าสู่ระบบใหม่ทุกเครื่อง';
+      } catch (_) {
+        resetNotice = 'ส่งลิงก์ไม่สำเร็จ กรุณาตรวจอินเทอร์เน็ต หรือรอสักครู่แล้วลองใหม่';
+      } finally { resetSending = false; if (user) render(); }
+    },
     async retry() { problem = ''; await flush(); },
     async useRemote() {
       if (busy || !user || !remote) return;
