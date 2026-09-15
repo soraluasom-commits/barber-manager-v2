@@ -6,9 +6,10 @@ html:not([data-shop-unlocked]) body::before {
   position: fixed; inset: 0; padding: 48px 24px; background: #f4f6f5;
   color: #25332c; font: 16px system-ui,sans-serif;
 }
-#authGate { position: fixed; inset: 0; z-index: 1000; overflow: auto; padding: 48px 24px; background: #f4f6f5; color: #25332c; }
-#authGate .auth-inner { max-width: 420px; margin: 4vh auto; }
-#authGate h1 { font-size: 28px; margin: 0 0 28px; color: #25332c !important; }
+#authGate { position: fixed; inset: 0; z-index: 1000; overflow: auto; padding: 48px 8%; background: #f4f6f5 url('./login-barbershop.webp') center / cover no-repeat; color: #25332c; }
+#authGate .auth-inner { width: 32%; max-width: 380px; margin: 3vh 0; }
+#authGate h1 { font-size: 34px; line-height: 1.2; letter-spacing: 0; margin: 0 0 32px; color: #25332c !important; }
+#authGate h1 span { display: block; font-size: 17px; font-weight: 500; margin-top: 12px; }
 #authGate h2 { font-size: 18px; color: #25332c !important; }
 #authGate label { color: #4b5a52 !important; }
 #authGate input { width: 100%; background: #fff !important; color: #25332c !important; border: 1px solid #b5c3bc !important; }
@@ -17,3 +18,13 @@ html:not([data-shop-unlocked]) body::before {
 #authGate .bad { color: #ad2537 !important; }
 #authGate button:disabled { opacity: .55; cursor: wait; }
 html[data-shop-unlocked] #authGate { display: none !important; }
+@media(max-width:1200px) {
+  #authGate { padding: 0; background-position: 65% center; }
+  #authGate .auth-inner { width: 48%; max-width: none; min-height: 100%; margin: 0; padding: 40px 24px; background: rgba(248,250,249,.94); }
+  #authGate h1 { font-size: 30px; }
+}
+@media(max-width:600px) {
+  #authGate { padding-top: 190px; background-position: 70% top; background-size: auto 540px; background-color: #f8faf9; }
+  #authGate .auth-inner { width: 100%; min-height: calc(100% - 190px); padding: 26px 24px 36px; }
+  #authGate h1 { font-size: 28px; margin-bottom: 24px; }
+}

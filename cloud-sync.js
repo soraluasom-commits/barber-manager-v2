@@ -27,7 +27,7 @@
     if (user) document.documentElement.setAttribute('data-shop-unlocked', '');
     else {
       document.documentElement.removeAttribute('data-shop-unlocked');
-      gate.innerHTML = '<div class="auth-inner"><h1>Barber Manager</h1>' + cloudPage() + '</div>';
+      gate.innerHTML = '<div class="auth-inner"><h1>Baeber Manager<br>System <span>by SORA</span></h1>' + cloudPage() + '</div>';
     }
   }
   try { pending = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (_) { problem = 'อ่านรายการรอซิงก์ไม่ได้ กรุณาสำรองข้อมูลก่อน'; }

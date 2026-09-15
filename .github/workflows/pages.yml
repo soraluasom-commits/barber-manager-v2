@@ -67,7 +67,7 @@ jobs:
 
           cp manifest.webmanifest icon.svg sw.js site/
           cp staff-days-off.js firebase-config.js cloud-merge.js cloud-sync.js site/
-          cp theme-fix.css auth-gate.css site/
+          cp theme-fix.css auth-gate.css login-barbershop.webp site/
           sed -i 's@</head>@<style>html:not([data-shop-unlocked]) body > :not(#authGate){display:none!important}</style><link rel="stylesheet" href="./theme-fix.css"><link rel="stylesheet" href="./auth-gate.css"></head>@' site/index.html
           sed -i 's@</body>@<script src="./staff-days-off.js"></script><script src="./firebase-config.js"></script><script src="./cloud-merge.js"></script><script src="./cloud-sync.js"></script></body>@' site/index.html
           touch site/.nojekyll
