@@ -1,0 +1,19 @@
+/* Loaded in the head: fail closed even if application scripts fail. */
+html:not([data-shop-unlocked]) body > :not(#authGate) { display: none !important; }
+html:not([data-shop-unlocked]) body { background: #f4f6f5 !important; }
+html:not([data-shop-unlocked]) body::before {
+  display: block !important; content: 'กำลังตรวจสอบการเข้าสู่ระบบ…';
+  position: fixed; inset: 0; padding: 48px 24px; background: #f4f6f5;
+  color: #25332c; font: 16px system-ui,sans-serif;
+}
+#authGate { position: fixed; inset: 0; z-index: 1000; overflow: auto; padding: 48px 24px; background: #f4f6f5; color: #25332c; }
+#authGate .auth-inner { max-width: 420px; margin: 4vh auto; }
+#authGate h1 { font-size: 28px; margin: 0 0 28px; color: #25332c !important; }
+#authGate h2 { font-size: 18px; color: #25332c !important; }
+#authGate label { color: #4b5a52 !important; }
+#authGate input { width: 100%; background: #fff !important; color: #25332c !important; border: 1px solid #b5c3bc !important; }
+#authGate .field { margin-top: 16px; }
+#authGate .btn.primary { width: 100%; background: #326b55 !important; color: #fff !important; }
+#authGate .bad { color: #ad2537 !important; }
+#authGate button:disabled { opacity: .55; cursor: wait; }
+html[data-shop-unlocked] #authGate { display: none !important; }

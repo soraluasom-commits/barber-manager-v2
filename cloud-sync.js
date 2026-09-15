@@ -9,7 +9,7 @@
       });
     });
     if (!acquired) {
-      document.body.innerHTML = '<main style="padding:32px"><h2>เปิดร้านอยู่ในแท็บอื่นแล้ว</h2><p>ปิดแท็บอื่นของเว็บร้านก่อน แล้วรีเฟรชหน้านี้</p></main>';
+      document.body.innerHTML = '<main id="authGate"><h2>เปิดร้านอยู่ในแท็บอื่นแล้ว</h2><p>ปิดแท็บอื่นของเว็บร้านก่อน แล้วรีเฟรชหน้านี้</p></main>';
       return;
     }
   }
@@ -20,6 +20,16 @@
   let auth, db, api, user, unsubscribe, reference;
   let base = null, remote = null, pending = null, ready = false, busy = false, remoteLoaded = false;
   let status = 'กำลังเชื่อมต่อบริการ', problem = '';
+  const gate = document.createElement('main');
+  gate.id = 'authGate';
+  document.body.appendChild(gate);
+  function refreshGate() {
+    if (user) document.documentElement.setAttribute('data-shop-unlocked', '');
+    else {
+      document.documentElement.removeAttribute('data-shop-unlocked');
+      gate.innerHTML = '<div class="auth-inner"><h1>Barber Manager</h1>' + cloudPage() + '</div>';
+    }
+  }
   try { pending = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (_) { problem = 'อ่านรายการรอซิงก์ไม่ได้ กรุณาสำรองข้อมูลก่อน'; }
   if (pending && pending.uid !== OWNER) { pending = null; problem = 'บัญชีของรายการรอซิงก์ไม่ตรงกับร้าน'; }
   try {
@@ -41,7 +51,7 @@
     return data;
   }
   function decode(value) { return value ? valid(JSON.parse(value.payload)) : null; }
-  function note(message) { status = message; if (page === 'cloud') render(); }
+  function note(message) { status = message; refreshGate(); if (page === 'cloud') render(); }
   function backupLocal() { localStorage.setItem('barberBeforeCloudV1', JSON.stringify(state)); }
   function apply(data) { state = upgrade(copy(data)); localStorage.setItem(STORAGE, JSON.stringify(state)); rememberBase(state); }
   function editing() { return document.getElementById('modal')?.classList.contains('open') || ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName); }
@@ -61,7 +71,7 @@
   function cloudPage() {
     const login = `<form id="cloudLogin"><div class="field"><label for="cloudEmail">อีเมลบัญชีร้าน</label><input id="cloudEmail" type="email" autocomplete="username" required></div><div class="field"><label for="cloudPassword">รหัสผ่าน</label><input id="cloudPassword" type="password" autocomplete="current-password" required></div><br><button class="btn primary" ${!auth || busy ? 'disabled' : ''}>เข้าสู่ระบบ</button></form>`;
     const actions = !remoteLoaded ? '<span>กำลังตรวจข้อมูลออนไลน์</span>' : !ready && remote ? '<button class="btn primary" onclick="BarberCloud.useRemote()">ใช้ข้อมูลออนไลน์บนเครื่องนี้</button>' : !ready && remote === null ? '<button class="btn primary" onclick="BarberCloud.uploadFirst()">นำข้อมูลเครื่องนี้ขึ้นออนไลน์ครั้งแรก</button>' : '<button class="btn" onclick="BarberCloud.retry()">ซิงก์อีกครั้ง</button>';
-    return `<section style="max-width:640px"><h2>บัญชีร้าน</h2><p role="status">${esc(status)}</p>${problem ? `<p class="bad" role="alert">${esc(problem)}</p>` : ''}${user ? `<p>${esc(user.email)}</p><div class="actions">${busy ? '<span>กำลังบันทึกออนไลน์…</span>' : actions}<button class="btn" onclick="BarberCloud.logout()" ${busy || pending ? 'disabled' : ''}>ออกจากระบบ</button></div>${pending ? '<p>มีข้อมูลรอซิงก์ในเครื่องนี้</p><button class="btn" onclick="saveBackupAs()">สำรองข้อมูลเครื่องนี้</button><button class="btn" onclick="BarberCloud.useRemote()">ใช้ข้อมูลออนไลน์แทนรายการที่รอ</button>' : ''}` : login}</section>`;
+    return `<section style="max-width:640px"><h2>บัญชีร้าน</h2><p role="status">${esc(status)}</p>${problem ? `<p class="bad" role="alert">${esc(problem)}</p>` : ''}${user ? `<p>${esc(user.email)}</p><div class="actions">${busy ? '<span>กำลังบันทึกออนไลน์…</span>' : actions}<button class="btn" onclick="BarberCloud.logout()">ออกจากระบบ</button></div>${pending ? '<p>มีข้อมูลรอซิงก์ในเครื่องนี้</p><button class="btn" onclick="saveBackupAs()">สำรองข้อมูลเครื่องนี้</button><button class="btn" onclick="BarberCloud.useRemote()">ใช้ข้อมูลออนไลน์แทนรายการที่รอ</button>' : ''}` : login}</section>`;
   }
   document.addEventListener('submit', async event => {
     if (event.target.id !== 'cloudLogin') return;
@@ -76,6 +86,7 @@
   });
   const originalSave = save;
   save = function (message) {
+    if (!user) { note('กรุณาเข้าสู่ระบบก่อนใช้งาน'); return; }
     if (ready) {
       try { persistPending({ uid: OWNER, base: pending ? pending.base : copy(base), data: copy(state) }); }
       catch (_) { alert('บันทึกรายการรอซิงก์ไม่ได้ กรุณาสำรองข้อมูลและเพิ่มพื้นที่ว่าง'); return; }
@@ -136,7 +147,14 @@
       } catch (_) { problem = 'นำข้อมูลขึ้นออนไลน์ไม่สำเร็จ กรุณาตรวจสถานะแล้วลองใหม่'; }
       finally { busy = false; render(); flush(); }
     },
-    async logout() { if (busy || pending) return; await api.signOut(auth); ready = false; localStorage.removeItem(LINK); render(); },
+    async logout() {
+      user = null; unsubscribe?.(); remote = null; remoteLoaded = false;
+      document.getElementById('modal')?.classList.remove('open');
+      note('ออกจากระบบแล้ว');
+      await api.signOut(auth);
+      // Keep the durable journal for the same owner's next authenticated session.
+      render();
+    },
   };
   try {
     const [appApi, authApi, databaseApi] = await Promise.all([
@@ -147,11 +165,13 @@
     api = { ...authApi, ...databaseApi };
     const app = appApi.initializeApp(window.BARBER_FIREBASE_CONFIG);
     auth = api.getAuth(app); db = api.getDatabase(app);
+    await api.setPersistence(auth, api.browserSessionPersistence);
     api.onAuthStateChanged(auth, async account => {
       unsubscribe?.(); user = null; remote = null; remoteLoaded = false;
-      if (!account) { note('ยังไม่ได้เข้าสู่ระบบ'); return; }
+      if (!account) { note('กรุณาเข้าสู่ระบบเพื่อใช้งาน'); return; }
       if (account.uid !== OWNER) { await api.signOut(auth); problem = 'บัญชีนี้ไม่มีสิทธิ์เข้าถึงข้อมูลร้าน'; note('เข้าใช้งานไม่ได้'); return; }
       user = account; reference = api.ref(db, `shops/${OWNER}`);
+      refreshGate();
       unsubscribe = api.onValue(reference, snapshot => {
         remote = snapshot.val(); remoteLoaded = true;
         if (pending) flush();
@@ -163,6 +183,6 @@
     setInterval(receiveLatest, 2000);
     window.addEventListener('online', () => { problem = ''; flush(); });
     note('พร้อมเข้าสู่ระบบ');
-  } catch (_) { problem = 'โหลดบริการซิงก์ไม่ได้ กรุณาตรวจอินเทอร์เน็ตแล้วรีเฟรช'; note('ข้อมูลในเครื่องยังใช้งานได้'); }
+  } catch (_) { user = null; problem = 'โหลดบริการเข้าสู่ระบบไม่ได้ กรุณาตรวจอินเทอร์เน็ตแล้วรีเฟรช'; note('ยังไม่สามารถเปิดข้อมูลร้านได้'); }
   render();
 })();
