@@ -1,0 +1,1 @@
+window.CATALOG_PARTS=[Array.from({length:295},(_,i)=>({id:'p'+String(i+1).padStart(3,'0'),name:'สินค้า '+String(i+1).padStart(3,'0'),active:true,sizes:['10ml','30ml'],caps:['ฝาแดง','ฝาดำ'],prices:{'10ml':{retail:490,wholesale:450},'30ml':{retail:850,wholesale:790}},wholesaleMin:6,spriteIndex:i}))];
