@@ -3,9 +3,9 @@ set -euo pipefail
 rm -rf public
 mkdir -p public/products
 
-# Buyer storefront V2.7
+# Buyer storefront V2.8
 cp order-catalog-v22/buyer-v26.html public/index.html
-{ cat order-catalog-v22/buyer-v26.js; printf '\n'; cat order-catalog-v22/buyer-v27-fix.js; } > public/app.js
+{ cat order-catalog-v22/buyer-v26.js; printf '\n'; cat order-catalog-v22/buyer-v27-fix.js; printf '\n'; cat order-catalog-v22/buyer-v28-fix.js; } > public/app.js
 cp order-catalog-v22/service-worker-reset.js public/service-worker.js
 
 # Seller/admin V2.5 (filename kept for compatibility)
@@ -19,12 +19,13 @@ curl -fL -sS https://order-catalog-api-v22.onrender.com/api/products -o public/c
 curl -fL -sS https://order-catalog-v22-fixed.onrender.com/styles.css -o public/styles.css
 cat order-catalog-v22/buyer-v26.css >> public/styles.css
 cat order-catalog-v22/buyer-v27.css >> public/styles.css
+cat order-catalog-v22/buyer-v28.css >> public/styles.css
 
 # Show the current storefront version in the browser title.
 python3 - <<'PY'
 p='public/index.html'
 s=open(p,encoding='utf-8').read()
-s=s.replace('<title>สั่งสินค้า V2.6</title>','<title>สั่งสินค้า V2.7</title>')
+s=s.replace('<title>สั่งสินค้า V2.6</title>','<title>สั่งสินค้า V2.8</title>')
 open(p,'w',encoding='utf-8').write(s)
 PY
 
