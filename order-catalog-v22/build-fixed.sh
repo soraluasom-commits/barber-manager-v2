@@ -8,15 +8,16 @@ cp order-catalog-v22/buyer-v26.html public/index.html
 { cat order-catalog-v22/buyer-v26.js; printf '\n'; cat order-catalog-v22/buyer-v27-fix.js; printf '\n'; cat order-catalog-v22/buyer-v28-fix.js; printf '\n'; cat order-catalog-v22/buyer-v29-tier.js; } > public/app.js
 cp order-catalog-v22/service-worker-reset.js public/service-worker.js
 
-# Seller/admin V2.10 (filename kept for compatibility)
+# Seller/admin V2.11 (filename kept for compatibility)
 cp order-catalog-v22/admin-v24.html public/admin-v24.html
 cp order-catalog-v22/admin-v24.js public/admin-v24.js
 cp order-catalog-v22/admin-v29.js public/admin-v29.js
 cp order-catalog-v22/admin-v30.js public/admin-v30.js
+cp order-catalog-v22/admin-v31-bulk-images.js public/admin-v31-bulk-images.js
 python3 - <<'PY'
 p='public/admin-v24.html'
 s=open(p,encoding='utf-8').read()
-s=s.replace('</body>','<script src="admin-v29.js"></script><script src="admin-v30.js"></script></body>')
+s=s.replace('</body>','<script src="admin-v29.js"></script><script src="admin-v30.js"></script><script src="admin-v31-bulk-images.js"></script></body>')
 open(p,'w',encoding='utf-8').write(s)
 PY
 
