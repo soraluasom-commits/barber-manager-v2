@@ -1,9 +1,9 @@
 {
-  "name":"order-catalog-backend-v23",
-  "version":"2.3.0",
+  "name":"order-catalog-backend-v24",
+  "version":"2.4.0",
   "private":true,
   "type":"module",
-  "scripts":{"start":"node server-v23.js"},
+  "scripts":{"start":"node server.js"},
   "engines":{"node":">=20"},
   "dependencies":{"pg":"^8.13.1"}
 }
