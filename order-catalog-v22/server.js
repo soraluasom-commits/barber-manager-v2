@@ -42,8 +42,19 @@ function orderId(){const d=new Date();const y=String(d.getFullYear()).slice(-2),
 
 async function loadCatalog(){
   if(mem.loaded) return;
-  const r=await fetch(CATALOG_URL,{cache:'no-store'}); if(!r.ok) throw new Error(`catalog ${r.status}`);
-  mem.products=(await r.json()).map(cleanProduct); mem.loaded=true;
+  try{
+    const r=await fetch(CATALOG_URL,{cache:'no-store'});
+    const ct=r.headers.get('content-type')||'';
+    if(!r.ok||!ct.includes('json')) throw new Error(`catalog ${r.status}`);
+    mem.products=(await r.json()).map(cleanProduct);
+  }catch(e){
+    console.warn('Catalog URL unavailable, using built-in catalog:',e.message);
+    mem.products=Array.from({length:295},(_,idx)=>{
+      const n=idx+1,id=`p${String(n).padStart(3,'0')}`;
+      return cleanProduct({id,name:`สินค้า ${String(n).padStart(3,'0')}`,image:`https://order-catalog-v21-preview.onrender.com/products/${id}.jpg`,active:true,sizes:['10ml','30ml'],caps:['ฝาแดง','ฝาดำ'],prices:{'10ml':{retail:490,wholesale:450},'30ml':{retail:850,wholesale:790}},wholesaleMin:6,stockTracked:false,stock:{'10ml':0,'30ml':0},lowStockThreshold:5});
+    });
+  }
+  mem.loaded=true;
 }
 async function initDb(){
   if(!pool) return;
