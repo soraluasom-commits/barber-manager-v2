@@ -6,6 +6,7 @@ mkdir -p public/products
 # Buyer storefront V2.6
 cp order-catalog-v22/buyer-v26.html public/index.html
 cp order-catalog-v22/buyer-v26.js public/app.js
+cp order-catalog-v22/service-worker-reset.js public/service-worker.js
 
 # Seller/admin V2.5 (filename kept for compatibility)
 cp order-catalog-v22/admin-v24.html public/admin-v24.html
