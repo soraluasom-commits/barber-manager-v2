@@ -3,14 +3,21 @@ set -euo pipefail
 rm -rf public
 mkdir -p public/products
 
-# Buyer storefront V2.8
+# Buyer storefront V2.9
 cp order-catalog-v22/buyer-v26.html public/index.html
-{ cat order-catalog-v22/buyer-v26.js; printf '\n'; cat order-catalog-v22/buyer-v27-fix.js; printf '\n'; cat order-catalog-v22/buyer-v28-fix.js; } > public/app.js
+{ cat order-catalog-v22/buyer-v26.js; printf '\n'; cat order-catalog-v22/buyer-v27-fix.js; printf '\n'; cat order-catalog-v22/buyer-v28-fix.js; printf '\n'; cat order-catalog-v22/buyer-v29-tier.js; } > public/app.js
 cp order-catalog-v22/service-worker-reset.js public/service-worker.js
 
-# Seller/admin V2.5 (filename kept for compatibility)
+# Seller/admin V2.9 (filename kept for compatibility)
 cp order-catalog-v22/admin-v24.html public/admin-v24.html
 cp order-catalog-v22/admin-v24.js public/admin-v24.js
+cp order-catalog-v22/admin-v29.js public/admin-v29.js
+python3 - <<'PY'
+p='public/admin-v24.html'
+s=open(p,encoding='utf-8').read()
+s=s.replace('</body>','<script src="admin-v29.js"></script></body>')
+open(p,'w',encoding='utf-8').write(s)
+PY
 
 # Keep current catalog snapshot available as a static fallback/debug file.
 curl -fL -sS https://order-catalog-api-v22.onrender.com/api/products -o public/catalog.json
@@ -25,7 +32,7 @@ cat order-catalog-v22/buyer-v28.css >> public/styles.css
 python3 - <<'PY'
 p='public/index.html'
 s=open(p,encoding='utf-8').read()
-s=s.replace('<title>สั่งสินค้า V2.6</title>','<title>สั่งสินค้า V2.8</title>')
+s=s.replace('<title>สั่งสินค้า V2.6</title>','<title>สั่งสินค้า V2.9</title>')
 open(p,'w',encoding='utf-8').write(s)
 PY
 
