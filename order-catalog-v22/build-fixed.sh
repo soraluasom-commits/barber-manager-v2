@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
-rm -rf public /tmp/oc /tmp/products_v21.zip
-mkdir -p public /tmp/oc
+rm -rf public
+mkdir -p public/products
 cp order-catalog-v21/index.html public/index.html
 cp order-catalog-v21/app.js public/app.js
 cp order-catalog-v22/cloud-render.js public/cloud.js
@@ -11,7 +11,7 @@ cp order-catalog-v22/admin-v24.html public/admin-v24.html
 cp order-catalog-v22/admin-v24.js public/admin-v24.js
 printf 'window.FIREBASE_CONFIG={};' > public/firebase-config.js
 curl -fL -sS https://order-catalog-api-v22.onrender.com/api/products -o public/catalog.json
-curl -fL -sS https://order-catalog-v22.onrender.com/styles.css -o public/styles.css
+curl -fL -sS https://order-catalog-v22-fixed.onrender.com/styles.css -o public/styles.css
 python3 - <<'PY'
 p='public/index.html'
 s=open(p,encoding='utf-8').read()
@@ -20,9 +20,9 @@ s=s.replace('</body>','<script src="filters-v23.js"></script><script src="shop-v
 s=s.replace('href="admin.html"','href="admin-v24.html"')
 open(p,'w',encoding='utf-8').write(s)
 PY
-curl -fL -sS "$ASSET_URL" -o /tmp/products_v21.zip
-unzip -q /tmp/products_v21.zip -d /tmp/oc
-cp -R /tmp/oc/products public/products
+for i in $(seq -w 1 295); do
+  curl -fL -sS "https://order-catalog-v22-fixed.onrender.com/products/p${i}.jpg" -o "public/products/p${i}.jpg"
+done
 test -s public/products/p001.jpg
 test -s public/products/p050.jpg
 test -s public/products/p150.jpg
