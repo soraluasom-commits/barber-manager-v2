@@ -1,0 +1,6 @@
+/* V2.8 stock + summary image polish */
+.stock-state.stock-out{display:inline-flex!important;align-items:center!important;width:max-content!important;background:#fee2e2!important;color:#dc2626!important;border:1px solid #fecaca!important;font-weight:950!important;padding:6px 10px!important;border-radius:999px!important}
+.buyer-card.sold-out{opacity:1!important;border-color:#fecaca!important}
+.buyer-card.sold-out .product-photo{filter:saturate(.65) brightness(.96)}
+.buyer-card.sold-out .add-cart{background:#cbd5e1!important;color:#64748b!important;box-shadow:none!important}
+.buyer-summary-sheet canvas{image-rendering:auto}
