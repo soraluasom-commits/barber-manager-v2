@@ -6,19 +6,21 @@ cp order-catalog-v21/index.html public/index.html
 cp order-catalog-v21/app.js public/app.js
 cp order-catalog-v22/cloud-render.js public/cloud.js
 cp order-catalog-v22/filters-v23.js public/filters-v23.js
-cp order-catalog-v22/admin-v23.html public/admin-v23.html
-cp order-catalog-v22/admin-v23.js public/admin-v23.js
+cp order-catalog-v22/shop-v24.js public/shop-v24.js
+cp order-catalog-v22/admin-v24.html public/admin-v24.html
+cp order-catalog-v22/admin-v24.js public/admin-v24.js
 printf 'window.FIREBASE_CONFIG={};' > public/firebase-config.js
-curl -L -sS https://order-catalog-api-v22.onrender.com/api/products -o public/catalog.json
-curl -L -sS https://order-catalog-v22.onrender.com/styles.css -o public/styles.css
+curl -fL -sS https://order-catalog-api-v22.onrender.com/api/products -o public/catalog.json
+curl -fL -sS https://order-catalog-v22.onrender.com/styles.css -o public/styles.css
 python3 - <<'PY'
 p='public/index.html'
 s=open(p,encoding='utf-8').read()
-s=s.replace('</body>','<script src="filters-v23.js"></script></body>')
-s=s.replace('href="admin.html"','href="admin-v23.html"')
+s=s.replace('<title>สั่งสินค้า</title>','<title>สั่งสินค้า V2.4</title>')
+s=s.replace('</body>','<script src="filters-v23.js"></script><script src="shop-v24.js"></script></body>')
+s=s.replace('href="admin.html"','href="admin-v24.html"')
 open(p,'w',encoding='utf-8').write(s)
 PY
-curl -L -sS "$ASSET_URL" -o /tmp/products_v21.zip
+curl -fL -sS "$ASSET_URL" -o /tmp/products_v21.zip
 unzip -q /tmp/products_v21.zip -d /tmp/oc
 cp -R /tmp/oc/products public/products
 test -s public/products/p001.jpg
