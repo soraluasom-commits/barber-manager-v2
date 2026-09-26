@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#111111" />
+  <title>สั่งสินค้า V2.6</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <div id="brandName" class="brand">ORDER CATALOG</div>
+    <div id="brandSub" class="sub">เลือกสินค้า • ขนาด • จำนวน</div>
+  </div>
+  <button id="cartBtn" class="cart-btn">ตะกร้า <span id="cartCount">0</span></button>
+</header>
+
+<main class="buyer-main">
+  <section class="buyer-hero">
+    <div>
+      <div class="hero-label">สั่งสินค้า</div>
+      <h1>เลือกสินค้าได้จากหน้าร้าน แล้วบันทึกสรุปเป็น JPG</h1>
+      <p>ราคาและข้อมูลสินค้าดึงจากระบบผู้ขายโดยตรง</p>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-box"><span>จำนวนสินค้า</span><b id="productCount">0</b></div>
+      <div class="stat-box"><span>ยอดในตะกร้า</span><b id="cartTotalMini">฿0</b></div>
+    </div>
+  </section>
+
+  <section class="buyer-tools">
+    <input id="searchInput" type="search" placeholder="ค้นหาชื่อหรือรหัสสินค้า..." />
+    <select id="sizeFilter">
+      <option value="">ทุกขนาด</option>
+      <option value="10ml">10ml</option>
+      <option value="30ml">30ml</option>
+    </select>
+    <div id="dynamicFilters" class="dynamic-filters"></div>
+  </section>
+
+  <section class="list-head">
+    <div id="resultsText" class="list-meta">แสดง 0 รายการ</div>
+    <div id="wholesaleNotice" class="wholesale-banner">กำลังโหลดราคาส่ง...</div>
+  </section>
+
+  <section id="productGrid" class="buyer-grid"></section>
+  <section id="pagination" class="pagination"></section>
+</main>
+
+<div id="cartModal" class="modal hidden"><div class="sheet cart-sheet buyer-cart-sheet">
+  <button class="close" data-close="cartModal">✕</button>
+  <h2>สรุปรายการในตะกร้า</h2>
+  <div id="cartItems"></div>
+  <div class="summary-box">
+    <div class="summary-row"><span>จำนวนรวม</span><b id="cartBottleCount">0 ขวด</b></div>
+    <div class="summary-row"><span>ประเภทราคา</span><b id="cartPriceType">ราคาปลีก</b></div>
+    <div class="summary-row grand"><span>ยอดรวมทั้งหมด</span><b id="grandTotal">฿0</b></div>
+  </div>
+  <div class="actions">
+    <button id="clearCart" class="ghost">ล้างรายการ</button>
+    <button id="checkoutBtn" class="primary">ยืนยันและบันทึก JPG</button>
+  </div>
+</div></div>
+
+<div id="summaryModal" class="modal hidden"><div class="sheet summary-sheet buyer-summary-sheet">
+  <button class="close" data-close="summaryModal">✕</button>
+  <h2>สรุปรายการสั่งซื้อ</h2>
+  <p class="success-notice">ระบบได้เตรียมภาพ JPG ของรายการนี้แล้ว</p>
+  <canvas id="summaryCanvas"></canvas>
+  <div class="actions summary-actions">
+    <button id="downloadJpg" class="primary">บันทึก JPG อีกครั้ง</button>
+    <button id="newOrderBtn" class="ghost">กลับไปหน้าร้าน</button>
+  </div>
+</div></div>
+
+<div class="customer-footer"><span id="shopContact"></span><span><a href="admin-v24.html" rel="nofollow">Admin</a></span></div>
+
+<datalist id="qtyOptions">
+  <option value="0"></option><option value="1"></option><option value="2"></option><option value="3"></option><option value="4"></option><option value="5"></option><option value="6"></option><option value="7"></option><option value="8"></option><option value="9"></option><option value="10"></option><option value="11"></option><option value="12"></option><option value="13"></option><option value="14"></option><option value="15"></option><option value="16"></option><option value="17"></option><option value="18"></option><option value="19"></option><option value="20"></option>
+</datalist>
+<script src="app.js"></script>
+</body>
+</html>
