@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#111111" />
+  <title>สั่งสินค้า</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <div id="brandName" class="brand">ORDER CATALOG</div>
+    <div id="brandSub" class="sub">เลือกสินค้า • ขนาด • ฝา • จำนวน</div>
+  </div>
+  <button id="cartBtn" class="cart-btn">ตะกร้า <span id="cartCount">0</span></button>
+</header>
+<main>
+  <section class="toolbar">
+    <input id="searchInput" type="search" placeholder="ค้นหาชื่อสินค้า..." />
+    <select id="sizeFilter"><option value="">ทุกขนาด</option><option value="10ml">10ml</option><option value="30ml">30ml</option></select>
+  </section>
+  <section class="hero-card">
+    <div>
+      <div class="hero-label">สั่งง่ายบนมือถือ</div>
+      <h1>เลือกสินค้า ขนาด ฝา และจำนวนได้ในหน้าเดียว</h1>
+      <p>เมื่อยืนยันออเดอร์ ระบบจะสร้างเลขออเดอร์และภาพสรุป JPG ให้บันทึกหรือแชร์ได้ทันที</p>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-box"><span>จำนวนสินค้า</span><b id="productCount">0</b></div>
+      <div class="stat-box"><span>ยอดในตะกร้า</span><b id="cartTotalMini">฿0</b></div>
+    </div>
+  </section>
+  <section id="productGrid" class="grid"></section>
+</main>
+
+<div id="productModal" class="modal hidden"><div class="sheet">
+  <button class="close" data-close="productModal">✕</button>
+  <img id="pmImg" class="detail-img" alt="สินค้า" />
+  <div class="chip-row"><span class="chip">รายละเอียดสินค้า</span><span id="pmStockChip" class="chip stock-chip hidden"></span></div>
+  <h2 id="pmName"></h2>
+  <label>ขนาด<select id="pmSize"></select></label>
+  <label>สีฝา<select id="pmCap"></select></label>
+  <div class="pricebox"><div>ราคาปลีก <b id="pmRetail"></b></div><div>ราคาส่ง <b id="pmWholesale"></b></div><small id="pmRule"></small></div>
+  <label>จำนวนที่สั่ง<input id="pmQty" type="number" min="1" value="1" inputmode="numeric" /></label>
+  <div class="line-total">รวม <b id="pmTotal"></b></div>
+  <button id="addCartBtn" class="primary">เพิ่มลงตะกร้า</button>
+</div></div>
+
+<div id="cartModal" class="modal hidden"><div class="sheet cart-sheet">
+  <button class="close" data-close="cartModal">✕</button>
+  <h2>สรุปรายการในตะกร้า</h2>
+  <div id="cartItems"></div>
+  <div class="grand">ยอดรวม <b id="grandTotal">฿0</b></div>
+  <div class="actions"><button id="clearCart" class="ghost">ล้างรายการ</button><button id="checkoutBtn" class="primary">ถัดไป / ข้อมูลลูกค้า</button></div>
+</div></div>
+
+<div id="checkoutModal" class="modal hidden"><div class="sheet">
+  <button class="close" data-close="checkoutModal">✕</button>
+  <h2>ข้อมูลลูกค้า</h2>
+  <div class="admin-form checkout-form">
+    <label>ชื่อลูกค้า<input id="cName" placeholder="ชื่อสำหรับอ้างอิงออเดอร์" required /></label>
+    <label>เบอร์โทร / Line<input id="cContact" placeholder="เบอร์โทร หรือ Line ID" required /></label>
+    <label>วิธีรับสินค้า<select id="cDeliveryMethod"><option value="delivery">จัดส่งพัสดุ</option><option value="pickup">รับเอง / นัดรับ</option></select></label>
+    <div id="deliveryFields">
+      <label>ที่อยู่จัดส่ง<textarea id="cAddress" rows="4" placeholder="ชื่อผู้รับ บ้านเลขที่ ถนน แขวง/ตำบล เขต/อำเภอ จังหวัด รหัสไปรษณีย์"></textarea></label>
+      <div class="shipping-preview"><span>ค่าจัดส่ง</span><b id="shippingFeeText">฿0</b></div>
+    </div>
+    <label>หมายเหตุเพิ่มเติม<textarea id="cNote" rows="4" placeholder="เช่น จุดสังเกต / นัดรับ / รายละเอียดเพิ่มเติม"></textarea></label>
+  </div>
+  <button id="summaryBtn" class="primary">ยืนยันคำสั่งซื้อ</button>
+</div></div>
+
+<div id="summaryModal" class="modal hidden"><div class="sheet summary-sheet">
+  <button class="close" data-close="summaryModal">✕</button>
+  <div class="order-success-head"><span class="success-check">✓</span><div><h2>รับออเดอร์แล้ว</h2><p id="orderIdText" class="order-id-large"></p></div></div>
+  <p id="orderSavedNotice" class="success-notice">กรุณาบันทึกภาพนี้ไว้เป็นหลักฐานการสั่งซื้อ</p>
+  <canvas id="summaryCanvas"></canvas>
+  <section class="payment-box">
+    <h3>ชำระเงิน / แนบสลิป</h3>
+    <p class="tiny">หลังโอนเงินแล้ว สามารถแนบภาพสลิปผูกกับเลขออเดอร์นี้ได้ทันที</p>
+    <input id="slipInput" type="file" accept="image/jpeg,image/png,image/webp" />
+    <button id="uploadSlipBtn" class="primary">อัปโหลดสลิปการโอน</button>
+    <div id="paymentStatusText" class="payment-status ps-unpaid">สถานะการชำระเงิน: รอชำระ</div>
+  </section>
+  <div class="actions summary-actions"><button id="downloadJpg" class="primary">บันทึกเป็น JPG</button><button id="shareJpgBtn" class="ghost">แชร์ภาพออเดอร์</button><button id="lineShareBtn" class="line-button">ส่งเข้า LINE</button><button id="trackOrderBtn" class="ghost">ติดตามสถานะออเดอร์</button><button id="copyTextBtn" class="ghost">คัดลอกข้อความออเดอร์</button></div>
+  <button id="newOrderBtn" class="text-button">เริ่มออเดอร์ใหม่</button>
+</div></div>
+
+<div class="customer-footer"><span id="shopContact"></span><span><a href="track.html">ติดตามออเดอร์</a> • <a href="admin.html" rel="nofollow">Admin</a></span></div>
+<script src="firebase-config.js"></script>
+<script src="cloud.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
