@@ -1,9 +1,12 @@
 {
   "name":"order-catalog-backend-v24",
-  "version":"2.4.0",
+  "version":"2.5.0",
   "private":true,
   "type":"module",
-  "scripts":{"start":"node migration-neon.js && node server.js"},
+  "scripts":{
+    "start":"node server.js",
+    "migrate:neon":"node migration-neon.js"
+  },
   "engines":{"node":">=20"},
   "dependencies":{"pg":"^8.13.1"}
 }
