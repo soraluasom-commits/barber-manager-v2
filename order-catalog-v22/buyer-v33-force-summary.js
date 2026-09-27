@@ -1,4 +1,4 @@
-/* Buyer V2.15 - delivery method + address/pickup details in saved JPG */
+/* Buyer V2.16 - delivery details in saved JPG; gift shown only at bottom */
 (function(){
   const DELIVERY_KEY='buyer_delivery_v215';
 
@@ -16,10 +16,6 @@
     return hit||{minQty:0,freeQty:0};
   }
 
-  function rr(ctx,x,y,w,h,r){
-    const R=Math.min(r,w/2,h/2);ctx.beginPath();ctx.moveTo(x+R,y);ctx.lineTo(x+w-R,y);ctx.quadraticCurveTo(x+w,y,x+w,y+R);ctx.lineTo(x+w,y+h-R);ctx.quadraticCurveTo(x+w,y+h,x+w-R,y+h);ctx.lineTo(x+R,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-R);ctx.lineTo(x,y+R);ctx.quadraticCurveTo(x,y,x+R,y);ctx.fill();
-  }
-
   function escHtml(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
   function savedDelivery(){try{return JSON.parse(localStorage.getItem(DELIVERY_KEY)||'{}')}catch{return{}}}
   function saveDelivery(){
@@ -30,7 +26,6 @@
   function ensureDeliveryUI(){
     const sheet=document.querySelector('#cartModal .buyer-cart-sheet')||document.querySelector('#cartModal .cart-sheet');
     if(!sheet)return;
-    // Remove any old bottom "ปิด" button if a previous version/theme added one.
     sheet.querySelectorAll('.actions button,button').forEach(b=>{if((b.textContent||'').trim()==='ปิด'&&!b.classList.contains('close'))b.remove()});
     if(document.querySelector('#deliveryBox'))return;
     const actions=sheet.querySelector('.actions');
@@ -115,13 +110,6 @@
     ctx.textAlign='right';ctx.fillStyle=wholesale()?'#047857':'#334155';ctx.font='800 28px sans-serif';ctx.fillText(wholesale()?'ราคาส่ง':'ราคาปลีก',W-70,100);ctx.textAlign='left';
 
     const gift=giftInfo();
-    if(gift.freeQty>0){
-      const bx=875,by=125,bw=455,bh=105;
-      ctx.fillStyle='#7c3aed';rr(ctx,bx,by,bw,bh,22);
-      ctx.fillStyle='#fff';ctx.font='800 24px sans-serif';ctx.fillText('ของแถมตามสเตป',bx+28,by+38);
-      ctx.font='900 38px sans-serif';ctx.fillText(`${gift.freeQty} ขวด`,bx+28,by+82);
-      ctx.textAlign='right';ctx.fillStyle='#ede9fe';ctx.font='700 20px sans-serif';ctx.fillText(`สเตป ${gift.minQty}+ ขวด`,bx+bw-25,by+80);ctx.textAlign='left';
-    }
 
     let y=headerH,grand=0;
     for(const i of cart){
@@ -166,7 +154,6 @@
     downloadJpg();
   }
 
-  // Capture phase prevents all older checkout handlers from running.
   document.addEventListener('click',function(e){
     const b=e.target?.closest?.('#checkoutBtn');
     if(!b)return;
@@ -178,5 +165,5 @@
   const appObserver=new MutationObserver(()=>ensureDeliveryUI());
   appObserver.observe(document.body,{childList:true,subtree:true});
   window.addEventListener('load',()=>{ensureDeliveryUI();setTimeout(ensureDeliveryUI,500)});
-  window.forceSummaryV215=forceSummary;
+  window.forceSummaryV216=forceSummary;
 })();
