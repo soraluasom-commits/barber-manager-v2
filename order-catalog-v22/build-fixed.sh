@@ -8,7 +8,7 @@ cp order-catalog-v22/buyer-v26.html public/index.html
 { cat order-catalog-v22/buyer-v26.js; printf '\n'; cat order-catalog-v22/buyer-v27-fix.js; printf '\n'; cat order-catalog-v22/buyer-v28-fix.js; printf '\n'; cat order-catalog-v22/buyer-v29-tier.js; printf '\n'; cat order-catalog-v22/buyer-v33-force-summary.js; } > public/app.js
 cp order-catalog-v22/service-worker-reset.js public/service-worker.js
 
-# Seller/admin V2.16 (filename kept for compatibility)
+# Seller/admin V2.17 (filename kept for compatibility)
 cp order-catalog-v22/admin-v24.html public/admin-v24.html
 cp order-catalog-v22/admin-v24.js public/admin-v24.js
 cp order-catalog-v22/admin-v29.js public/admin-v29.js
@@ -16,16 +16,19 @@ cp order-catalog-v22/admin-v30.js public/admin-v30.js
 cp order-catalog-v22/admin-v31-bulk-images.js public/admin-v31-bulk-images.js
 cp order-catalog-v22/admin-v32-bulk-stock.js public/admin-v32-bulk-stock.js
 cp order-catalog-v22/admin-v33-bulk-stock-fix.js public/admin-v33-bulk-stock-fix.js
+cp order-catalog-v22/admin-v34-delete-all.js public/admin-v34-delete-all.js
 python3 - <<'PY'
 p='public/admin-v24.html'
 s=open(p,encoding='utf-8').read()
-s=s.replace('src="admin-v24.js"','src="admin-v24.js?v=216"')
-s=s.replace('</body>','<script src="admin-v29.js?v=216"></script><script src="admin-v30.js?v=216"></script><script src="admin-v31-bulk-images.js?v=216"></script><script src="admin-v32-bulk-stock.js?v=216"></script><script src="admin-v33-bulk-stock-fix.js?v=216"></script></body>')
+s=s.replace('src="admin-v24.js"','src="admin-v24.js?v=217"')
+s=s.replace('</body>','<script src="admin-v29.js?v=217"></script><script src="admin-v30.js?v=217"></script><script src="admin-v31-bulk-images.js?v=217"></script><script src="admin-v32-bulk-stock.js?v=217"></script><script src="admin-v33-bulk-stock-fix.js?v=217"></script><script src="admin-v34-delete-all.js?v=217"></script></body>')
 open(p,'w',encoding='utf-8').write(s)
 PY
 
 # Keep current catalog snapshot available as a static fallback/debug file.
 curl -fL -sS https://order-catalog-api-v22.onrender.com/api/products -o public/catalog.json
+# Permanent empty seed file: prevents intentionally-cleared catalogs from being repopulated on an API restart.
+printf '[]\n' > public/empty-catalog.json
 
 # Reuse established base stylesheet, then append buyer-specific styles.
 curl -fL -sS https://order-catalog-v22-fixed.onrender.com/styles.css -o public/styles.css
