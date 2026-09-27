@@ -3,7 +3,7 @@ set -euo pipefail
 rm -rf public
 mkdir -p public/products
 
-# Buyer storefront V2.15
+# Buyer storefront V2.16
 cp order-catalog-v22/buyer-v26.html public/index.html
 { cat order-catalog-v22/buyer-v26.js; printf '\n'; cat order-catalog-v22/buyer-v27-fix.js; printf '\n'; cat order-catalog-v22/buyer-v28-fix.js; printf '\n'; cat order-catalog-v22/buyer-v29-tier.js; printf '\n'; cat order-catalog-v22/buyer-v33-force-summary.js; } > public/app.js
 cp order-catalog-v22/service-worker-reset.js public/service-worker.js
@@ -36,14 +36,14 @@ cat order-catalog-v22/buyer-v26.css >> public/styles.css
 cat order-catalog-v22/buyer-v27.css >> public/styles.css
 cat order-catalog-v22/buyer-v28.css >> public/styles.css
 
-# Show the current storefront version and force browsers to fetch V2.15 assets.
+# Show the current storefront version and force browsers to fetch V2.16 assets.
 python3 - <<'PY'
 p='public/index.html'
 s=open(p,encoding='utf-8').read()
-s=s.replace('<title>สั่งสินค้า V2.6</title>','<title>สั่งสินค้า V2.15</title>')
-s=s.replace('href="styles.css"','href="styles.css?v=215"')
-s=s.replace('src="app.js"','src="app.js?v=215"')
-s=s.replace("navigator.serviceWorker.register('/service-worker.js'","navigator.serviceWorker.register('/service-worker.js?v=215'")
+s=s.replace('<title>สั่งสินค้า V2.6</title>','<title>สั่งสินค้า V2.16</title>')
+s=s.replace('href="styles.css"','href="styles.css?v=216"')
+s=s.replace('src="app.js"','src="app.js?v=216"')
+s=s.replace("navigator.serviceWorker.register('/service-worker.js'","navigator.serviceWorker.register('/service-worker.js?v=216'")
 open(p,'w',encoding='utf-8').write(s)
 PY
 
