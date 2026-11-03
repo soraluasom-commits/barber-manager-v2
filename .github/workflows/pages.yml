@@ -1,19 +1,15 @@
-name: Deploy Barber Manager V1.10.8.1 Web to GitHub Pages
-
+name: Deploy Barber Manager to GitHub Pages
 on:
   push:
     branches: ["main"]
   workflow_dispatch:
-
 permissions:
   contents: read
   pages: write
   id-token: write
-
 concurrency:
-  group: "pages"
+  group: pages
   cancel-in-progress: true
-
 jobs:
   deploy:
     environment:
@@ -21,65 +17,18 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Prepare V1.10.8.1 release
-        shell: bash
+      - uses: actions/checkout@v4
+      - name: Prepare approved release
         run: |
-          set -euo pipefail
-
-          # Verify the exact source chunks used for this release.
-          test "$(git hash-object .release_v11081_4k/part00.txt)" = "93eef75280076ab3b96bea121c93551f9704a2ad"
-          test "$(git hash-object .release_v11081_4k/part01.txt)" = "8bf66b7e943e0ed38348bcdd172d6a4f6d3c2d5b"
-          test "$(git hash-object .release_v11081_4k/part02.txt)" = "23f7fa88628ae16c5bbfb613217e08fa14cffbb1"
-          test "$(git hash-object .release_b64_v11081/part01.txt)" = "8dc5becec7e1519807627af470a0978d22bec97c"
-          test "$(git hash-object .release_v11081_2kfix/part10.txt)" = "5008552941aebc1de659a24e085b43e698b6e92d"
-          test "$(git hash-object .release_v11081_2kfix/part11.txt)" = "b0ac67e614e8b1d58accbccd9ebad2e8cf8668f0"
-          test "$(git hash-object .release_v11081_2kfix/part12.txt)" = "68742004ec4876a2f39cc37608961fd17a1a62e3"
-          test "$(git hash-object .release_v11081_2kfix/part13.txt)" = "be7838d4d47a5cdb0c8847f311e06984e8eed4dd"
-          test "$(git hash-object .release_v11081_2kfix/part14.txt)" = "bb2633deeb6b79654bceb9640ccf838f70b186ab"
-          test "$(git hash-object .release_b64_v11081/part03.txt)" = "819f33c2dfe1834a94c54f5b3602d792647e13c9"
-          test "$(git hash-object .release_b64_v11081/part04.txt)" = "af8fd46c52fa6d536d893333cd26ea91a1216eb4"
-
-          # Assemble the exact 49,064-character Base64 release without Python.
-          : > /tmp/index.b64
-          cat .release_v11081_4k/part00.txt >> /tmp/index.b64
-          cat .release_v11081_4k/part01.txt >> /tmp/index.b64
-          head -c 2000 .release_v11081_4k/part02.txt >> /tmp/index.b64
-          cat .release_b64_v11081/part01.txt >> /tmp/index.b64
-          cat .release_v11081_2kfix/part10.txt >> /tmp/index.b64
-          cat .release_v11081_2kfix/part11.txt >> /tmp/index.b64
-          cat .release_v11081_2kfix/part12.txt >> /tmp/index.b64
-          cat .release_v11081_2kfix/part13.txt >> /tmp/index.b64
-          cat .release_v11081_2kfix/part14.txt >> /tmp/index.b64
-          cat .release_b64_v11081/part03.txt >> /tmp/index.b64
-          cat .release_b64_v11081/part04.txt >> /tmp/index.b64
-
-          test "$(wc -c < /tmp/index.b64)" -eq 49064
-          echo "6ee8e8a16bdb193d0e864217555536d0df774233c37fa0ce3fa1d621259d5e81  /tmp/index.b64" | sha256sum -c -
-
           mkdir -p site
-          base64 -d /tmp/index.b64 | gzip -dc > site/index.html
-          test "$(wc -c < site/index.html)" -eq 184183
-          echo "7050a1658957c75b980fdb2674b5fbe7668b2d29cf705216ebcf11d2809297fd  site/index.html" | sha256sum -c -
-          grep -q "Barber Manager V1.10.8.1" site/index.html
-
-          cp manifest.webmanifest icon.svg sw.js site/
-          cp staff-days-off.js firebase-config.js cloud-merge.js cloud-sync.js site/
-          cp theme-fix.css auth-gate.css login-barbershop.webp site/
-          sed -i 's@</head>@<style>html:not([data-shop-unlocked]) body > :not(#authGate){display:none!important}</style><link rel="stylesheet" href="./theme-fix.css"><link rel="stylesheet" href="./auth-gate.css"></head>@' site/index.html
-          sed -i 's@</body>@<script src="./staff-days-off.js"></script><script src="./firebase-config.js"></script><script src="./cloud-merge.js"></script><script src="./cloud-sync.js"></script></body>@' site/index.html
+          cp index.html sw.js manifest.webmanifest icon.svg site/
+          cp staff-photos.js shop-enhancements.js staff-days-off.js firebase-config.js cloud-merge.js cloud-sync.js hair-catalogue.js learning-center.js navigation-groups.js site/
+          cp theme-fix.css auth-gate.css ui-refresh.css login-barbershop.webp hair-standard.png hair-fade.png hair-street.png hair-asian.png hair-classic.png hair-long.png hair-texture.png hair-mod-warrior.png site/
+          grep -q '2026-11-03-approved' site/index.html
           touch site/.nojekyll
-
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload GitHub Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
         with:
-          path: 'site'
-
-      - name: Deploy to GitHub Pages
+          path: site
+      - uses: actions/deploy-pages@v4
         id: deployment
-        uses: actions/deploy-pages@v4

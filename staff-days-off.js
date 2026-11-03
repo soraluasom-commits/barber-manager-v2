@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  function daysOffReport(staff, entries, month, today, selected = '') {
+  function daysOffReport(staff, entries, month, today, selected = '', attendance = []) {
     const names = [...new Set([...staff.map(s => s.name), ...entries.filter(e => e.date?.startsWith(month + '-')).map(e => e.staff)].filter(Boolean))];
     const [year, monthNumber] = month.split('-').map(Number);
     const count = new Date(year, monthNumber, 0).getDate();
@@ -15,7 +15,7 @@
     for (let day = 1; day <= count; day++) {
       const date = `${month}-${String(day).padStart(2, '0')}`;
       if (date > today) break;
-      const absent = names.filter(name => (!selected || name === selected) && !worked.get(date)?.has(name));
+      const absent = names.filter(name => (!selected || name === selected) && !worked.get(date)?.has(name) && !attendance.some(a=>a.staff===name&&a.date===date&&a.status==='work'));
       if (absent.length) rows.push({ date, absent });
     }
     return { names, rows };
@@ -48,12 +48,12 @@
     const monthNumber = filters.daysOffMonth || today.slice(5, 7);
     const month = `${year}-${monthNumber}`;
     let selected = filters.daysOffStaff || '';
-    let report = daysOffReport(state.staff, state.entries, month, today, selected);
+    let report = daysOffReport(state.staff, state.entries, month, today, selected, state.attendance||[]);
     // A removed barber remains available in months containing their work history.
     if (selected && !report.names.includes(selected)) {
       selected = '';
       filters.daysOffStaff = '';
-      report = daysOffReport(state.staff, state.entries, month, today);
+      report = daysOffReport(state.staff, state.entries, month, today, '', state.attendance||[]);
     }
     const months = Array.from({ length: 12 }, (_, i) => {
       const value = String(i + 1).padStart(2, '0');
@@ -61,12 +61,13 @@
       return `<option value="${value}" ${value === monthNumber ? 'selected' : ''}>${label}</option>`;
     }).join('');
     const total = report.rows.reduce((sum, row) => sum + row.absent.length, 0);
+    const confirmed=report.rows.reduce((count,row)=>count+row.absent.filter(name=>(state.attendance||[]).some(a=>a.staff===name&&a.date===row.date&&['off','leave'].includes(a.status))).length,0);
     let body;
     if (!report.names.length) body = '<div class="empty">ยังไม่มีรายชื่อช่างสำหรับเดือนนี้</div>';
     else if (month > today.slice(0, 7)) body = '<div class="empty">ยังไม่ถึงเดือนที่เลือก</div>';
     else if (!report.rows.length) body = '<div class="empty">ไม่พบวันหยุดของช่างที่เลือกในเดือนนี้</div>';
-    else body = `<div class="tablewrap"><table><thead><tr><th scope="col">วันที่</th><th scope="col">ช่างที่หยุด</th></tr></thead><tbody>${report.rows.map(row => `<tr data-off-date="${row.date}"><td>${thDate(row.date)}<br><span class="muted">${weekday(row.date)}</span>${row.date === today ? '<span class="muted today-note">วันนี้ · ข้อมูลระหว่างวัน</span>' : ''}</td><td>${row.absent.length ? row.absent.map(name => `<div class="off-name">${esc(name)}</div>`).join('') : '<span class="muted">ไม่มีช่างหยุด</span>'}</td></tr>`).join('')}</tbody></table></div>`;
-    return `<section class="staff-days-off" aria-labelledby="daysOffHeading"><h2 id="daysOffHeading">วันหยุดช่าง</h2><div class="toolbar"><div class="field"><label for="daysOffStaff">ช่าง</label><select id="daysOffStaff" onchange="filters.daysOffStaff=this.value;render()"><option value="">ช่างทั้งหมด</option>${report.names.map(name => `<option value="${esc(name)}" ${name === selected ? 'selected' : ''}>${esc(name)}</option>`).join('')}</select></div><div class="field"><label for="daysOffMonth">เดือน</label><select id="daysOffMonth" onchange="filters.daysOffMonth=this.value;render()">${months}</select></div><div class="field"><label for="daysOffYear">ปี พ.ศ.</label><select id="daysOffYear" onchange="filters.daysOffYear=this.value;render()">${yearOptions(year)}</select></div></div><div class="off-summary"><b>${monthLabel(month)}</b> · ${selected ? `หยุด ${num(total)} วัน` : `รวม ${num(total)} วัน-คน`}</div>${body}</section>`;
+    else body = `<div class="tablewrap"><table><thead><tr><th scope="col">วันที่</th><th scope="col">ช่างและสถานะ</th></tr></thead><tbody>${report.rows.map(row => `<tr data-off-date="${row.date}"><td>${thDate(row.date)}<br><span class="muted">${weekday(row.date)}</span>${row.date === today ? '<span class="muted today-note">วันนี้ · ข้อมูลระหว่างวัน</span>' : ''}</td><td>${row.absent.length ? row.absent.map(name => {const record=(state.attendance||[]).find(a=>a.staff===name&&a.date===row.date),status=record?.status==='leave'?'leave':'off';return `<div class="off-name">${esc(name)} <small>${status==='leave'?'ลา':'หยุด'}</small>${status==='leave'&&record.reason?`<br><small>${esc(record.reason)}</small>`:''}</div>`}).join('') : '<span class="muted">ไม่มีช่างหยุด</span>'}</td></tr>`).join('')}</tbody></table></div>`;
+    return `<section class="staff-days-off" aria-labelledby="daysOffHeading"><h2 id="daysOffHeading">วันหยุดช่าง</h2><p class="muted">วันที่ไม่มีรายการงานนับเป็นหยุด • สถานะลาและมาทำงานที่บันทึกไว้ยังคงเดิม</p><div class="toolbar"><div class="field"><label for="daysOffStaff">ช่าง</label><select id="daysOffStaff" onchange="filters.daysOffStaff=this.value;render()"><option value="">ช่างทั้งหมด</option>${report.names.map(name => `<option value="${esc(name)}" ${name === selected ? 'selected' : ''}>${esc(name)}</option>`).join('')}</select></div><div class="field"><label for="daysOffMonth">เดือน</label><select id="daysOffMonth" onchange="filters.daysOffMonth=this.value;render()">${months}</select></div><div class="field"><label for="daysOffYear">ปี พ.ศ.</label><select id="daysOffYear" onchange="filters.daysOffYear=this.value;render()">${yearOptions(year)}</select></div></div><div class="off-summary"><b>${monthLabel(month)}</b> · หยุด/ลา ${num(total)} วัน-คน</div>${body}</section>`;
   }
 
   const originalStaffPage = staffPage;

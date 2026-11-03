@@ -1,49 +1,847 @@
 <!doctype html>
 <html lang="th">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#262322">
-<title>Barber Manager V1.10.8 Web</title>
-<link rel="manifest" href="./manifest.webmanifest">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#15111e" />
+<title>Barber Manager V1.10.8.1 Web — Base V1.10.7</title>
 <style>
-html,body{height:100%;margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#f7f5f2;color:#262322}main{min-height:100%;display:grid;place-items:center;padding:24px;box-sizing:border-box}.card{max-width:620px;background:white;border:1px solid #e5dfd9;border-radius:20px;padding:28px;box-shadow:0 14px 40px rgba(38,35,34,.08)}h1{margin:0 0 10px;font-size:24px}.bar{height:8px;background:#ece7e2;border-radius:999px;overflow:hidden;margin-top:18px}.bar>i{display:block;height:100%;width:45%;background:#a8b89f;border-radius:999px;animation:load 1.1s ease-in-out infinite alternate}@keyframes load{to{transform:translateX(120%)}}#msg{margin-top:12px;color:#6d645e;font-size:14px}.error{color:#b42318!important;white-space:pre-wrap}
+:root{--bg:#f6f5fb;--panel:#fff;--text:#1d1b20;--muted:#746f7e;--line:#e8e3f2;--pri:#6d4aff;--pri2:#8f76ff;--good:#168a55;--bad:#c23b3b;--warn:#b36b00;--shadow:0 10px 30px rgba(44,31,81,.08);--radius:18px}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;background:var(--bg);color:var(--text)}button,input,select,textarea{font:inherit}button{cursor:pointer}.app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}.side{position:sticky;top:0;height:100vh;background:#17141e;color:#fff;padding:20px 14px;overflow:auto}.brand{display:flex;gap:10px;align-items:center;padding:8px 10px 20px;font-weight:800;font-size:18px}.brand b{background:linear-gradient(135deg,var(--pri),#b79cff);width:38px;height:38px;border-radius:12px;display:grid;place-items:center}.nav{display:grid;gap:5px}.nav button{border:0;background:transparent;color:#cfc9da;text-align:left;padding:11px 12px;border-radius:12px}.nav button:hover,.nav button.active{background:#2b2537;color:#fff}.main{min-width:0}.top{position:sticky;top:0;z-index:5;background:rgba(246,245,251,.88);backdrop-filter:blur(12px);padding:14px 24px;border-bottom:1px solid rgba(232,227,242,.8);display:flex;align-items:center;justify-content:space-between;gap:12px}.top h1{margin:0;font-size:21px}.wrap{padding:22px 24px 50px;max-width:1500px;margin:auto}.grid{display:grid;gap:16px}.kpis{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}.kpi .label{color:var(--muted);font-size:13px}.kpi .num{font-size:28px;font-weight:800;margin-top:7px}.kpi .sub{font-size:12px;color:var(--muted);margin-top:5px}.two{grid-template-columns:1.3fr .7fr}.three{grid-template-columns:repeat(3,minmax(0,1fr))}.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 14px}.section-title h2,.section-title h3{margin:0}.muted{color:var(--muted)}.btn{border:0;border-radius:11px;padding:10px 14px;background:#ece8f7;color:#31294a;font-weight:650}.btn.primary{background:var(--pri);color:#fff}.btn.danger{background:#fdeaea;color:#9d2525}.btn.ghost{background:transparent;border:1px solid var(--line)}.btn.small{padding:6px 9px;font-size:12px}.actions{display:flex;gap:8px;flex-wrap:wrap}.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}.field{display:grid;gap:6px}.field label{font-size:12px;color:var(--muted)}input,select,textarea{border:1px solid #dcd6e8;background:#fff;border-radius:11px;padding:10px 11px;outline:none;min-width:0}input:focus,select:focus,textarea:focus{border-color:var(--pri);box-shadow:0 0 0 3px rgba(109,74,255,.12)}textarea{min-height:80px;resize:vertical}.formgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.formgrid .span2{grid-column:span 2}.formgrid .span4{grid-column:1/-1}.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:14px}table{border-collapse:collapse;width:100%;min-width:650px;background:#fff}th,td{padding:11px 12px;border-bottom:1px solid #eeeaf5;text-align:left;font-size:13px}th{position:sticky;top:0;background:#faf9fd;color:#625b70;z-index:1}td.num,th.num{text-align:right}.pill{display:inline-flex;padding:4px 8px;border-radius:999px;background:#f0ecff;color:#5a3ce0;font-size:12px}.good{color:var(--good)}.bad{color:var(--bad)}.warn{color:var(--warn)}.progress{height:10px;background:#eeeaf5;border-radius:999px;overflow:hidden}.progress>i{display:block;height:100%;background:linear-gradient(90deg,var(--pri),#a894ff);border-radius:inherit}.barlist{display:flex;gap:5px;align-items:end;height:170px;padding-top:10px}.barcol{flex:1;min-width:18px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px}.bar{width:100%;background:linear-gradient(180deg,var(--pri2),var(--pri));border-radius:7px 7px 3px 3px;min-height:2px}.barcol small{font-size:9px;color:var(--muted);white-space:nowrap}.staff-row{display:grid;grid-template-columns:100px 1fr auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid #f0edf5}.staff-row:last-child{border:0}.empty{text-align:center;color:var(--muted);padding:30px}.notice{background:#f4f0ff;border:1px solid #ddd4ff;color:#493b75;border-radius:13px;padding:12px 14px;margin-bottom:14px}.modal{position:fixed;inset:0;background:rgba(20,15,28,.55);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}.modal.open{display:flex}.modalbox{background:#fff;border-radius:20px;width:min(720px,100%);max-height:90vh;overflow:auto;padding:20px;box-shadow:0 25px 70px rgba(0,0,0,.25)}.modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.modalhead h3{margin:0}.close{border:0;background:#f1eef6;width:36px;height:36px;border-radius:50%}.split{display:flex;justify-content:space-between;gap:10px;align-items:center}.bigmoney{font-size:34px;font-weight:850}.rank{display:grid;grid-template-columns:32px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #f0edf5}.rank .badge{width:28px;height:28px;background:#f0ecff;border-radius:9px;display:grid;place-items:center;color:#5b43c7;font-weight:800}.mobilebar{display:none}.dangerzone{border-color:#f2cccc;background:#fffafa}.footer{color:var(--muted);font-size:12px;text-align:center;margin-top:26px}.toast{position:fixed;right:18px;bottom:18px;background:#1f1b27;color:#fff;padding:11px 14px;border-radius:12px;box-shadow:var(--shadow);z-index:80;opacity:0;transform:translateY(10px);transition:.2s;pointer-events:none}.toast.show{opacity:1;transform:none}.statline{display:grid;grid-template-columns:1fr auto;gap:10px;padding:8px 0;border-bottom:1px solid #f0edf5}.weekgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}.weekday{background:#faf9fd;border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}.weekday b{display:block;font-size:16px;margin-top:4px}.hidden{display:none!important}.formula-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.formula-box{background:#faf9fd;border:1px solid var(--line);border-radius:14px;padding:14px}.formula-box .label{font-size:12px;color:var(--muted)}.formula-box .value{font-size:23px;font-weight:800;margin-top:5px}.formula-op{display:grid;place-items:center;font-size:22px;color:var(--muted)}.chart-wrap{overflow-x:auto}.linechart{width:100%;min-width:720px;height:auto;display:block}.chart-legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px}.legend-item{display:flex;align-items:center;gap:7px;font-size:12px}.legend-dot{width:10px;height:10px;border-radius:50%}.avg-rank{display:grid;grid-template-columns:36px 1fr auto;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid #f0edf5}.avg-rank:last-child{border:0}.avg-rank .badge{width:30px;height:30px;border-radius:9px;background:#f0ecff;color:#5b43c7;display:grid;place-items:center;font-weight:800}.income-expense-ledger .good b,.income-expense-ledger .bad b{white-space:nowrap}.point-value{font-size:11px;font-weight:800;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round;pointer-events:none}.goal-progress-card{margin:14px 0;padding:16px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(135deg,#fff 0%,#fbf9ff 100%)}.goal-progress-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.goal-progress-head .name{font-weight:800;font-size:15px}.goal-progress-metrics{display:grid;gap:12px}.goal-metric{display:grid;gap:6px}.goal-metric-top{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:12px}.goal-metric-top .value{color:var(--muted)}.goal-percent{font-weight:850;font-size:14px;padding:3px 8px;border-radius:999px;min-width:58px;text-align:center}.goal-percent.money{background:#eee9ff;color:#5b3fd5}.goal-percent.heads{background:#e7f8ff;color:#087aa7}.goal-bar{height:13px;border-radius:999px;background:#eeeaf5;overflow:hidden;box-shadow:inset 0 1px 2px rgba(42,32,64,.08)}.goal-bar>i{display:block;height:100%;border-radius:inherit;transition:width .35s ease}.goal-bar.money>i{background:linear-gradient(90deg,#6d4aff,#a778ff,#d26bff)}.goal-bar.heads>i{background:linear-gradient(90deg,#00a6c8,#29c8d8,#72dfb5)}.goal-store{border:1px solid #ded5ff;background:linear-gradient(135deg,#f7f3ff 0%,#ffffff 75%)}@media(max-width:600px){.goal-progress-head{align-items:flex-start;flex-direction:column}.goal-metric-top{align-items:flex-start}.goal-metric-top .value{text-align:right}}
+@media(max-width:1100px){.kpis{grid-template-columns:repeat(3,1fr)}.two{grid-template-columns:1fr}.formgrid{grid-template-columns:repeat(2,1fr)}.three{grid-template-columns:1fr 1fr}.weekgrid{grid-template-columns:repeat(4,1fr)}.formula-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){.app{display:block}.side{position:fixed;z-index:40;left:-270px;width:250px;transition:.2s}.side.open{left:0}.top{padding:12px 14px}.wrap{padding:14px 12px 90px}.mobilebar{display:flex}.kpis{grid-template-columns:1fr 1fr}.kpi .num{font-size:23px}.formgrid{grid-template-columns:1fr}.formgrid .span2,.formgrid .span4{grid-column:auto}.three{grid-template-columns:1fr}.weekgrid{grid-template-columns:repeat(2,1fr)}.formula-grid{grid-template-columns:1fr}.formula-op{display:none}.top h1{font-size:18px}.nav button{padding:10px 12px}.card{padding:14px}.bottomnav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);display:grid!important;grid-template-columns:repeat(5,1fr);z-index:30;padding-bottom:env(safe-area-inset-bottom)}.bottomnav button{border:0;background:#fff;padding:9px 3px;font-size:10px;color:#655e70}.bottomnav b{display:block;font-size:18px;margin-bottom:2px}.bottomnav button.active{color:var(--pri)}}
+@media(max-width:420px){.kpis{grid-template-columns:1fr}.bigmoney{font-size:29px}}
 </style>
-</head>
-<body>
-<main><section class="card"><h1>✂ Barber Manager V1.10.8 Web</h1><div>กำลังเปิดระบบจากฐาน V1.10.7…</div><div class="bar"><i></i></div><div id="msg">กำลังโหลดข้อมูลโปรแกรม</div></section></main>
+<style id="premium-ui">
+body{--bg:#0d0b13;--panel:#17131f;--panel2:#1e1929;--text:#f5f3fb;--muted:#b9b0c8;--line:rgba(255,255,255,.08);--pri:#8d6bff;--pri2:#b899ff;--good:#52d29a;--bad:#ff7d8c;--warn:#f5bf56;--shadow:0 22px 65px rgba(0,0,0,.34);--radius:22px;background:radial-gradient(circle at top left,rgba(141,107,255,.18),transparent 34%),radial-gradient(circle at top right,rgba(0,205,255,.08),transparent 24%),linear-gradient(180deg,#100d16 0%,#0d0b13 100%);color:var(--text);letter-spacing:.01em}body[data-theme="light"]{--bg:#f4f0fb;--panel:rgba(255,255,255,.86);--panel2:#ffffff;--text:#201a2e;--muted:#716782;--line:rgba(94,66,154,.10);--pri:#7857ff;--pri2:#b998ff;--good:#168a55;--bad:#d34f62;--warn:#b07114;--shadow:0 16px 48px rgba(62,31,126,.11);background:radial-gradient(circle at top left,rgba(120,87,255,.14),transparent 32%),radial-gradient(circle at right top,rgba(0,194,255,.08),transparent 18%),linear-gradient(180deg,#f8f6ff 0%,#f1edf9 100%)}body::before,body::after{content:"";position:fixed;inset:auto auto 0 0;pointer-events:none;z-index:0;filter:blur(80px);opacity:.35}body::before{width:320px;height:320px;left:-80px;top:-50px;background:rgba(136,100,255,.22)}body::after{width:360px;height:360px;right:-120px;bottom:-120px;background:rgba(0,207,255,.12)}.app,.main,.top,.wrap,.side,.bottomnav,.modal,.toast{position:relative;z-index:1}.app{grid-template-columns:272px 1fr}.side{background:linear-gradient(180deg,rgba(20,17,30,.96),rgba(15,12,22,.92));border-right:1px solid rgba(255,255,255,.05);box-shadow:inset -1px 0 0 rgba(255,255,255,.02)}body[data-theme="light"] .side{background:linear-gradient(180deg,rgba(24,19,39,.97),rgba(32,24,53,.95))}.brand{padding:12px 12px 22px;gap:12px}.brand-mark{background:linear-gradient(135deg,#7d5cff,#be98ff)!important;box-shadow:0 12px 28px rgba(125,92,255,.38),inset 0 1px 1px rgba(255,255,255,.35);width:44px!important;height:44px!important;border-radius:14px!important}.brand-text{line-height:1.2}.brand-kicker{display:inline-block;margin-top:5px;color:#a89fc1!important;font-size:11px;letter-spacing:.06em;text-transform:uppercase}.nav{gap:8px}.nav button{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:14px;color:#d9d2e7;transition:all .18s ease}.nav button:hover,.nav button.active{background:linear-gradient(135deg,rgba(141,107,255,.22),rgba(141,107,255,.08));color:#fff;transform:translateX(2px);box-shadow:inset 3px 0 0 var(--pri)}.nav-icon{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:rgba(255,255,255,.06);font-size:14px;flex:0 0 auto}.nav button.active .nav-icon,.nav button:hover .nav-icon{background:linear-gradient(135deg,rgba(141,107,255,.55),rgba(199,165,255,.28));color:#fff}.nav-text{font-weight:650;letter-spacing:.01em}.top{background:rgba(17,14,25,.65);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.06);padding:18px 24px;min-height:84px}body[data-theme="light"] .top{background:rgba(249,247,255,.78);border-bottom:1px solid rgba(94,66,154,.08)}.top-left{display:flex;align-items:center;gap:12px}.top-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:4px}.top h1{font-size:24px;letter-spacing:-.02em}.wrap{padding:24px 26px 60px;max-width:1520px}.card,.modalbox{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02)),var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}body[data-theme="light"] .card,body[data-theme="light"] .modalbox{background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(255,255,255,.74)),var(--panel)}.card{padding:20px;transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;animation:fadeUp .35s ease both}.card:hover{transform:translateY(-2px);box-shadow:0 24px 70px rgba(0,0,0,.24);border-color:rgba(141,107,255,.22)}body[data-theme="light"] .card:hover{box-shadow:0 20px 55px rgba(62,31,126,.15)}.hero-card{padding:26px;overflow:hidden;position:relative;background:radial-gradient(circle at 15% 0%,rgba(140,107,255,.26),transparent 35%),radial-gradient(circle at 100% 10%,rgba(0,206,255,.14),transparent 26%),linear-gradient(140deg,rgba(26,20,40,.96),rgba(18,14,28,.94));border-color:rgba(173,151,255,.20)}body[data-theme="light"] .hero-card{background:radial-gradient(circle at 14% 0%,rgba(120,87,255,.17),transparent 34%),radial-gradient(circle at 100% 10%,rgba(0,174,255,.11),transparent 24%),linear-gradient(145deg,#fff 0%,#f6f1ff 52%,#fff 100%)}.hero-header{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:18px}.hero-title{font-size:34px;font-weight:850;letter-spacing:-.03em;line-height:1.08}.hero-meta{margin-top:8px;color:var(--muted);max-width:720px}.hero-pill{padding:8px 12px;font-weight:700;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.06)}body[data-theme="light"] .hero-pill{background:rgba(120,87,255,.08)}.hero-stat-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.hero-stat{padding:16px;border:1px solid rgba(255,255,255,.07);border-radius:18px;background:rgba(255,255,255,.05)}body[data-theme="light"] .hero-stat{background:rgba(255,255,255,.65);border-color:rgba(94,66,154,.08)}.hero-stat span{display:block;font-size:12px;color:var(--muted);margin-bottom:8px}.hero-stat b{display:block;font-size:28px;letter-spacing:-.02em}.hero-stat small{display:block;margin-top:8px;color:var(--muted)}.notice{background:linear-gradient(135deg,rgba(141,107,255,.12),rgba(141,107,255,.07));border:1px solid rgba(141,107,255,.18);color:var(--text);border-radius:16px}.kpis{grid-template-columns:repeat(auto-fit,minmax(195px,1fr))}.kpi{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015)),var(--panel)}.kpi .label{font-size:12px;text-transform:uppercase;letter-spacing:.08em}.kpi .num{font-size:30px;letter-spacing:-.03em}.pill{background:rgba(141,107,255,.12);border:1px solid rgba(141,107,255,.18);color:var(--text);padding:6px 10px;font-weight:700}.btn{border-radius:13px;padding:11px 15px;background:rgba(255,255,255,.06);color:var(--text);border:1px solid transparent;transition:all .18s ease}.btn:hover{transform:translateY(-1px)}.btn.primary{background:linear-gradient(135deg,var(--pri),#ae82ff);box-shadow:0 16px 34px rgba(122,94,255,.25)}.btn.primary.glow{box-shadow:0 16px 34px rgba(122,94,255,.34),0 0 0 1px rgba(255,255,255,.06) inset}.btn.ghost{background:transparent;border:1px solid var(--line)}.themebtn{min-width:116px}.iconbtn{min-width:44px;padding:10px 12px}.tablewrap{border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.02)}table{background:transparent}th{background:rgba(255,255,255,.03);color:var(--muted)}body[data-theme="light"] th{background:rgba(120,87,255,.04)}tbody tr:hover{background:rgba(141,107,255,.06)}input,select,textarea{background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--text);border-radius:13px;padding:11px 12px}body[data-theme="light"] input,body[data-theme="light"] select,body[data-theme="light"] textarea{background:rgba(255,255,255,.85)}input::placeholder,textarea::placeholder{color:var(--muted)}.modalbox{padding:22px}.close{background:rgba(255,255,255,.08);color:var(--text)}.progress,.goal-bar{background:rgba(255,255,255,.08)}body[data-theme="light"] .progress,body[data-theme="light"] .goal-bar{background:#ece7fa}.progress>i{background:linear-gradient(90deg,#8e6cff,#bf8aff)}.goal-progress-card{background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.02));border-color:var(--line);border-radius:18px}.goal-store{background:linear-gradient(135deg,rgba(141,107,255,.14),rgba(255,255,255,.03));border-color:rgba(141,107,255,.24)}.goal-percent.money{background:rgba(141,107,255,.16);color:#d7c6ff}.goal-percent.heads{background:rgba(0,190,220,.16);color:#8fe7f6}body[data-theme="light"] .goal-percent.money{color:#5b3fd5}body[data-theme="light"] .goal-percent.heads{color:#087aa7}.rank .badge,.avg-rank .badge{background:rgba(141,107,255,.16);color:#d9ceff}.formula-box,.weekday{background:rgba(255,255,255,.03);border-color:var(--line)}body[data-theme="light"] .formula-box,body[data-theme="light"] .weekday{background:rgba(255,255,255,.7)}.bottomnav{background:rgba(17,14,25,.88);backdrop-filter:blur(14px);border-top:1px solid rgba(255,255,255,.06)}body[data-theme="light"] .bottomnav{background:rgba(255,255,255,.92);border-top:1px solid rgba(94,66,154,.08)}.bottomnav button{background:transparent;color:var(--muted)}.bottomnav button.active{color:var(--pri)}.toast{background:#17131f;border:1px solid rgba(255,255,255,.07)}body[data-theme="light"] .toast{background:#241d33}@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.nav-icon{font-size:18px;width:36px;height:36px;border-radius:12px;display:grid;place-items:center;background:rgba(255,255,255,.08);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 8px 18px rgba(0,0,0,.12)}
+.nav button[data-page="dashboard"] .nav-icon{background:linear-gradient(135deg,#7b61ff,#5ab7ff)}
+.nav button[data-page="entry"] .nav-icon{background:linear-gradient(135deg,#ff8a47,#ff5d7a)}
+.nav button[data-page="daily"] .nav-icon{background:linear-gradient(135deg,#4dc9ff,#4e8dff)}
+.nav button[data-page="monthly"] .nav-icon{background:linear-gradient(135deg,#16d5c0,#2d8cff)}
+.nav button[data-page="goals"] .nav-icon{background:linear-gradient(135deg,#ffb443,#ff6a39)}
+.nav button[data-page="income"] .nav-icon{background:linear-gradient(135deg,#3fd188,#1fb88a)}
+.nav button[data-page="expenses"] .nav-icon{background:linear-gradient(135deg,#ff6f8e,#ff8b56)}
+.nav button[data-page="funds"] .nav-icon{background:linear-gradient(135deg,#ffd84d,#ffb02e)}
+.nav button[data-page="analytics"] .nav-icon{background:linear-gradient(135deg,#8d6bff,#c56dff)}
+.nav button[data-page="history"] .nav-icon{background:linear-gradient(135deg,#7c8bff,#5877ff)}
+.nav button[data-page="staff"] .nav-icon{background:linear-gradient(135deg,#38d7bf,#51b3f7)}
+.nav button[data-page="backup"] .nav-icon{background:linear-gradient(135deg,#a074ff,#6f8cff)}
+.nav button.active .nav-icon,.nav button:hover .nav-icon{transform:translateY(-1px) scale(1.03);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 12px 24px rgba(0,0,0,.18)}
+.bottomnav .bn-icon{display:grid;place-items:center;width:32px;height:32px;border-radius:11px;margin:0 auto 4px;font-size:17px;background:rgba(255,255,255,.06);box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.bottomnav button[data-page="dashboard"] .bn-icon{background:linear-gradient(135deg,#7b61ff,#5ab7ff)}
+.bottomnav button[data-page="entry"] .bn-icon{background:linear-gradient(135deg,#ff8a47,#ff5d7a)}
+.bottomnav button[data-page="income"] .bn-icon{background:linear-gradient(135deg,#3fd188,#1fb88a)}
+.bottomnav button[data-page="expenses"] .bn-icon{background:linear-gradient(135deg,#ff6f8e,#ff8b56)}
+.bottomnav button[data-page="funds"] .bn-icon{background:linear-gradient(135deg,#ffd84d,#ffb02e)}
+.bottomnav button.active .bn-icon{box-shadow:0 10px 22px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.14)}
+body[data-theme="light"] .nav-icon,body[data-theme="light"] .bottomnav .bn-icon{box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 8px 18px rgba(72,47,132,.14)}
+@media(max-width:1200px){.hero-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:760px){.top{padding:14px 14px 12px;min-height:auto}.top-left{align-items:flex-start}.top-actions{justify-content:flex-end}.wrap{padding:14px 12px 90px}.hero-header,.hero-stat-grid{grid-template-columns:1fr}.hero-header{flex-direction:column}.hero-title{font-size:28px}.hero-stat-grid{display:grid}.kpi .num{font-size:24px}.bottomnav button{font-size:10px}.bottomnav b{font-size:16px}.nav button{padding:11px 12px}}@media(max-width:560px){.top-actions{width:100%;justify-content:space-between}.hero-stat-grid{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}}
+</style>
+
+
+<style id="style-c-icons">
+.nav button .nav-icon,.bottomnav .bn-icon{border-radius:16px;color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.12);border:1px solid rgba(255,255,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.26),0 10px 20px rgba(0,0,0,.14)}
+.nav button[data-page="dashboard"] .nav-icon,.bottomnav button[data-page="dashboard"] .bn-icon{background:linear-gradient(135deg,#8f7dff,#6dd8ff)}
+.nav button[data-page="summary"] .nav-icon{background:linear-gradient(135deg,#2fd3a6,#8f7dff)}
+.nav button[data-page="entry"] .nav-icon,.bottomnav button[data-page="entry"] .bn-icon{background:linear-gradient(135deg,#ffa873,#ff7aac)}
+.nav button[data-page="daily"] .nav-icon{background:linear-gradient(135deg,#78d4ff,#78a8ff)}
+.nav button[data-page="monthly"] .nav-icon{background:linear-gradient(135deg,#7ee6cc,#7ea8ff)}
+.nav button[data-page="goals"] .nav-icon{background:linear-gradient(135deg,#14d7b0,#55c8ff)}
+.nav button[data-page="income"] .nav-icon,.bottomnav button[data-page="income"] .bn-icon{background:linear-gradient(135deg,#74df9c,#47cdb0)}
+.nav button[data-page="expenses"] .nav-icon,.bottomnav button[data-page="expenses"] .bn-icon{background:linear-gradient(135deg,#37c7ff,#2fd3a6)}
+.nav button[data-page="funds"] .nav-icon,.bottomnav button[data-page="funds"] .bn-icon{background:linear-gradient(135deg,#ffe37d,#ffbe74)}
+.nav button[data-page="analytics"] .nav-icon{background:linear-gradient(135deg,#7168ff,#55c8ff)}
+.nav button[data-page="history"] .nav-icon{background:linear-gradient(135deg,#9aa7ff,#7a8bff)}
+.nav button[data-page="staff"] .nav-icon{background:linear-gradient(135deg,#77ead3,#74c4ff)}
+.nav button[data-page="backup"] .nav-icon{background:linear-gradient(135deg,#b497ff,#84a3ff)}
+.nav button.active .nav-icon,.nav button:hover .nav-icon,.bottomnav button.active .bn-icon{transform:translateY(-1px) scale(1.03);filter:brightness(1.04)}
+body[data-theme="light"] .nav button .nav-icon,body[data-theme="light"] .bottomnav .bn-icon{box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 10px 20px rgba(106,83,170,.15)}
+</style>
+
+
+<style id="soft-pop-main-overrides">
+body{--pri:#8f7dff;--pri2:#b497ff;--good:#38cfa3;--bad:#ff6e63;--warn:#ffc14d;--line:rgba(255,255,255,.10);background:radial-gradient(circle at top left,rgba(143,125,255,.22),transparent 34%),radial-gradient(circle at 85% 10%,rgba(109,216,255,.14),transparent 20%),radial-gradient(circle at 50% 100%,rgba(47,211,166,.10),transparent 22%),linear-gradient(180deg,#110e19 0%,#0f0c16 100%)}
+body[data-theme="light"]{--pri:#8673ff;--pri2:#c1a2ff;--good:#28b98a;--bad:#ff7097;--warn:#f1a33c;background:radial-gradient(circle at top left,rgba(143,125,255,.18),transparent 32%),radial-gradient(circle at 85% 8%,rgba(121,216,255,.14),transparent 19%),radial-gradient(circle at 50% 100%,rgba(47,211,166,.08),transparent 24%),linear-gradient(180deg,#fcf9ff 0%,#f5effb 100%)}
+.brand-mark{background:linear-gradient(135deg,#8f7dff,#6dd8ff)!important}
+.brand-kicker{color:#c8bee2!important}
+.card,.modalbox{backdrop-filter:blur(14px)}
+.card{border-color:rgba(255,255,255,.09)}
+body[data-theme="light"] .card{border-color:rgba(138,120,212,.12)}
+.kpi{position:relative;overflow:hidden;background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.025)),var(--panel)}
+.kpi::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,#8f7dff,#6dd8ff,#2fd3a6)}
+body[data-theme="light"] .kpi{background:linear-gradient(160deg,rgba(255,255,255,.98),rgba(255,255,255,.82))}
+.hero-card{background:radial-gradient(circle at 18% 0%,rgba(143,125,255,.26),transparent 34%),radial-gradient(circle at 90% 12%,rgba(109,216,255,.17),transparent 25%),radial-gradient(circle at 50% 100%,rgba(47,211,166,.10),transparent 28%),linear-gradient(145deg,rgba(28,22,43,.98),rgba(18,14,29,.96))}
+body[data-theme="light"] .hero-card{background:radial-gradient(circle at 16% 0%,rgba(143,125,255,.16),transparent 34%),radial-gradient(circle at 94% 12%,rgba(109,216,255,.13),transparent 24%),radial-gradient(circle at 50% 100%,rgba(47,211,166,.10),transparent 28%),linear-gradient(145deg,#ffffff 0%,#f8f3ff 56%,#ffffff 100%)}
+.hero-stat{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.05));border-color:rgba(255,255,255,.10)}
+body[data-theme="light"] .hero-stat{background:linear-gradient(180deg,rgba(255,255,255,.88),rgba(255,255,255,.72))}
+.section-title h2,.section-title h3{position:relative;padding-left:14px}
+.section-title h2::before,.section-title h3::before{content:"";position:absolute;left:0;top:50%;transform:translateY(-50%);width:6px;height:22px;border-radius:999px;background:linear-gradient(180deg,#8f7dff,#6dd8ff)}
+.notice{background:linear-gradient(135deg,rgba(143,125,255,.15),rgba(109,216,255,.10),rgba(47,211,166,.08));border-color:rgba(143,125,255,.18)}
+.pill{background:linear-gradient(135deg,rgba(143,125,255,.16),rgba(109,216,255,.10));border-color:rgba(143,125,255,.22)}
+.btn{border-radius:14px}
+.btn.primary{background:linear-gradient(135deg,#8f7dff,#af8fff 48%,#2fd3a6);box-shadow:0 14px 32px rgba(143,125,255,.28)}
+.btn.primary:hover{box-shadow:0 18px 36px rgba(143,125,255,.34)}
+.btn.ghost,.btn:not(.primary):not(.danger){background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.04));border:1px solid var(--line)}
+body[data-theme="light"] .btn.ghost,body[data-theme="light"] .btn:not(.primary):not(.danger){background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(250,245,255,.88))}
+.progress,.goal-bar{background:rgba(255,255,255,.10)}
+.progress>i{background:linear-gradient(90deg,#8f7dff,#6dd8ff,#2fd3a6)}
+.goal-bar.money>i{background:linear-gradient(90deg,#8f7dff,#b28fff,#2fd3a6)}
+.goal-bar.heads>i{background:linear-gradient(90deg,#6dd8ff,#71e6cf,#9fe7a9)}
+.goal-progress-card{background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.03))}
+.goal-store{background:linear-gradient(135deg,rgba(143,125,255,.18),rgba(109,216,255,.08),rgba(255,255,255,.03))}
+.tablewrap{border-radius:18px}
+tbody tr:hover{background:linear-gradient(90deg,rgba(143,125,255,.08),rgba(109,216,255,.06))}
+.rank .badge,.avg-rank .badge{background:linear-gradient(135deg,rgba(143,125,255,.22),rgba(109,216,255,.14));color:#fff}
+.legend-dot{box-shadow:0 0 0 3px rgba(255,255,255,.05)}
+.point-value{font-size:10.5px}
+.footer{opacity:.86}
+</style>
+
+
+<style id="v17-summary-styles">
+.seven-bars{gap:10px;height:205px;padding-top:38px}.interactive-bar{position:relative;cursor:pointer;outline:none}.interactive-bar .bar{transition:height .2s ease,filter .2s ease,transform .2s ease;background:linear-gradient(180deg,#6dd8ff 0%,#8f7dff 50%,#2fd3a6 100%)}.interactive-bar:hover .bar,.interactive-bar.tip-open .bar,.interactive-bar:focus .bar{filter:brightness(1.1);transform:scaleX(1.05)}.bar-tip{position:absolute;left:50%;bottom:calc(100% - 30px);transform:translate(-50%,6px);min-width:132px;opacity:0;visibility:hidden;pointer-events:none;z-index:5;border:1px solid rgba(255,255,255,.12);border-radius:13px;padding:8px 10px;background:rgba(24,19,36,.96);box-shadow:0 14px 35px rgba(0,0,0,.30);text-align:center;transition:.16s ease}.bar-tip b,.bar-tip span{display:block;white-space:nowrap}.bar-tip b{font-size:13px;color:#fff}.bar-tip span{font-size:11px;color:#cfc5df;margin-top:3px}.interactive-bar:hover .bar-tip,.interactive-bar.tip-open .bar-tip,.interactive-bar:focus .bar-tip{opacity:1;visibility:visible;transform:translate(-50%,0)}body[data-theme="light"] .bar-tip{background:rgba(40,30,58,.96)}
+.summary-toolbar{display:flex;justify-content:space-between;gap:12px;align-items:end;flex-wrap:wrap;margin-bottom:16px}.share-summary{overflow:hidden;padding:0}.summary-cover{padding:26px;background:radial-gradient(circle at 10% 0%,rgba(143,125,255,.28),transparent 35%),radial-gradient(circle at 92% 10%,rgba(109,216,255,.18),transparent 28%),linear-gradient(145deg,rgba(34,27,50,.98),rgba(20,16,31,.96));border-bottom:1px solid var(--line)}body[data-theme="light"] .summary-cover{background:radial-gradient(circle at 10% 0%,rgba(143,125,255,.17),transparent 34%),radial-gradient(circle at 92% 10%,rgba(109,216,255,.15),transparent 28%),linear-gradient(145deg,#fff,#f8f2ff)}.summary-cover h2{font-size:30px;margin:4px 0 7px;letter-spacing:-.03em}.summary-cover .summary-sub{color:var(--muted)}.summary-body{padding:22px}.summary-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.summary-kpi{border:1px solid var(--line);border-radius:17px;padding:15px;background:linear-gradient(150deg,rgba(255,255,255,.07),rgba(255,255,255,.025))}.summary-kpi span{display:block;color:var(--muted);font-size:12px}.summary-kpi b{display:block;font-size:24px;margin-top:5px}.summary-change{display:inline-flex;align-items:center;gap:6px;margin-top:7px;font-weight:850;border-radius:999px;padding:5px 9px;font-size:13px}.summary-change.up{background:rgba(56,207,163,.13);color:#55dfa9}.summary-change.down{background:rgba(255,110,99,.12);color:#ff8b82}.summary-change.flat{background:rgba(255,255,255,.08);color:var(--muted)}body[data-theme="light"] .summary-change.up{color:#168a55}body[data-theme="light"] .summary-change.down{color:#d94868}.member-staff-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}.member-staff-card{border:1px solid var(--line);border-radius:17px;padding:15px;background:linear-gradient(145deg,rgba(143,125,255,.09),rgba(109,216,255,.05))}.member-staff-card .avatar{width:38px;height:38px;border-radius:13px;display:grid;place-items:center;font-weight:900;background:linear-gradient(135deg,#8f7dff,#6dd8ff);color:#fff;margin-bottom:10px}.member-staff-card h3{margin:0 0 7px}.member-staff-card .pair{display:flex;justify-content:space-between;gap:10px;padding-top:6px;color:var(--muted)}.member-staff-card .pair b{color:var(--text)}.summary-ledgers{display:grid;grid-template-columns:1fr 1fr;gap:14px}.summary-ledger{border:1px solid var(--line);border-radius:17px;padding:16px;min-width:0}.summary-ledger h3{margin:0 0 10px}.summary-ledger .statline:last-child{border:0}.jpg-note{font-size:12px;color:var(--muted);margin-top:8px}.save-jpg{background:linear-gradient(135deg,#2fd3a6,#8f7dff,#6dd8ff)!important}.summary-divider{height:1px;background:var(--line);margin:20px 0}@media(max-width:850px){.summary-kpis{grid-template-columns:1fr 1fr}.summary-ledgers{grid-template-columns:1fr}}@media(max-width:560px){.summary-kpis{grid-template-columns:1fr}.summary-cover h2{font-size:25px}.summary-body{padding:15px}.summary-cover{padding:20px}.seven-bars{gap:5px}.bar-tip{min-width:112px}}
+</style>
+
+
+<style id="v18-refinements">
+.recent-entry-right{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap;text-align:right}.recent-entry-right b{white-space:nowrap}.recent-heads{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:999px;background:linear-gradient(135deg,rgba(109,216,255,.13),rgba(143,125,255,.12));border:1px solid rgba(109,216,255,.16);color:var(--text);font-size:12px;font-weight:750}
+.member-staff-card .avatar{font-size:22px;width:46px;height:46px;border-radius:15px;box-shadow:0 10px 22px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.20)}
+.member-staff-card .avatar.av0{background:linear-gradient(135deg,#8f7dff,#6dd8ff)}.member-staff-card .avatar.av1{background:linear-gradient(135deg,#37c7ff,#2fd3a6)}.member-staff-card .avatar.av2{background:linear-gradient(135deg,#77ead3,#74c4ff)}.member-staff-card .avatar.av3{background:linear-gradient(135deg,#14d7b0,#55c8ff)}.member-staff-card .avatar.av4{background:linear-gradient(135deg,#7168ff,#55c8ff)}.member-staff-card .avatar.av5{background:linear-gradient(135deg,#74df9c,#47cdb0)}.member-staff-card .avatar.av6{background:linear-gradient(135deg,#9aa7ff,#7a8bff)}.member-staff-card .avatar.av7{background:linear-gradient(135deg,#2fd3a6,#8f7dff)}
+.nav-row{display:grid;grid-template-columns:minmax(0,1fr);gap:6px;align-items:center;border-radius:14px;transition:.18s}.nav-row.reorder-on{grid-template-columns:minmax(0,1fr) auto;padding:3px;border:1px dashed rgba(143,125,255,.22);background:rgba(143,125,255,.04)}.nav-row.dragging{opacity:.45;transform:scale(.98)}.nav-row.drag-over{background:rgba(109,216,255,.10);border-color:rgba(109,216,255,.38)}
+.nav-row>.nav-main{width:100%;margin:0}.menu-order-controls{display:flex;gap:3px;padding-right:3px}.menu-order-controls button{width:28px!important;height:28px!important;min-width:28px!important;padding:0!important;display:grid!important;place-items:center!important;border-radius:9px!important;background:rgba(255,255,255,.07)!important;color:#fff!important;border:1px solid rgba(255,255,255,.08)!important;box-shadow:none!important;transform:none!important}.menu-order-controls button:hover{background:rgba(143,125,255,.20)!important;transform:none!important}.menu-reorder-panel{margin-top:12px;padding:10px;border-top:1px solid rgba(255,255,255,.07);display:grid;gap:7px}.menu-reorder-toggle,.menu-reset-btn{width:100%;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:9px 10px;background:rgba(255,255,255,.05);color:#dcd5e9;font-weight:700;text-align:center}.menu-reorder-toggle.active{background:linear-gradient(135deg,rgba(143,125,255,.24),rgba(109,216,255,.14));color:#fff;border-color:rgba(143,125,255,.30)}.menu-reorder-help{font-size:10px;line-height:1.45;color:#928aa2;text-align:center}.menu-reset-btn{font-size:11px;background:transparent;color:#aea6bc}.menu-reset-btn:hover,.menu-reorder-toggle:hover{border-color:rgba(143,125,255,.30)}
+@media(max-width:760px){.nav-row.reorder-on{grid-template-columns:minmax(0,1fr) auto}.menu-order-controls button{width:32px!important;height:32px!important}.recent-entry-right{gap:6px}.recent-heads{font-size:11px}}
+</style>
+
+
+<style id="annual-summary-styles">
+.nav button[data-page="annual"] .nav-icon{background:linear-gradient(135deg,#7fd8ff,#9a82ff,#2fd3a6)}
+.annual-toolbar{display:flex;justify-content:space-between;gap:14px;align-items:end;flex-wrap:wrap;margin-bottom:18px}
+.annual-cover{position:relative;overflow:hidden;padding:28px;border-radius:24px;background:radial-gradient(circle at 12% 0%,rgba(143,125,255,.24),transparent 34%),radial-gradient(circle at 95% 10%,rgba(109,216,255,.18),transparent 25%),linear-gradient(145deg,rgba(30,24,45,.98),rgba(18,14,29,.96));border:1px solid rgba(255,255,255,.09);box-shadow:var(--shadow)}
+body[data-theme="light"] .annual-cover{background:radial-gradient(circle at 12% 0%,rgba(143,125,255,.17),transparent 34%),radial-gradient(circle at 95% 10%,rgba(109,216,255,.14),transparent 25%),linear-gradient(145deg,#fff,#f8f3ff 58%,#fff)}
+.annual-cover h2{font-size:32px;margin:4px 0 8px}.annual-cover p{margin:0;color:var(--muted)}
+.annual-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:20px}.annual-kpi{padding:18px;border-radius:18px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08)}body[data-theme="light"] .annual-kpi{background:rgba(255,255,255,.76);border-color:rgba(138,120,212,.12)}.annual-kpi span{display:block;font-size:12px;color:var(--muted);margin-bottom:7px}.annual-kpi b{display:block;font-size:26px;letter-spacing:-.02em}
+.annual-staff-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.annual-staff-card{padding:20px;border-radius:20px;border:1px solid var(--line);background:linear-gradient(155deg,rgba(255,255,255,.075),rgba(255,255,255,.025))}.annual-staff-head{display:flex;gap:12px;align-items:center;margin-bottom:16px}.annual-staff-head .avatar{flex:0 0 auto}.annual-staff-head h3{margin:0;font-size:20px}.annual-staff-pair{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}.annual-staff-pair:last-child{border-bottom:0}.annual-staff-pair span{color:var(--muted)}
+.annual-ledger-total{font-size:30px;font-weight:850;margin:8px 0}.tax-note{margin-top:16px;font-size:12px;color:var(--muted);line-height:1.6}.year-badge{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border-radius:999px;background:linear-gradient(135deg,rgba(143,125,255,.18),rgba(109,216,255,.11));border:1px solid rgba(143,125,255,.22);font-weight:750}
+@media(max-width:1000px){.annual-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.annual-staff-grid{grid-template-columns:1fr 1fr}}@media(max-width:700px){.annual-kpis,.annual-staff-grid{grid-template-columns:1fr}.annual-cover{padding:20px}.annual-cover h2{font-size:27px}}
+</style>
+
+<style id="modal-position-fix-v191">
+/* V1.9.1: keep dialogs anchored to viewport, visible immediately */
+.modal{position:fixed!important;inset:0!important;z-index:1000!important;display:none;align-items:flex-start!important;justify-content:center!important;padding:clamp(28px,7vh,72px) 18px 24px!important;overflow-y:auto;background:rgba(14,10,22,.66);backdrop-filter:blur(7px)}
+.modal.open{display:flex!important}
+.modalbox{position:relative!important;margin:0 auto!important;width:min(720px,100%)!important;max-height:calc(100dvh - clamp(56px,14vh,144px))!important;overflow:auto!important;overscroll-behavior:contain;scrollbar-gutter:stable;animation:modalDropIn .2s ease both}
+body.modal-open{overflow:hidden}
+@keyframes modalDropIn{from{opacity:0;transform:translateY(-12px) scale(.985)}to{opacity:1;transform:none}}
+@media(max-width:760px){.modal{padding:14px 10px 18px!important;align-items:flex-start!important}.modalbox{max-height:calc(100dvh - 32px)!important;border-radius:18px!important}.modalhead{position:sticky;top:-1px;z-index:3;background:var(--panel);padding:2px 0 10px}.modalbox form .actions{padding-bottom:4px}}
+</style>
+
+
+<style id="aqua-violet-overrides">
+body{--pri:#7168ff;--pri2:#55c8ff;--good:#2fd3a6;--bad:#ff6e63;--warn:#ffc14d;--line:rgba(255,255,255,.10);background:radial-gradient(circle at top left,rgba(113,104,255,.23),transparent 35%),radial-gradient(circle at 84% 10%,rgba(85,200,255,.16),transparent 22%),radial-gradient(circle at 50% 100%,rgba(47,211,166,.10),transparent 24%),linear-gradient(180deg,#0f1320 0%,#0d1019 100%)}
+body[data-theme="light"]{--pri:#675fff;--pri2:#38bcff;--good:#1eb98d;--bad:#e2554a;--warn:#e8a530;background:radial-gradient(circle at top left,rgba(113,104,255,.16),transparent 32%),radial-gradient(circle at 84% 10%,rgba(85,200,255,.13),transparent 20%),radial-gradient(circle at 50% 100%,rgba(47,211,166,.08),transparent 24%),linear-gradient(180deg,#f7fbff 0%,#eef5fb 100%)}
+.brand-mark{background:linear-gradient(135deg,#7168ff,#55c8ff)!important}.brand-kicker{color:#bfd4ea!important}.notice{background:linear-gradient(135deg,rgba(113,104,255,.16),rgba(85,200,255,.10),rgba(47,211,166,.08));border-color:rgba(85,200,255,.16)}
+.hero-card{background:radial-gradient(circle at 18% 0%,rgba(113,104,255,.28),transparent 34%),radial-gradient(circle at 90% 12%,rgba(85,200,255,.18),transparent 26%),radial-gradient(circle at 50% 100%,rgba(47,211,166,.10),transparent 28%),linear-gradient(145deg,rgba(19,25,41,.98),rgba(13,17,29,.96))}body[data-theme="light"] .hero-card{background:radial-gradient(circle at 16% 0%,rgba(113,104,255,.13),transparent 34%),radial-gradient(circle at 94% 12%,rgba(85,200,255,.11),transparent 24%),radial-gradient(circle at 50% 100%,rgba(47,211,166,.09),transparent 28%),linear-gradient(145deg,#ffffff 0%,#eff6ff 58%,#ffffff 100%)}
+.kpi::before{background:linear-gradient(90deg,#7168ff,#55c8ff,#2fd3a6)}.pill{background:linear-gradient(135deg,rgba(113,104,255,.17),rgba(85,200,255,.11));border-color:rgba(85,200,255,.18)}
+.btn.primary{background:linear-gradient(135deg,#7168ff,#55c8ff 58%,#2fd3a6);box-shadow:0 14px 32px rgba(85,200,255,.22)}.btn.primary.glow{box-shadow:0 16px 34px rgba(85,200,255,.28),0 0 0 1px rgba(255,255,255,.05) inset}
+.progress>i{background:linear-gradient(90deg,#7168ff,#55c8ff,#2fd3a6)}.goal-bar.money>i{background:linear-gradient(90deg,#7168ff,#55c8ff,#2fd3a6)}.goal-bar.heads>i{background:linear-gradient(90deg,#55c8ff,#2fd3a6,#8ddf5b)}
+.section-title h2::before,.section-title h3::before{background:linear-gradient(180deg,#7168ff,#55c8ff)}
+.summary-cover{background:radial-gradient(circle at 10% 0%,rgba(113,104,255,.28),transparent 35%),radial-gradient(circle at 92% 10%,rgba(85,200,255,.18),transparent 28%),radial-gradient(circle at 50% 100%,rgba(47,211,166,.11),transparent 28%),linear-gradient(145deg,rgba(20,29,48,.98),rgba(13,18,31,.96));border-bottom:1px solid var(--line)}body[data-theme="light"] .summary-cover{background:radial-gradient(circle at 10% 0%,rgba(113,104,255,.14),transparent 34%),radial-gradient(circle at 92% 10%,rgba(85,200,255,.12),transparent 28%),radial-gradient(circle at 50% 100%,rgba(47,211,166,.08),transparent 26%),linear-gradient(145deg,#fff,#f0f7ff)}
+.summary-change.up{background:rgba(47,211,166,.13);color:#5de3be}.summary-change.down{background:rgba(255,110,99,.12);color:#ff8b82}.member-staff-card{background:linear-gradient(145deg,rgba(113,104,255,.09),rgba(85,200,255,.06))}.save-jpg{background:linear-gradient(135deg,#7168ff,#55c8ff,#2fd3a6)!important}.interactive-bar .bar{background:linear-gradient(180deg,#2fd3a6 0%,#55c8ff 50%,#7168ff 100%)}
+.nav button.active,.nav button:hover{background:linear-gradient(135deg,rgba(113,104,255,.20),rgba(85,200,255,.10));box-shadow:inset 3px 0 0 var(--pri)}.rank .badge,.avg-rank .badge{background:linear-gradient(135deg,rgba(113,104,255,.22),rgba(85,200,255,.16));color:#fff}
+</style>
+
+
+<style id="apricot-pastel-overrides">
+body{--pri:#f29b61;--pri2:#f6bc6b;--good:#8dcfb7;--bad:#e88362;--warn:#e6b14d;--line:rgba(255,255,255,.10);background:radial-gradient(circle at top left,rgba(242,155,97,.20),transparent 34%),radial-gradient(circle at 85% 10%,rgba(246,188,107,.14),transparent 20%),radial-gradient(circle at 50% 100%,rgba(141,207,183,.11),transparent 24%),linear-gradient(180deg,#18141a 0%,#141116 100%)}
+body[data-theme="light"]{--pri:#ec9358;--pri2:#f2bb71;--good:#73c3a6;--bad:#dd7353;--warn:#daaa3f;background:radial-gradient(circle at top left,rgba(242,155,97,.14),transparent 32%),radial-gradient(circle at 85% 10%,rgba(246,188,107,.12),transparent 18%),radial-gradient(circle at 50% 100%,rgba(141,207,183,.10),transparent 22%),linear-gradient(180deg,#fffaf6 0%,#f8f1ea 100%)}
+.brand-mark{background:linear-gradient(135deg,#f29b61,#f6bc6b)!important}.brand-kicker{color:#ecd3c3!important}
+.notice{background:linear-gradient(135deg,rgba(242,155,97,.16),rgba(246,188,107,.11),rgba(141,207,183,.08));border-color:rgba(242,155,97,.18)}
+.hero-card{background:radial-gradient(circle at 18% 0%,rgba(242,155,97,.22),transparent 34%),radial-gradient(circle at 90% 12%,rgba(246,188,107,.16),transparent 26%),radial-gradient(circle at 50% 100%,rgba(141,207,183,.09),transparent 28%),linear-gradient(145deg,rgba(39,30,31,.98),rgba(25,22,24,.96))}
+body[data-theme="light"] .hero-card{background:radial-gradient(circle at 16% 0%,rgba(242,155,97,.12),transparent 34%),radial-gradient(circle at 94% 12%,rgba(246,188,107,.11),transparent 24%),radial-gradient(circle at 50% 100%,rgba(141,207,183,.09),transparent 26%),linear-gradient(145deg,#fffefc 0%,#fff5ea 58%,#fffdfb 100%)}
+.kpi::before{background:linear-gradient(90deg,#f29b61,#f6bc6b,#8dcfb7)}
+.pill{background:linear-gradient(135deg,rgba(242,155,97,.15),rgba(246,188,107,.10));border-color:rgba(242,155,97,.18)}
+.btn.primary{background:linear-gradient(135deg,#f29b61,#f6bc6b 58%,#8dcfb7);box-shadow:0 14px 32px rgba(242,155,97,.23)}
+.btn.primary.glow{box-shadow:0 16px 34px rgba(242,155,97,.28),0 0 0 1px rgba(255,255,255,.05) inset}
+.progress>i{background:linear-gradient(90deg,#f29b61,#f6bc6b,#8dcfb7)}
+.goal-bar.money>i{background:linear-gradient(90deg,#f29b61,#f6bc6b,#f2d6a4)}
+.goal-bar.heads>i{background:linear-gradient(90deg,#8dcfb7,#b8ddb2,#f6cf93)}
+.section-title h2::before,.section-title h3::before{background:linear-gradient(180deg,#f29b61,#f6bc6b)}
+.summary-cover{background:radial-gradient(circle at 10% 0%,rgba(242,155,97,.24),transparent 35%),radial-gradient(circle at 92% 10%,rgba(246,188,107,.18),transparent 28%),radial-gradient(circle at 50% 100%,rgba(141,207,183,.10),transparent 28%),linear-gradient(145deg,rgba(44,34,35,.98),rgba(29,24,24,.96));border-bottom:1px solid var(--line)}
+body[data-theme="light"] .summary-cover{background:radial-gradient(circle at 10% 0%,rgba(242,155,97,.14),transparent 34%),radial-gradient(circle at 92% 10%,rgba(246,188,107,.12),transparent 28%),radial-gradient(circle at 50% 100%,rgba(141,207,183,.08),transparent 26%),linear-gradient(145deg,#fffefc,#fff4e7)}
+.summary-change.up{background:rgba(141,207,183,.14);color:#a9ead3}.summary-change.down{background:rgba(232,131,98,.13);color:#ffb29a}body[data-theme="light"] .summary-change.up{color:#2c9271}body[data-theme="light"] .summary-change.down{color:#c05f45}
+.member-staff-card{background:linear-gradient(145deg,rgba(242,155,97,.08),rgba(246,188,107,.05))}.save-jpg{background:linear-gradient(135deg,#f29b61,#f6bc6b,#8dcfb7)!important}.interactive-bar .bar{background:linear-gradient(180deg,#8dcfb7 0%,#f6bc6b 50%,#f29b61 100%)}
+.nav button.active,.nav button:hover{background:linear-gradient(135deg,rgba(242,155,97,.18),rgba(246,188,107,.10));box-shadow:inset 3px 0 0 var(--pri)}.rank .badge,.avg-rank .badge{background:linear-gradient(135deg,rgba(242,155,97,.20),rgba(246,188,107,.14));color:#fff}
+.nav button[data-page="dashboard"] .nav-icon,.bottomnav button[data-page="dashboard"] .bn-icon{background:linear-gradient(135deg,#f29b61,#f6bc6b)}
+.nav button[data-page="entry"] .nav-icon,.bottomnav button[data-page="entry"] .bn-icon{background:linear-gradient(135deg,#f1a97a,#d68a5c)}
+.nav button[data-page="daily"] .nav-icon{background:linear-gradient(135deg,#f6bc6b,#c8a36a)}
+.nav button[data-page="monthly"] .nav-icon{background:linear-gradient(135deg,#8dcfb7,#f6bc6b)}
+.nav button[data-page="goals"] .nav-icon{background:linear-gradient(135deg,#f29b61,#f1b76a)}
+.nav button[data-page="income"] .nav-icon,.bottomnav button[data-page="income"] .bn-icon{background:linear-gradient(135deg,#f6bc6b,#8dcfb7)}
+.nav button[data-page="expenses"] .nav-icon,.bottomnav button[data-page="expenses"] .bn-icon{background:linear-gradient(135deg,#e88362,#f1a97a)}
+.nav button[data-page="funds"] .nav-icon,.bottomnav button[data-page="funds"] .bn-icon{background:linear-gradient(135deg,#f6cf93,#f29b61)}
+.nav button[data-page="analytics"] .nav-icon{background:linear-gradient(135deg,#d68a5c,#f6bc6b)}
+.nav button[data-page="history"] .nav-icon{background:linear-gradient(135deg,#c8a36a,#f2d6a4)}
+.nav button[data-page="staff"] .nav-icon{background:linear-gradient(135deg,#8dcfb7,#f6cf93)}
+.nav button[data-page="backup"] .nav-icon{background:linear-gradient(135deg,#f2b48c,#8dcfb7)}
+.nav button[data-page="summary"] .nav-icon{background:linear-gradient(135deg,#f29b61,#8dcfb7)}
+.nav button[data-page="annual"] .nav-icon{background:linear-gradient(135deg,#f6bc6b,#f29b61,#8dcfb7)}
+.member-staff-card .avatar,.member-staff-card .avatar.av0{background:linear-gradient(135deg,#f29b61,#f6bc6b)}.member-staff-card .avatar.av1{background:linear-gradient(135deg,#f1a97a,#f6cf93)}.member-staff-card .avatar.av2{background:linear-gradient(135deg,#8dcfb7,#f6cf93)}.member-staff-card .avatar.av3{background:linear-gradient(135deg,#d68a5c,#f1b76a)}.member-staff-card .avatar.av4{background:linear-gradient(135deg,#c8a36a,#8dcfb7)}.member-staff-card .avatar.av5{background:linear-gradient(135deg,#f6bc6b,#8dcfb7)}.member-staff-card .avatar.av6{background:linear-gradient(135deg,#e7b28b,#f2d6a4)}.member-staff-card .avatar.av7{background:linear-gradient(135deg,#f29b61,#8dcfb7)}
+</style>
+
+
+<style id="terracotta-teal-harmony-overrides">
+body{--pri:#C86B47;--pri2:#2F7F7C;--good:#2F7F7C;--bad:#B95346;--warn:#E2B56D;--line:rgba(255,255,255,.10);background:radial-gradient(circle at top left,rgba(200,107,71,.18),transparent 33%),radial-gradient(circle at 86% 8%,rgba(47,127,124,.16),transparent 20%),radial-gradient(circle at 50% 100%,rgba(226,181,109,.10),transparent 24%),linear-gradient(180deg,#171416 0%,#121113 100%)}
+body[data-theme="light"]{--pri:#BE6746;--pri2:#3D7E7A;--good:#2F7F7C;--bad:#B95346;--warn:#D8AD62;background:radial-gradient(circle at top left,rgba(200,107,71,.13),transparent 30%),radial-gradient(circle at 86% 8%,rgba(47,127,124,.11),transparent 18%),radial-gradient(circle at 50% 100%,rgba(226,181,109,.09),transparent 22%),linear-gradient(180deg,#fffdfa 0%,#f6f1ea 100%)}
+.brand-mark{background:linear-gradient(135deg,#C86B47,#2F7F7C)!important}.brand-kicker{color:#e3d1c3!important}
+.notice{background:linear-gradient(135deg,rgba(200,107,71,.16),rgba(47,127,124,.10),rgba(226,181,109,.08));border-color:rgba(200,107,71,.18)}
+.hero-card{background:radial-gradient(circle at 18% 0%,rgba(200,107,71,.21),transparent 34%),radial-gradient(circle at 90% 12%,rgba(47,127,124,.16),transparent 26%),radial-gradient(circle at 50% 100%,rgba(226,181,109,.09),transparent 28%),linear-gradient(145deg,rgba(37,28,27,.98),rgba(23,22,24,.96))}
+body[data-theme="light"] .hero-card{background:radial-gradient(circle at 16% 0%,rgba(200,107,71,.11),transparent 34%),radial-gradient(circle at 94% 12%,rgba(47,127,124,.10),transparent 24%),radial-gradient(circle at 50% 100%,rgba(226,181,109,.08),transparent 24%),linear-gradient(145deg,#fffdfb 0%,#f8f2ec 58%,#fffdfb 100%)}
+.kpi::before{background:linear-gradient(90deg,#C86B47,#E2B56D,#2F7F7C)}
+.pill{background:linear-gradient(135deg,rgba(200,107,71,.15),rgba(47,127,124,.08));border-color:rgba(200,107,71,.18)}
+.btn.primary{background:linear-gradient(135deg,#C86B47,#D88E5B 50%,#2F7F7C);box-shadow:0 14px 32px rgba(200,107,71,.22)}
+.btn.primary.glow{box-shadow:0 16px 34px rgba(200,107,71,.26),0 0 0 1px rgba(255,255,255,.05) inset}
+.progress>i{background:linear-gradient(90deg,#C86B47,#E2B56D,#2F7F7C)}
+.goal-bar.money>i{background:linear-gradient(90deg,#C86B47,#D88E5B,#E2B56D)}
+.goal-bar.heads>i{background:linear-gradient(90deg,#2F7F7C,#5A8F8C,#B4CFA2)}
+.section-title h2::before,.section-title h3::before{background:linear-gradient(180deg,#C86B47,#2F7F7C)}
+.summary-cover{background:radial-gradient(circle at 10% 0%,rgba(200,107,71,.23),transparent 35%),radial-gradient(circle at 92% 10%,rgba(47,127,124,.18),transparent 28%),radial-gradient(circle at 50% 100%,rgba(226,181,109,.09),transparent 26%),linear-gradient(145deg,rgba(42,32,30,.98),rgba(28,24,24,.96));border-bottom:1px solid var(--line)}
+body[data-theme="light"] .summary-cover{background:radial-gradient(circle at 10% 0%,rgba(200,107,71,.12),transparent 34%),radial-gradient(circle at 92% 10%,rgba(47,127,124,.11),transparent 28%),radial-gradient(circle at 50% 100%,rgba(226,181,109,.08),transparent 24%),linear-gradient(145deg,#fffdfb,#f8f1e8)}
+.summary-change.up{background:rgba(47,127,124,.14);color:#8ed1cd}.summary-change.down{background:rgba(185,83,70,.13);color:#f2b3a8}body[data-theme="light"] .summary-change.up{color:#2F7F7C}body[data-theme="light"] .summary-change.down{color:#B95346}
+.member-staff-card{background:linear-gradient(145deg,rgba(200,107,71,.08),rgba(47,127,124,.05))}
+.save-jpg{background:linear-gradient(135deg,#C86B47,#D88E5B,#2F7F7C)!important}
+.interactive-bar .bar{background:linear-gradient(180deg,#2F7F7C 0%,#E2B56D 50%,#C86B47 100%)}
+.nav button.active,.nav button:hover{background:linear-gradient(135deg,rgba(200,107,71,.18),rgba(47,127,124,.09));box-shadow:inset 3px 0 0 var(--pri)}
+.rank .badge,.avg-rank .badge{background:linear-gradient(135deg,rgba(200,107,71,.20),rgba(47,127,124,.14));color:#fff}
+.nav button[data-page="dashboard"] .nav-icon,.bottomnav button[data-page="dashboard"] .bn-icon{background:linear-gradient(135deg,#C86B47,#D88E5B)}
+.nav button[data-page="entry"] .nav-icon,.bottomnav button[data-page="entry"] .bn-icon{background:linear-gradient(135deg,#2F7F7C,#5A8F8C)}
+.nav button[data-page="daily"] .nav-icon{background:linear-gradient(135deg,#E2B56D,#C86B47)}
+.nav button[data-page="monthly"] .nav-icon{background:linear-gradient(135deg,#D88E5B,#2F7F7C)}
+.nav button[data-page="goals"] .nav-icon{background:linear-gradient(135deg,#C86B47,#E2B56D)}
+.nav button[data-page="income"] .nav-icon,.bottomnav button[data-page="income"] .bn-icon{background:linear-gradient(135deg,#E2B56D,#2F7F7C)}
+.nav button[data-page="expenses"] .nav-icon,.bottomnav button[data-page="expenses"] .bn-icon{background:linear-gradient(135deg,#B95346,#D88E5B)}
+.nav button[data-page="funds"] .nav-icon,.bottomnav button[data-page="funds"] .bn-icon{background:linear-gradient(135deg,#D8C4A8,#C86B47)}
+.nav button[data-page="analytics"] .nav-icon{background:linear-gradient(135deg,#8C6A4E,#2F7F7C)}
+.nav button[data-page="history"] .nav-icon{background:linear-gradient(135deg,#D8C4A8,#8C6A4E)}
+.nav button[data-page="staff"] .nav-icon{background:linear-gradient(135deg,#2F7F7C,#B4CFA2)}
+.nav button[data-page="backup"] .nav-icon{background:linear-gradient(135deg,#D88E5B,#D8C4A8)}
+.nav button[data-page="summary"] .nav-icon{background:linear-gradient(135deg,#C86B47,#2F7F7C)}
+.nav button[data-page="annual"] .nav-icon{background:linear-gradient(135deg,#E2B56D,#C86B47,#2F7F7C)}
+.member-staff-card .avatar,.member-staff-card .avatar.av0{background:linear-gradient(135deg,#C86B47,#D88E5B)}.member-staff-card .avatar.av1{background:linear-gradient(135deg,#2F7F7C,#5A8F8C)}.member-staff-card .avatar.av2{background:linear-gradient(135deg,#E2B56D,#2F7F7C)}.member-staff-card .avatar.av3{background:linear-gradient(135deg,#D88E5B,#E2B56D)}.member-staff-card .avatar.av4{background:linear-gradient(135deg,#8C6A4E,#5A8F8C)}.member-staff-card .avatar.av5{background:linear-gradient(135deg,#C86B47,#2F7F7C)}.member-staff-card .avatar.av6{background:linear-gradient(135deg,#D8C4A8,#8C6A4E)}.member-staff-card .avatar.av7{background:linear-gradient(135deg,#D88E5B,#5A8F8C)}
+</style>
+
+
+<style id="pastel-harmony-overrides">
+body{--pri:#B7A1E6;--pri2:#F2C6A0;--good:#9FD3C7;--bad:#E59AA0;--warn:#DCCB8D;--line:rgba(255,255,255,.10);background:radial-gradient(circle at top left,rgba(183,161,230,.18),transparent 34%),radial-gradient(circle at 84% 10%,rgba(242,198,160,.15),transparent 22%),radial-gradient(circle at 50% 100%,rgba(159,211,199,.11),transparent 24%),linear-gradient(180deg,#17151a 0%,#131218 100%)}
+body[data-theme="light"]{--pri:#AE97E0;--pri2:#EFBF95;--good:#8ECBBC;--bad:#DA8B93;--warn:#D2C27D;background:radial-gradient(circle at top left,rgba(183,161,230,.14),transparent 32%),radial-gradient(circle at 84% 10%,rgba(242,198,160,.13),transparent 20%),radial-gradient(circle at 50% 100%,rgba(159,211,199,.10),transparent 22%),linear-gradient(180deg,#fffdfd 0%,#f7f2f6 100%)}
+.brand-mark{background:linear-gradient(135deg,#B7A1E6,#9FD3C7)!important}.brand-kicker{color:#dfd6ef!important}
+.notice{background:linear-gradient(135deg,rgba(183,161,230,.15),rgba(242,198,160,.11),rgba(159,211,199,.09));border-color:rgba(183,161,230,.18)}
+.hero-card{background:radial-gradient(circle at 18% 0%,rgba(183,161,230,.20),transparent 34%),radial-gradient(circle at 90% 12%,rgba(242,198,160,.15),transparent 26%),radial-gradient(circle at 50% 100%,rgba(159,211,199,.09),transparent 28%),linear-gradient(145deg,rgba(33,29,39,.98),rgba(22,20,28,.96))}
+body[data-theme="light"] .hero-card{background:radial-gradient(circle at 16% 0%,rgba(183,161,230,.12),transparent 34%),radial-gradient(circle at 94% 12%,rgba(242,198,160,.11),transparent 24%),radial-gradient(circle at 50% 100%,rgba(159,211,199,.08),transparent 24%),linear-gradient(145deg,#fffefe 0%,#faf5f6 58%,#fffefe 100%)}
+.kpi::before{background:linear-gradient(90deg,#B7A1E6,#F2C6A0,#9FD3C7)}
+.pill{background:linear-gradient(135deg,rgba(183,161,230,.15),rgba(242,198,160,.10));border-color:rgba(183,161,230,.18)}
+.btn.primary{background:linear-gradient(135deg,#B7A1E6,#F2C6A0 52%,#9FD3C7);box-shadow:0 14px 32px rgba(183,161,230,.20)}
+.btn.primary.glow{box-shadow:0 16px 34px rgba(183,161,230,.26),0 0 0 1px rgba(255,255,255,.05) inset}
+.progress>i{background:linear-gradient(90deg,#B7A1E6,#F2C6A0,#9FD3C7)}
+.goal-bar.money>i{background:linear-gradient(90deg,#B7A1E6,#F2C6A0,#F7DDBE)}
+.goal-bar.heads>i{background:linear-gradient(90deg,#9FD3C7,#C9E6DD,#DDE8B8)}
+.section-title h2::before,.section-title h3::before{background:linear-gradient(180deg,#B7A1E6,#9FD3C7)}
+.summary-cover{background:radial-gradient(circle at 10% 0%,rgba(183,161,230,.22),transparent 35%),radial-gradient(circle at 92% 10%,rgba(242,198,160,.17),transparent 28%),radial-gradient(circle at 50% 100%,rgba(159,211,199,.09),transparent 26%),linear-gradient(145deg,rgba(39,34,43,.98),rgba(25,23,29,.96));border-bottom:1px solid var(--line)}
+body[data-theme="light"] .summary-cover{background:radial-gradient(circle at 10% 0%,rgba(183,161,230,.13),transparent 34%),radial-gradient(circle at 92% 10%,rgba(242,198,160,.11),transparent 28%),radial-gradient(circle at 50% 100%,rgba(159,211,199,.08),transparent 24%),linear-gradient(145deg,#fffefe,#faf3f3)}
+.summary-change.up{background:rgba(159,211,199,.14);color:#b8efe2}.summary-change.down{background:rgba(229,154,160,.13);color:#f3b6bc}body[data-theme="light"] .summary-change.up{color:#5cae9c}body[data-theme="light"] .summary-change.down{color:#c86f79}
+.member-staff-card{background:linear-gradient(145deg,rgba(183,161,230,.08),rgba(242,198,160,.05))}
+.save-jpg{background:linear-gradient(135deg,#B7A1E6,#F2C6A0,#9FD3C7)!important}
+.interactive-bar .bar{background:linear-gradient(180deg,#9FD3C7 0%,#F2C6A0 50%,#B7A1E6 100%)}
+.nav button.active,.nav button:hover{background:linear-gradient(135deg,rgba(183,161,230,.18),rgba(242,198,160,.10));box-shadow:inset 3px 0 0 var(--pri)}
+.rank .badge,.avg-rank .badge{background:linear-gradient(135deg,rgba(183,161,230,.19),rgba(159,211,199,.14));color:#fff}
+.nav button[data-page="dashboard"] .nav-icon,.bottomnav button[data-page="dashboard"] .bn-icon{background:linear-gradient(135deg,#B7A1E6,#AFC6E9)}
+.nav button[data-page="entry"] .nav-icon,.bottomnav button[data-page="entry"] .bn-icon{background:linear-gradient(135deg,#F2C6A0,#F7DDBE)}
+.nav button[data-page="daily"] .nav-icon{background:linear-gradient(135deg,#9FD3C7,#C9E6DD)}
+.nav button[data-page="monthly"] .nav-icon{background:linear-gradient(135deg,#E7B8D2,#F2D3E3)}
+.nav button[data-page="goals"] .nav-icon{background:linear-gradient(135deg,#B7A1E6,#F2C6A0)}
+.nav button[data-page="income"] .nav-icon,.bottomnav button[data-page="income"] .bn-icon{background:linear-gradient(135deg,#F2C6A0,#9FD3C7)}
+.nav button[data-page="expenses"] .nav-icon,.bottomnav button[data-page="expenses"] .bn-icon{background:linear-gradient(135deg,#E59AA0,#F2C6A0)}
+.nav button[data-page="funds"] .nav-icon,.bottomnav button[data-page="funds"] .bn-icon{background:linear-gradient(135deg,#E9D8C9,#B7A1E6)}
+.nav button[data-page="analytics"] .nav-icon{background:linear-gradient(135deg,#AFC6E9,#9FD3C7)}
+.nav button[data-page="history"] .nav-icon{background:linear-gradient(135deg,#DDE8B8,#C9D7A5)}
+.nav button[data-page="staff"] .nav-icon{background:linear-gradient(135deg,#9FD3C7,#B7A1E6)}
+.nav button[data-page="backup"] .nav-icon{background:linear-gradient(135deg,#F5D7C8,#AFC6E9)}
+.nav button[data-page="summary"] .nav-icon{background:linear-gradient(135deg,#B7A1E6,#F2C6A0)}
+.nav button[data-page="annual"] .nav-icon{background:linear-gradient(135deg,#F2C6A0,#9FD3C7,#B7A1E6)}
+.member-staff-card .avatar,.member-staff-card .avatar.av0{background:linear-gradient(135deg,#B7A1E6,#AFC6E9)}.member-staff-card .avatar.av1{background:linear-gradient(135deg,#F2C6A0,#F7DDBE)}.member-staff-card .avatar.av2{background:linear-gradient(135deg,#9FD3C7,#C9E6DD)}.member-staff-card .avatar.av3{background:linear-gradient(135deg,#E7B8D2,#F2D3E3)}.member-staff-card .avatar.av4{background:linear-gradient(135deg,#C9D7A5,#E1E9C8)}.member-staff-card .avatar.av5{background:linear-gradient(135deg,#AFC6E9,#D4E1F4)}.member-staff-card .avatar.av6{background:linear-gradient(135deg,#F5D7C8,#E9D8C9)}.member-staff-card .avatar.av7{background:linear-gradient(135deg,#B7A1E6,#9FD3C7)}
+</style>
+
+
+<style id="pastel-duo-overrides">
+body{--pri:#B7A1E6;--pri2:#9FD3C7;--good:#9FD3C7;--bad:#D7A1AF;--warn:#C7B7E8;--line:rgba(255,255,255,.10);background:radial-gradient(circle at top left,rgba(183,161,230,.18),transparent 34%),radial-gradient(circle at 84% 10%,rgba(159,211,199,.15),transparent 22%),radial-gradient(circle at 50% 100%,rgba(175,198,233,.10),transparent 24%),linear-gradient(180deg,#17151a 0%,#131218 100%)}
+body[data-theme="light"]{--pri:#AE97E0;--pri2:#8ECBBC;--good:#8ECBBC;--bad:#C68E9C;--warn:#BFAEE3;background:radial-gradient(circle at top left,rgba(183,161,230,.14),transparent 32%),radial-gradient(circle at 84% 10%,rgba(159,211,199,.12),transparent 20%),radial-gradient(circle at 50% 100%,rgba(175,198,233,.09),transparent 22%),linear-gradient(180deg,#fcfbfe 0%,#f2f5f8 100%)}
+.brand-mark{background:linear-gradient(135deg,#B7A1E6,#9FD3C7)!important}.brand-kicker{color:#dfd6ef!important}
+.notice{background:linear-gradient(135deg,rgba(183,161,230,.15),rgba(159,211,199,.11),rgba(175,198,233,.09));border-color:rgba(183,161,230,.18)}
+.hero-card{background:radial-gradient(circle at 18% 0%,rgba(183,161,230,.20),transparent 34%),radial-gradient(circle at 90% 12%,rgba(159,211,199,.15),transparent 26%),radial-gradient(circle at 50% 100%,rgba(175,198,233,.09),transparent 28%),linear-gradient(145deg,rgba(33,29,39,.98),rgba(22,20,28,.96))}
+body[data-theme="light"] .hero-card{background:radial-gradient(circle at 16% 0%,rgba(183,161,230,.12),transparent 34%),radial-gradient(circle at 94% 12%,rgba(159,211,199,.10),transparent 24%),radial-gradient(circle at 50% 100%,rgba(175,198,233,.08),transparent 24%),linear-gradient(145deg,#fffefe 0%,#f6f8fb 58%,#fffefe 100%)}
+.kpi::before{background:linear-gradient(90deg,#B7A1E6,#D6C8F0,#9FD3C7)}
+.pill{background:linear-gradient(135deg,rgba(183,161,230,.15),rgba(159,211,199,.10));border-color:rgba(183,161,230,.18)}
+.btn.primary{background:linear-gradient(135deg,#B7A1E6,#D6C8F0 48%,#9FD3C7);box-shadow:0 14px 32px rgba(183,161,230,.20)}
+.btn.primary.glow{box-shadow:0 16px 34px rgba(183,161,230,.26),0 0 0 1px rgba(255,255,255,.05) inset}
+.progress>i{background:linear-gradient(90deg,#B7A1E6,#D6C8F0,#9FD3C7)}
+.goal-bar.money>i{background:linear-gradient(90deg,#B7A1E6,#D6C8F0,#C7D7F4)}
+.goal-bar.heads>i{background:linear-gradient(90deg,#9FD3C7,#C9E6DD,#DDEEF0)}
+.section-title h2::before,.section-title h3::before{background:linear-gradient(180deg,#B7A1E6,#9FD3C7)}
+.summary-cover{background:radial-gradient(circle at 10% 0%,rgba(183,161,230,.22),transparent 35%),radial-gradient(circle at 92% 10%,rgba(159,211,199,.16),transparent 28%),radial-gradient(circle at 50% 100%,rgba(175,198,233,.09),transparent 26%),linear-gradient(145deg,rgba(39,34,43,.98),rgba(25,23,29,.96));border-bottom:1px solid var(--line)}
+body[data-theme="light"] .summary-cover{background:radial-gradient(circle at 10% 0%,rgba(183,161,230,.13),transparent 34%),radial-gradient(circle at 92% 10%,rgba(159,211,199,.10),transparent 28%),radial-gradient(circle at 50% 100%,rgba(175,198,233,.08),transparent 24%),linear-gradient(145deg,#fffefe,#f4f7f8)}
+.summary-change.up{background:rgba(159,211,199,.14);color:#b8efe2}.summary-change.down{background:rgba(215,161,175,.13);color:#efc3ce}body[data-theme="light"] .summary-change.up{color:#5cae9c}body[data-theme="light"] .summary-change.down{color:#b66f84}
+.member-staff-card{background:linear-gradient(145deg,rgba(183,161,230,.08),rgba(159,211,199,.05))}
+.save-jpg{background:linear-gradient(135deg,#B7A1E6,#D6C8F0,#9FD3C7)!important}
+.interactive-bar .bar{background:linear-gradient(180deg,#9FD3C7 0%,#D6C8F0 50%,#B7A1E6 100%)}
+.nav button.active,.nav button:hover{background:linear-gradient(135deg,rgba(183,161,230,.18),rgba(159,211,199,.10));box-shadow:inset 3px 0 0 var(--pri)}
+.rank .badge,.avg-rank .badge{background:linear-gradient(135deg,rgba(183,161,230,.19),rgba(159,211,199,.14));color:#fff}
+.nav button[data-page="dashboard"] .nav-icon,.bottomnav button[data-page="dashboard"] .bn-icon{background:linear-gradient(135deg,#B7A1E6,#AFC6E9)}
+.nav button[data-page="entry"] .nav-icon,.bottomnav button[data-page="entry"] .bn-icon{background:linear-gradient(135deg,#9FD3C7,#C9E6DD)}
+.nav button[data-page="daily"] .nav-icon{background:linear-gradient(135deg,#D6C8F0,#B7A1E6)}
+.nav button[data-page="monthly"] .nav-icon{background:linear-gradient(135deg,#AFC6E9,#9FD3C7)}
+.nav button[data-page="goals"] .nav-icon{background:linear-gradient(135deg,#B7A1E6,#9FD3C7)}
+.nav button[data-page="income"] .nav-icon,.bottomnav button[data-page="income"] .bn-icon{background:linear-gradient(135deg,#C7D7F4,#9FD3C7)}
+.nav button[data-page="expenses"] .nav-icon,.bottomnav button[data-page="expenses"] .bn-icon{background:linear-gradient(135deg,#D7A1AF,#C7D7F4)}
+.nav button[data-page="funds"] .nav-icon,.bottomnav button[data-page="funds"] .bn-icon{background:linear-gradient(135deg,#DDEEF0,#B7A1E6)}
+.nav button[data-page="analytics"] .nav-icon{background:linear-gradient(135deg,#AFC6E9,#9FD3C7)}
+.nav button[data-page="history"] .nav-icon{background:linear-gradient(135deg,#DDEEF0,#C7D7F4)}
+.nav button[data-page="staff"] .nav-icon{background:linear-gradient(135deg,#9FD3C7,#B7A1E6)}
+.nav button[data-page="backup"] .nav-icon{background:linear-gradient(135deg,#C7D7F4,#AFC6E9)}
+.nav button[data-page="summary"] .nav-icon{background:linear-gradient(135deg,#B7A1E6,#9FD3C7)}
+.nav button[data-page="annual"] .nav-icon{background:linear-gradient(135deg,#9FD3C7,#AFC6E9,#B7A1E6)}
+.member-staff-card .avatar,.member-staff-card .avatar.av0{background:linear-gradient(135deg,#B7A1E6,#AFC6E9)}.member-staff-card .avatar.av1{background:linear-gradient(135deg,#9FD3C7,#C9E6DD)}.member-staff-card .avatar.av2{background:linear-gradient(135deg,#D6C8F0,#9FD3C7)}.member-staff-card .avatar.av3{background:linear-gradient(135deg,#AFC6E9,#C7D7F4)}.member-staff-card .avatar.av4{background:linear-gradient(135deg,#C9E6DD,#DDEEF0)}.member-staff-card .avatar.av5{background:linear-gradient(135deg,#B7A1E6,#9FD3C7)}.member-staff-card .avatar.av6{background:linear-gradient(135deg,#C7D7F4,#D6C8F0)}.member-staff-card .avatar.av7{background:linear-gradient(135deg,#B7A1E6,#9FD3C7)}
+</style>
+
+
+<style id="burnt-orange-sage-overrides">
+body{--pri:#D69A6C;--pri2:#A8B89F;--good:#8DAE91;--bad:#C77E68;--warn:#D7B681;--line:rgba(255,255,255,.10);background:radial-gradient(circle at top left,rgba(214,154,108,.18),transparent 34%),radial-gradient(circle at 84% 10%,rgba(168,184,159,.15),transparent 22%),radial-gradient(circle at 50% 100%,rgba(199,182,167,.10),transparent 24%),linear-gradient(180deg,#191716 0%,#141312 100%)}
+body[data-theme="light"]{--pri:#CF9365;--pri2:#9FAF96;--good:#84A488;--bad:#BC735E;--warn:#CDAE77;background:radial-gradient(circle at top left,rgba(214,154,108,.13),transparent 32%),radial-gradient(circle at 84% 10%,rgba(168,184,159,.12),transparent 20%),radial-gradient(circle at 50% 100%,rgba(199,182,167,.08),transparent 22%),linear-gradient(180deg,#fffdfa 0%,#f6f2ed 100%)}
+.brand-mark{background:linear-gradient(135deg,#D69A6C,#A8B89F)!important}.brand-kicker{color:#e2d4c7!important}
+.notice{background:linear-gradient(135deg,rgba(214,154,108,.15),rgba(168,184,159,.11),rgba(199,182,167,.08));border-color:rgba(214,154,108,.18)}
+.hero-card{background:radial-gradient(circle at 18% 0%,rgba(214,154,108,.20),transparent 34%),radial-gradient(circle at 90% 12%,rgba(168,184,159,.15),transparent 26%),radial-gradient(circle at 50% 100%,rgba(199,182,167,.08),transparent 28%),linear-gradient(145deg,rgba(35,30,28,.98),rgba(23,21,20,.96))}
+body[data-theme="light"] .hero-card{background:radial-gradient(circle at 16% 0%,rgba(214,154,108,.11),transparent 34%),radial-gradient(circle at 94% 12%,rgba(168,184,159,.10),transparent 24%),radial-gradient(circle at 50% 100%,rgba(199,182,167,.07),transparent 24%),linear-gradient(145deg,#fffdfa 0%,#f7f3ef 58%,#fffdfa 100%)}
+.kpi::before{background:linear-gradient(90deg,#D69A6C,#E3B186,#A8B89F)}
+.pill{background:linear-gradient(135deg,rgba(214,154,108,.15),rgba(168,184,159,.10));border-color:rgba(214,154,108,.18)}
+.btn.primary{background:linear-gradient(135deg,#D69A6C,#E3B186 52%,#A8B89F);box-shadow:0 14px 32px rgba(214,154,108,.20)}
+.btn.primary.glow{box-shadow:0 16px 34px rgba(214,154,108,.26),0 0 0 1px rgba(255,255,255,.05) inset}
+.progress>i{background:linear-gradient(90deg,#D69A6C,#E3B186,#A8B89F)}
+.goal-bar.money>i{background:linear-gradient(90deg,#D69A6C,#E3B186,#D7C6B5)}
+.goal-bar.heads>i{background:linear-gradient(90deg,#A8B89F,#C6D2BF,#DDE4D9)}
+.section-title h2::before,.section-title h3::before{background:linear-gradient(180deg,#D69A6C,#A8B89F)}
+.summary-cover{background:radial-gradient(circle at 10% 0%,rgba(214,154,108,.22),transparent 35%),radial-gradient(circle at 92% 10%,rgba(168,184,159,.16),transparent 28%),radial-gradient(circle at 50% 100%,rgba(199,182,167,.08),transparent 26%),linear-gradient(145deg,rgba(38,32,29,.98),rgba(25,23,21,.96));border-bottom:1px solid var(--line)}
+body[data-theme="light"] .summary-cover{background:radial-gradient(circle at 10% 0%,rgba(214,154,108,.12),transparent 34%),radial-gradient(circle at 92% 10%,rgba(168,184,159,.10),transparent 28%),radial-gradient(circle at 50% 100%,rgba(199,182,167,.07),transparent 24%),linear-gradient(145deg,#fffdfa,#f4f1ed)}
+.summary-change.up{background:rgba(141,174,145,.14);color:#bee0c1}.summary-change.down{background:rgba(199,126,104,.13);color:#f0b5a5}body[data-theme="light"] .summary-change.up{color:#5b8d61}body[data-theme="light"] .summary-change.down{color:#b5624f}
+.member-staff-card{background:linear-gradient(145deg,rgba(214,154,108,.08),rgba(168,184,159,.05))}
+.save-jpg{background:linear-gradient(135deg,#D69A6C,#E3B186,#A8B89F)!important}
+.interactive-bar .bar{background:linear-gradient(180deg,#A8B89F 0%,#E3B186 50%,#D69A6C 100%)}
+.nav button.active,.nav button:hover{background:linear-gradient(135deg,rgba(214,154,108,.18),rgba(168,184,159,.10));box-shadow:inset 3px 0 0 var(--pri)}
+.rank .badge,.avg-rank .badge{background:linear-gradient(135deg,rgba(214,154,108,.19),rgba(168,184,159,.14));color:#fff}
+.nav button[data-page="dashboard"] .nav-icon,.bottomnav button[data-page="dashboard"] .bn-icon{background:linear-gradient(135deg,#D69A6C,#E3B186)}
+.nav button[data-page="entry"] .nav-icon,.bottomnav button[data-page="entry"] .bn-icon{background:linear-gradient(135deg,#A8B89F,#C6D2BF)}
+.nav button[data-page="daily"] .nav-icon{background:linear-gradient(135deg,#E3B186,#D69A6C)}
+.nav button[data-page="monthly"] .nav-icon{background:linear-gradient(135deg,#D7C6B5,#A8B89F)}
+.nav button[data-page="goals"] .nav-icon{background:linear-gradient(135deg,#D69A6C,#A8B89F)}
+.nav button[data-page="income"] .nav-icon,.bottomnav button[data-page="income"] .bn-icon{background:linear-gradient(135deg,#E3B186,#A8B89F)}
+.nav button[data-page="expenses"] .nav-icon,.bottomnav button[data-page="expenses"] .bn-icon{background:linear-gradient(135deg,#C77E68,#D69A6C)}
+.nav button[data-page="funds"] .nav-icon,.bottomnav button[data-page="funds"] .bn-icon{background:linear-gradient(135deg,#DDE4D9,#A8B89F)}
+.nav button[data-page="analytics"] .nav-icon{background:linear-gradient(135deg,#B9A28B,#A8B89F)}
+.nav button[data-page="history"] .nav-icon{background:linear-gradient(135deg,#D7C6B5,#E7DDD3)}
+.nav button[data-page="staff"] .nav-icon{background:linear-gradient(135deg,#A8B89F,#DDE4D9)}
+.nav button[data-page="backup"] .nav-icon{background:linear-gradient(135deg,#D69A6C,#D7C6B5)}
+.nav button[data-page="summary"] .nav-icon{background:linear-gradient(135deg,#D69A6C,#A8B89F)}
+.nav button[data-page="annual"] .nav-icon{background:linear-gradient(135deg,#E3B186,#A8B89F,#D69A6C)}
+.member-staff-card .avatar,.member-staff-card .avatar.av0{background:linear-gradient(135deg,#D69A6C,#E3B186)}.member-staff-card .avatar.av1{background:linear-gradient(135deg,#A8B89F,#C6D2BF)}.member-staff-card .avatar.av2{background:linear-gradient(135deg,#E3B186,#A8B89F)}.member-staff-card .avatar.av3{background:linear-gradient(135deg,#B9A28B,#D7C6B5)}.member-staff-card .avatar.av4{background:linear-gradient(135deg,#C6D2BF,#DDE4D9)}.member-staff-card .avatar.av5{background:linear-gradient(135deg,#D69A6C,#A8B89F)}.member-staff-card .avatar.av6{background:linear-gradient(135deg,#D7C6B5,#E7DDD3)}.member-staff-card .avatar.av7{background:linear-gradient(135deg,#D69A6C,#A8B89F)}
+</style>
+
+
+<style id="burnt-orange-sage-flat-overrides">
+body{--pri:#D69A6C;--pri2:#A8B89F;--good:#7F9A83;--bad:#C77E68;--warn:#D5B07A;--line:rgba(255,255,255,.10);background:#151312;color:var(--text)}
+body[data-theme="light"]{--pri:#D69A6C;--pri2:#A8B89F;--good:#7F9A83;--bad:#C77E68;--warn:#D5B07A;background:#F6F1EC;color:#2a2522}
+body::before,body::after{display:none}
+.top{background:rgba(25,22,20,.96)}
+body[data-theme="light"] .top{background:rgba(255,250,245,.96)}
+.side{background:#1D1A18}
+body[data-theme="light"] .side{background:#2D2926}
+.brand-mark{background:#D69A6C!important;box-shadow:0 8px 18px rgba(214,154,108,.28)!important}
+.brand-kicker{color:#D8C7B8!important}
+.card,.modalbox{background:#211d1b;border:1px solid rgba(255,255,255,.08);box-shadow:0 18px 44px rgba(0,0,0,.20)}
+body[data-theme="light"] .card,body[data-theme="light"] .modalbox{background:#FFFCF8;border:1px solid rgba(153,132,116,.16);box-shadow:0 14px 34px rgba(93,70,49,.10)}
+.hero-card{background:#2A2421;border-color:rgba(214,154,108,.24)}
+body[data-theme="light"] .hero-card{background:#FFF7F0;border-color:rgba(214,154,108,.18)}
+.hero-stat{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.08)}
+body[data-theme="light"] .hero-stat{background:#FFFFFF;border-color:rgba(153,132,116,.10)}
+.notice{background:rgba(214,154,108,.12);border-color:rgba(214,154,108,.20)}
+body[data-theme="light"] .notice{background:rgba(214,154,108,.10)}
+.kpi::before{background:#D69A6C}
+.kpi{background:#211d1b}
+body[data-theme="light"] .kpi{background:#FFFFFF}
+.pill{background:rgba(214,154,108,.14);border-color:rgba(214,154,108,.22)}
+body[data-theme="light"] .pill{background:rgba(214,154,108,.10)}
+.btn.primary,.save-jpg{background:#D69A6C!important;color:#fff!important;box-shadow:0 12px 26px rgba(214,154,108,.24)!important}
+.btn.primary:hover{filter:brightness(1.04)}
+.btn.ghost,.btn:not(.primary):not(.danger){background:rgba(255,255,255,.06);border:1px solid var(--line)}
+body[data-theme="light"] .btn.ghost,body[data-theme="light"] .btn:not(.primary):not(.danger){background:#FFFFFF}
+.progress,.goal-bar{background:rgba(255,255,255,.10)}
+body[data-theme="light"] .progress,body[data-theme="light"] .goal-bar{background:#EFE8E1}
+.progress>i,.goal-bar.money>i{background:#D69A6C}
+.goal-bar.heads>i{background:#A8B89F}
+.section-title h2::before,.section-title h3::before{background:#A8B89F}
+.summary-cover{background:#2A2421;border-bottom:1px solid var(--line)}
+body[data-theme="light"] .summary-cover{background:#FFF7F0}
+.summary-change.up{background:rgba(168,184,159,.16);color:#CFE3D1}
+.summary-change.down{background:rgba(199,126,104,.16);color:#F3C0B2}
+body[data-theme="light"] .summary-change.up{color:#5F7D64}body[data-theme="light"] .summary-change.down{color:#B5624F}
+.member-staff-card{background:rgba(255,255,255,.03)}
+body[data-theme="light"] .member-staff-card{background:#FFFFFF}
+.interactive-bar .bar{background:#A8B89F}
+.nav button.active,.nav button:hover{background:rgba(214,154,108,.16);box-shadow:inset 3px 0 0 #D69A6C}
+.nav-icon,.bottomnav .bn-icon{box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 8px 18px rgba(0,0,0,.10)}
+.nav button[data-page="dashboard"] .nav-icon,.bottomnav button[data-page="dashboard"] .bn-icon{background:#D69A6C}
+.nav button[data-page="entry"] .nav-icon,.bottomnav button[data-page="entry"] .bn-icon{background:#A8B89F}
+.nav button[data-page="daily"] .nav-icon{background:#D69A6C}
+.nav button[data-page="monthly"] .nav-icon{background:#A8B89F}
+.nav button[data-page="goals"] .nav-icon{background:#D69A6C}
+.nav button[data-page="income"] .nav-icon,.bottomnav button[data-page="income"] .bn-icon{background:#A8B89F}
+.nav button[data-page="expenses"] .nav-icon,.bottomnav button[data-page="expenses"] .bn-icon{background:#C77E68}
+.nav button[data-page="funds"] .nav-icon,.bottomnav button[data-page="funds"] .bn-icon{background:#A8B89F}
+.nav button[data-page="analytics"] .nav-icon{background:#B9A28B}
+.nav button[data-page="history"] .nav-icon{background:#D7C6B5}
+.nav button[data-page="staff"] .nav-icon{background:#A8B89F}
+.nav button[data-page="backup"] .nav-icon{background:#D69A6C}
+.nav button[data-page="summary"] .nav-icon{background:#D69A6C}
+.nav button[data-page="annual"] .nav-icon{background:#A8B89F}
+.rank .badge,.avg-rank .badge{background:rgba(214,154,108,.18);color:#fff}
+body[data-theme="light"] .rank .badge,body[data-theme="light"] .avg-rank .badge{color:#8A5537}
+.member-staff-card .avatar,.member-staff-card .avatar.av0{background:#D69A6C}.member-staff-card .avatar.av1{background:#A8B89F}.member-staff-card .avatar.av2{background:#D69A6C}.member-staff-card .avatar.av3{background:#B9A28B}.member-staff-card .avatar.av4{background:#C6D2BF}.member-staff-card .avatar.av5{background:#A8B89F}.member-staff-card .avatar.av6{background:#D7C6B5}.member-staff-card .avatar.av7{background:#D69A6C}
+.tablewrap{background:rgba(255,255,255,.02)}
+body[data-theme="light"] .tablewrap{background:#FFFFFF}
+th{background:rgba(255,255,255,.04)}
+body[data-theme="light"] th{background:#F7F0E8}
+tbody tr:hover{background:rgba(214,154,108,.08)}
+input,select,textarea{background:rgba(255,255,255,.04);border:1px solid var(--line)}
+body[data-theme="light"] input,body[data-theme="light"] select,body[data-theme="light"] textarea{background:#FFFFFF;border:1px solid rgba(153,132,116,.18)}
+</style>
+
+
+<style id="balanced-burnt-orange-sage-5050">
+/* 50/50 color balance: orange and sage appear in equal roles */
+body{--pri:#D69A6C;--pri2:#A8B89F;--good:#8DAE91;--bad:#C77E68;--warn:#D5B07A}
+body[data-theme="light"]{--pri:#D69A6C;--pri2:#A8B89F}
+.brand-mark{background:#A8B89F!important;box-shadow:0 8px 18px rgba(168,184,159,.26)!important}
+.hero-card{border-color:rgba(168,184,159,.25)!important}
+.hero-card::after{content:"";position:absolute;inset:0 auto 0 0;width:10px;background:#D69A6C;border-radius:22px 0 0 22px;opacity:.95}
+.hero-card::before{content:"";position:absolute;inset:0 0 0 auto;width:10px;background:#A8B89F;border-radius:0 22px 22px 0;opacity:.95}
+.hero-stat:nth-child(odd){border-top:4px solid #D69A6C;background:rgba(214,154,108,.06)}
+.hero-stat:nth-child(even){border-top:4px solid #A8B89F;background:rgba(168,184,159,.08)}
+body[data-theme="light"] .hero-stat:nth-child(odd){background:rgba(214,154,108,.07)}
+body[data-theme="light"] .hero-stat:nth-child(even){background:rgba(168,184,159,.09)}
+.notice{border-left:4px solid #A8B89F;background:linear-gradient(90deg,rgba(214,154,108,.10) 0 50%, rgba(168,184,159,.10) 50% 100%)}
+body[data-theme="light"] .notice{background:linear-gradient(90deg,rgba(214,154,108,.08) 0 50%, rgba(168,184,159,.08) 50% 100%)}
+.kpis .kpi:nth-child(odd)::before{background:#D69A6C!important}
+.kpis .kpi:nth-child(even)::before{background:#A8B89F!important}
+.kpis .kpi:nth-child(odd){box-shadow:inset 0 0 0 1px rgba(214,154,108,.08)}
+.kpis .kpi:nth-child(even){box-shadow:inset 0 0 0 1px rgba(168,184,159,.10)}
+.pill,.hero-pill{background:rgba(168,184,159,.16)!important;border-color:rgba(168,184,159,.24)!important}
+body[data-theme="light"] .pill,body[data-theme="light"] .hero-pill{background:rgba(168,184,159,.10)!important}
+.btn.primary,.save-jpg{background:#D69A6C!important}
+.btn.primary.alt-sage{background:#A8B89F!important}
+.progress>i,.goal-bar.money>i{background:#D69A6C!important}
+.goal-bar.heads>i{background:#A8B89F!important}
+.section-title h2::before,.section-title h3::before{background:#A8B89F!important}
+.summary-cover{border-bottom:4px solid #D69A6C}
+.summary-cover .summary-kpis .sum-card:nth-child(odd), .summary-grid .sum-card:nth-child(odd){border-top:3px solid #D69A6C}
+.summary-cover .summary-kpis .sum-card:nth-child(even), .summary-grid .sum-card:nth-child(even){border-top:3px solid #A8B89F}
+.interactive-bar .bar:nth-child(odd), .interactive-bar .bar.orange{background:#D69A6C!important}
+.interactive-bar .bar:nth-child(even), .interactive-bar .bar.sage{background:#A8B89F!important}
+.nav button.active,.nav button:hover{background:rgba(168,184,159,.16)!important;box-shadow:inset 3px 0 0 #D69A6C!important}
+.nav button[data-page="dashboard"] .nav-icon,.bottomnav button[data-page="dashboard"] .bn-icon{background:#D69A6C!important}
+.nav button[data-page="entry"] .nav-icon,.bottomnav button[data-page="entry"] .bn-icon{background:#A8B89F!important}
+.nav button[data-page="daily"] .nav-icon{background:#D69A6C!important}
+.nav button[data-page="monthly"] .nav-icon{background:#A8B89F!important}
+.nav button[data-page="goals"] .nav-icon{background:#D69A6C!important}
+.nav button[data-page="income"] .nav-icon,.bottomnav button[data-page="income"] .bn-icon{background:#A8B89F!important}
+.nav button[data-page="expenses"] .nav-icon,.bottomnav button[data-page="expenses"] .bn-icon{background:#D69A6C!important}
+.nav button[data-page="funds"] .nav-icon,.bottomnav button[data-page="funds"] .bn-icon{background:#A8B89F!important}
+.nav button[data-page="analytics"] .nav-icon{background:#D69A6C!important}
+.nav button[data-page="history"] .nav-icon{background:#A8B89F!important}
+.nav button[data-page="staff"] .nav-icon{background:#D69A6C!important}
+.nav button[data-page="backup"] .nav-icon{background:#A8B89F!important}
+.nav button[data-page="summary"] .nav-icon{background:#D69A6C!important}
+.nav button[data-page="annual"] .nav-icon{background:#A8B89F!important}
+.rank .badge,.avg-rank .badge{background:#A8B89F!important;color:#fff!important}
+.member-staff-card .avatar.av0,.member-staff-card .avatar.av2,.member-staff-card .avatar.av4,.member-staff-card .avatar.av6{background:#D69A6C!important}
+.member-staff-card .avatar.av1,.member-staff-card .avatar.av3,.member-staff-card .avatar.av5,.member-staff-card .avatar.av7{background:#A8B89F!important}
+.tablewrap{box-shadow:inset 0 1px 0 rgba(214,154,108,.06), inset 0 -1px 0 rgba(168,184,159,.07)}
+.point-value{color:#A8B89F!important}
+.good{color:#8DAE91!important}.bad{color:#C77E68!important}
+</style>
+
+
+<style id="white-base-burnt-orange-sage-overrides">
+/* White canvas base: background and surfaces white, orange/sage reserved for menus, buttons, accents */
+body,body[data-theme="light"]{--bg:#FFFFFF;--panel:#FFFFFF;--panel2:#FFFFFF;--text:#2a2522;--muted:#6e6258;--line:rgba(153,132,116,.16);--pri:#D69A6C;--pri2:#A8B89F;--good:#7F9A83;--bad:#C77E68;--warn:#D5B07A;--shadow:0 14px 34px rgba(93,70,49,.08);background:#FFFFFF!important;color:#2a2522}
+body::before,body::after{display:none!important}
+.app{background:#FFFFFF}
+.side{background:#FFFFFF!important;border-right:1px solid rgba(153,132,116,.14)!important;box-shadow:none!important}
+.top{background:#FFFFFF!important;border-bottom:1px solid rgba(153,132,116,.12)!important;backdrop-filter:none!important}
+.wrap,.main{background:#FFFFFF!important}
+.brand-mark{background:#A8B89F!important;box-shadow:0 8px 18px rgba(168,184,159,.22)!important}
+.brand-kicker{color:#8b8077!important}
+.nav button{color:#5d544d!important}
+.nav button:hover,.nav button.active{background:rgba(168,184,159,.12)!important;color:#2a2522!important;box-shadow:inset 3px 0 0 #D69A6C!important;transform:none!important}
+.nav-icon,.bottomnav .bn-icon{box-shadow:none!important;color:#fff!important}
+.nav button[data-page="dashboard"] .nav-icon,.bottomnav button[data-page="dashboard"] .bn-icon{background:#D69A6C!important}
+.nav button[data-page="entry"] .nav-icon,.bottomnav button[data-page="entry"] .bn-icon{background:#A8B89F!important}
+.nav button[data-page="daily"] .nav-icon{background:#D69A6C!important}
+.nav button[data-page="monthly"] .nav-icon{background:#A8B89F!important}
+.nav button[data-page="goals"] .nav-icon{background:#D69A6C!important}
+.nav button[data-page="income"] .nav-icon,.bottomnav button[data-page="income"] .bn-icon{background:#A8B89F!important}
+.nav button[data-page="expenses"] .nav-icon,.bottomnav button[data-page="expenses"] .bn-icon{background:#D69A6C!important}
+.nav button[data-page="funds"] .nav-icon,.bottomnav button[data-page="funds"] .bn-icon{background:#A8B89F!important}
+.nav button[data-page="analytics"] .nav-icon{background:#D69A6C!important}
+.nav button[data-page="history"] .nav-icon{background:#A8B89F!important}
+.nav button[data-page="staff"] .nav-icon{background:#D69A6C!important}
+.nav button[data-page="backup"] .nav-icon{background:#A8B89F!important}
+.nav button[data-page="summary"] .nav-icon{background:#D69A6C!important}
+.nav button[data-page="annual"] .nav-icon{background:#A8B89F!important}
+.card,.modalbox,.tablewrap,.member-staff-card,.goal-progress-card,.goal-store,.formula-box,.weekday{background:#FFFFFF!important;border:1px solid rgba(153,132,116,.14)!important;box-shadow:0 10px 24px rgba(93,70,49,.06)!important}
+.hero-card,.summary-cover{background:#FFFFFF!important;border:1px solid rgba(153,132,116,.16)!important;box-shadow:0 14px 30px rgba(93,70,49,.07)!important}
+.hero-card::before,.hero-card::after{display:none!important}
+.notice{background:#F8F5F1!important;border:1px solid rgba(153,132,116,.16)!important}
+.hero-pill,.pill{background:rgba(168,184,159,.12)!important;border-color:rgba(168,184,159,.24)!important;color:#2a2522!important}
+.hero-stat{background:#FFFFFF!important;border:1px solid rgba(153,132,116,.12)!important}
+.hero-stat:nth-child(odd){border-top:4px solid #D69A6C!important}
+.hero-stat:nth-child(even){border-top:4px solid #A8B89F!important}
+.kpi{background:#FFFFFF!important}
+.kpis .kpi:nth-child(odd)::before{background:#D69A6C!important}
+.kpis .kpi:nth-child(even)::before{background:#A8B89F!important}
+.btn{background:#FFFFFF!important;border:1px solid rgba(153,132,116,.18)!important;color:#2a2522!important}
+.btn.primary,.save-jpg{background:#D69A6C!important;border-color:#D69A6C!important;color:#fff!important;box-shadow:0 12px 24px rgba(214,154,108,.20)!important}
+.btn.alt-sage{background:#A8B89F!important;border-color:#A8B89F!important;color:#fff!important}
+.btn.ghost{background:#FFFFFF!important;border:1px solid rgba(168,184,159,.26)!important}
+.themebtn{background:#A8B89F!important;border-color:#A8B89F!important;color:#fff!important}
+.progress,.goal-bar{background:#EFE8E1!important}
+.progress>i,.goal-bar.money>i{background:#D69A6C!important}
+.goal-bar.heads>i{background:#A8B89F!important}
+.section-title h2::before,.section-title h3::before{background:#A8B89F!important}
+.rank .badge,.avg-rank .badge{background:#A8B89F!important;color:#fff!important}
+.summary-change.up{background:rgba(168,184,159,.16)!important;color:#5F7D64!important}
+.summary-change.down{background:rgba(214,154,108,.16)!important;color:#B5624F!important}
+.interactive-bar .bar:nth-child(odd){background:#D69A6C!important}
+.interactive-bar .bar:nth-child(even){background:#A8B89F!important}
+th{background:#F7F2EC!important;color:#6e6258!important}
+tbody tr:hover{background:rgba(168,184,159,.08)!important}
+input,select,textarea{background:#FFFFFF!important;border:1px solid rgba(153,132,116,.18)!important;color:#2a2522!important}
+.bottomnav{background:#FFFFFF!important;border-top:1px solid rgba(153,132,116,.14)!important;backdrop-filter:none!important}
+.bottomnav button{color:#7a6f66!important}
+.bottomnav button.active{color:#2a2522!important}
+.close{background:#F2ECE6!important;color:#2a2522!important}
+.toast{background:#FFFFFF!important;border:1px solid rgba(153,132,116,.16)!important;color:#2a2522!important}
+.member-staff-card .avatar.av0,.member-staff-card .avatar.av2,.member-staff-card .avatar.av4,.member-staff-card .avatar.av6{background:#D69A6C!important}
+.member-staff-card .avatar.av1,.member-staff-card .avatar.av3,.member-staff-card .avatar.av5,.member-staff-card .avatar.av7{background:#A8B89F!important}
+</style>
+
+
+<style id="v1102-fixes">
+/* 1) Left main menu background dark gray/black */
+.side{background:#262322!important;border-right:1px solid rgba(255,255,255,.08)!important;box-shadow:none!important;color:#fff!important}
+.side .brand{color:#fff!important}
+.side .brand-kicker{color:#b9b2ab!important}
+.side .nav button{color:#ddd6cf!important}
+.side .nav button:hover,.side .nav button.active{background:rgba(255,255,255,.08)!important;color:#ffffff!important;box-shadow:inset 3px 0 0 #D69A6C!important}
+
+/* 2) Monthly summary staff emoji icon backgrounds all different for first 3 staff */
+.member-staff-card .avatar.av0{background:#D69A6C!important}
+.member-staff-card .avatar.av1{background:#A8B89F!important}
+.member-staff-card .avatar.av2{background:#8E7A6A!important}
+.member-staff-card .avatar.av3{background:#C6D2BF!important}
+.member-staff-card .avatar.av4{background:#D7C6B5!important}
+.member-staff-card .avatar.av5{background:#B9A28B!important}
+.member-staff-card .avatar.av6{background:#D69A6C!important}
+.member-staff-card .avatar.av7{background:#A8B89F!important}
+
+/* 3) Main menu icon backgrounds alternate orange / sage with no adjacent duplicates */
+.nav button[data-page="dashboard"] .nav-icon,.bottomnav button[data-page="dashboard"] .bn-icon{background:#D69A6C!important}
+.nav button[data-page="summary"] .nav-icon,.bottomnav button[data-page="summary"] .bn-icon{background:#A8B89F!important}
+.nav button[data-page="annual"] .nav-icon,.bottomnav button[data-page="annual"] .bn-icon{background:#D69A6C!important}
+.nav button[data-page="entry"] .nav-icon,.bottomnav button[data-page="entry"] .bn-icon{background:#A8B89F!important}
+.nav button[data-page="daily"] .nav-icon,.bottomnav button[data-page="daily"] .bn-icon{background:#D69A6C!important}
+.nav button[data-page="monthly"] .nav-icon,.bottomnav button[data-page="monthly"] .bn-icon{background:#A8B89F!important}
+.nav button[data-page="goals"] .nav-icon,.bottomnav button[data-page="goals"] .bn-icon{background:#D69A6C!important}
+.nav button[data-page="income"] .nav-icon,.bottomnav button[data-page="income"] .bn-icon{background:#A8B89F!important}
+.nav button[data-page="expenses"] .nav-icon,.bottomnav button[data-page="expenses"] .bn-icon{background:#D69A6C!important}
+.nav button[data-page="funds"] .nav-icon,.bottomnav button[data-page="funds"] .bn-icon{background:#A8B89F!important}
+.nav button[data-page="analytics"] .nav-icon,.bottomnav button[data-page="analytics"] .bn-icon{background:#D69A6C!important}
+.nav button[data-page="history"] .nav-icon,.bottomnav button[data-page="history"] .bn-icon{background:#A8B89F!important}
+.nav button[data-page="staff"] .nav-icon,.bottomnav button[data-page="staff"] .bn-icon{background:#D69A6C!important}
+.nav button[data-page="backup"] .nav-icon,.bottomnav button[data-page="backup"] .bn-icon{background:#A8B89F!important}
+
+/* 4) Save work button green */
+.btn.alt-sage{background:#A8B89F!important;border:1px solid #A8B89F!important;color:#fff!important;box-shadow:0 10px 22px rgba(168,184,159,.20)!important}
+.btn.alt-sage:hover{filter:brightness(1.03)}
+</style>
+
+
+<style id="annual-detail-toggle-styles">
+.annual-detail-toggle{display:flex;justify-content:flex-end;margin-top:14px}.annual-detail-wrap{margin-top:14px}.annual-detail-wrap[hidden]{display:none!important}.detail-toggle-btn{min-width:190px}.detail-toggle-btn .toggle-arrow{display:inline-block;margin-right:5px;transition:transform .18s ease}.detail-toggle-btn.is-open .toggle-arrow{transform:rotate(180deg)}
+</style>
+
+
+<style id="v-next-shop-finance-fixed-sidebar">
+/* V-next: semantic finance colors + shop name + fixed desktop sidebar */
+.expense-number{color:#dc2626!important}
+.balance-number{color:#2563eb!important}
+.shop-name-top{flex:1;min-width:150px;text-align:center;padding:0 16px;overflow:hidden}
+.shop-name-top .shop-name-label{display:block;font-size:10px;letter-spacing:.10em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.shop-name-top b{display:block;font-size:20px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.shop-settings{display:grid;gap:12px}
+.shop-name-card{padding:16px;border:1px solid var(--line);border-radius:14px;background:rgba(127,127,127,.035)}
+.shop-name-card .current-shop-name{font-size:24px;font-weight:850;margin:6px 0 12px;overflow-wrap:anywhere}
+.monthly-detail-toggle{display:flex;justify-content:flex-end;margin-top:2px}
+@media (min-width:901px){
+  .app{display:block!important;padding-left:272px!important;min-height:100vh!important}
+  .side{position:fixed!important;left:0!important;top:0!important;bottom:0!important;width:272px!important;height:100vh!important;z-index:40!important;overflow-y:auto!important;overscroll-behavior:contain}
+  .main{min-width:0!important;width:100%!important}
+}
+@media (max-width:900px){
+  .top{flex-wrap:wrap!important}
+  .shop-name-top{order:3;flex-basis:100%;text-align:left;padding:4px 0 0 48px}
+  .shop-name-top b{font-size:17px}
+}
+</style>
+
+
+<style id="v1-10-7-menu-alternation">
+.nav button[data-page="analytics"] .nav-icon,.bottomnav button[data-page="analytics"] .bn-icon{background:#A8B89F!important}
+.nav button[data-page="history"] .nav-icon,.bottomnav button[data-page="history"] .bn-icon{background:#D69A6C!important}
+.nav button[data-page="staff"] .nav-icon,.bottomnav button[data-page="staff"] .bn-icon{background:#A8B89F!important}
+.nav button[data-page="backup"] .nav-icon,.bottomnav button[data-page="backup"] .bn-icon{background:#D69A6C!important}
+</style>
+
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="application-name" content="Barber Manager">
+<meta name="apple-mobile-web-app-title" content="Barber Manager">
+<meta name="barber-release" content="2026-11-03-approved"><style>html:not([data-shop-unlocked]) body > :not(#authGate){display:none!important}</style><link rel="stylesheet" href="./theme-fix.css"><link rel="stylesheet" href="./auth-gate.css"><link rel="stylesheet" href="./ui-refresh.css"></head>
+<body data-theme="light">
+<div class="app">
+<aside class="side" id="side">
+ <div class="brand"><b class="brand-mark">✂</b><span class="brand-text">BARBER MANAGER<br><small class="brand-kicker">V1.10.8.1 WEB • Base V1.10.7 • PWA</small></span></div>
+ <nav class="nav" id="nav"></nav>
+</aside>
+<main class="main">
+ <header class="top"><div class="top-left"><div class="mobilebar"><button class="btn iconbtn" onclick="toggleSide()">☰</button></div><div><div class="eyebrow">White Base Burnt Orange Sage UI v1.10.8 Web</div><h1 id="pageTitle">หน้าหลัก</h1></div></div><div class="shop-name-top"><span class="shop-name-label">ชื่อร้าน</span><b id="shopNameTop">ชื่อร้าน</b></div><div class="top-actions"><span class="pill hero-pill" id="todayPill"></span><button class="btn ghost themebtn" id="themeToggle" onclick="toggleTheme()">☀️ โหมดสว่าง</button><button class="btn alt-sage glow" onclick="openEntryModal()">＋ บันทึกงาน</button></div></header>
+ <div class="wrap" id="content"></div>
+</main>
+</div>
+<div class="bottomnav hidden" id="bottomnav"></div>
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div class="modalbox" id="modalbox"></div></div>
+<div class="toast" id="toast"></div>
 <script>
-(async()=>{
-  const msg=document.getElementById('msg');
-  const parts=[
-    './payload/index.part01','./payload/index.part02','./payload/index.rest01','./payload/index.rest02','./payload/index.rest03'
-  ];
+const SEED={"staff":[],"entries":[],"expenses":[],"funds":[],"monthlySettings":{},"expenseCategories":["ค่าเช่า","ค่าน้ำ-ค่าไฟ","ค่าอุปกรณ์","ค่าของใช้","เครื่องดื่ม","อื่นๆ"],"shopName":""};
+const STORAGE='barberManagerV1Data';
+const WEEK=['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+const PAGES=[['dashboard','🏠','หน้าหลัก'],['summary','🧾','สรุปรายเดือน'],['annual','📆','สรุปข้อมูลประจำปี'],['entry','✂️','บันทึกงาน'],['daily','📅','รายวัน'],['monthly','📊','รายเดือน'],['goals','🎯','เป้าหมาย'],['income','💵','รายรับ'],['expenses','💸','รายจ่าย'],['analytics','📈','วิเคราะห์'],['history','🗂️','ประวัติ'],['staff','👥','จัดการช่างและร้าน'],['backup','💾','สำรองข้อมูล']];
+const MENU_ORDER_KEY='barberManagerMenuOrder';
+const STAFF_AVATARS=['😎','🧑‍🎤','🥷','🧑‍🚀','🤠','🦸','🧑‍🔧','🕶️'];
+let menuReorderMode=false;
+function staffAvatar(i,name=''){const src=window.BarberStaff?.photo(name);return src?`<img class="staff-portrait" src="${esc(src)}" alt="รูป ${esc(name)}">`:STAFF_AVATARS[i%STAFF_AVATARS.length]}
+function orderedPages(){let saved=[];try{saved=JSON.parse(localStorage.getItem(MENU_ORDER_KEY)||'[]')}catch(e){}const map=Object.fromEntries(PAGES.map(x=>[x[0],x])),valid=Array.isArray(saved)?saved.filter(k=>map[k]):[],rest=PAGES.map(x=>x[0]).filter(k=>!valid.includes(k));return [...valid,...rest].map(k=>map[k])}
+function persistMenuOrder(keys){localStorage.setItem(MENU_ORDER_KEY,JSON.stringify(keys))}
+function moveMenu(p,delta,e){e?.stopPropagation();const keys=orderedPages().map(x=>x[0]),i=keys.indexOf(p),j=i+delta;if(i<0||j<0||j>=keys.length)return;[keys[i],keys[j]]=[keys[j],keys[i]];persistMenuOrder(keys);renderNav()}
+function toggleMenuReorder(){menuReorderMode=!menuReorderMode;renderNav()}
+function resetMenuOrder(){localStorage.removeItem(MENU_ORDER_KEY);renderNav();toast('คืนลำดับเมนูเริ่มต้นแล้ว')}
+function menuNavigate(p,e){if(menuReorderMode){e?.preventDefault();return}go(p)}
+function menuDragStart(e,p){if(!menuReorderMode){e.preventDefault();return}e.dataTransfer.setData('text/plain',p);e.dataTransfer.effectAllowed='move';e.currentTarget.classList.add('dragging')}
+function menuDragOver(e){if(!menuReorderMode)return;e.preventDefault();e.dataTransfer.dropEffect='move';e.currentTarget.classList.add('drag-over')}
+function menuDragLeave(e){e.currentTarget.classList.remove('drag-over')}
+function menuDragEnd(e){document.querySelectorAll('.nav-row').forEach(x=>x.classList.remove('dragging','drag-over'))}
+function menuDrop(e,target){if(!menuReorderMode)return;e.preventDefault();const from=e.dataTransfer.getData('text/plain');document.querySelectorAll('.nav-row').forEach(x=>x.classList.remove('dragging','drag-over'));if(!from||from===target)return;const keys=orderedPages().map(x=>x[0]),a=keys.indexOf(from),b=keys.indexOf(target);if(a<0||b<0)return;keys.splice(a,1);keys.splice(b,0,from);persistMenuOrder(keys);renderNav()}
+let state=loadState(); let page='dashboard'; let filters={};
+function clone(x){return JSON.parse(JSON.stringify(x))}
+function upgrade(d){
+ d=d&&typeof d==='object'?d:{}; d.staff=Array.isArray(d.staff)?d.staff:[]; d.entries=Array.isArray(d.entries)?d.entries:[]; d.expenses=Array.isArray(d.expenses)?d.expenses:[]; d.funds=Array.isArray(d.funds)?d.funds:[]; d.monthlySettings=d.monthlySettings||{}; d.expenseCategories=Array.isArray(d.expenseCategories)&&d.expenseCategories.length?d.expenseCategories:['ค่าเช่า','ค่าน้ำ-ค่าไฟ','ค่าอุปกรณ์','ค่าของใช้','เครื่องดื่ม','อื่นๆ'];
+ d.shopName=typeof d.shopName==='string'?d.shopName:''; d.entries.forEach(x=>{if(x.notes==null)x.notes=''; if(!x.weekday&&x.date)x.weekday=weekday(x.date)}); d.expenses.forEach(x=>{if(!x.category)x.category='ยังไม่จัดหมวด'}); return d;
+}
+function loadState(){try{const s=localStorage.getItem(STORAGE);return upgrade(s?JSON.parse(s):clone(SEED))}catch(e){return upgrade(clone(SEED))}}
+function save(msg='บันทึกแล้ว'){localStorage.setItem(STORAGE,JSON.stringify(state));toast(msg);render()}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function n(v){return Number(v)||0} function money(v){return '฿'+n(v).toLocaleString('th-TH',{maximumFractionDigits:2})} function num(v){return n(v).toLocaleString('th-TH')}
+function isoToday(){const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')}
+function currentMonth(){return isoToday().slice(0,7)} function weekday(s){const [y,m,d]=s.split('-').map(Number);return WEEK[new Date(y,m-1,d).getDay()]}
+function thDate(s,long=false){if(!s)return '';const [y,m,d]=s.split('-').map(Number);return new Intl.DateTimeFormat('th-TH',{day:'numeric',month:long?'long':'short',year:long?'numeric':undefined}).format(new Date(y,m-1,d))}
+function monthLabel(m){const [y,mo]=m.split('-').map(Number);return new Intl.DateTimeFormat('th-TH',{month:'long',year:'numeric'}).format(new Date(y,mo-1,1))}
+function id(){return 'id_'+Math.random().toString(36).slice(2,10)}
+function sum(a,f=x=>x){return a.reduce((s,x)=>s+n(f(x)),0)}
+function byMonth(a,m){return a.filter(x=>x.date?.startsWith(m))} function byDate(a,d){return a.filter(x=>x.date===d)}
+function receiptSum(m){return sum(byMonth(state.funds,m),x=>x.amount)}
+function expenseSum(m){return sum(byMonth(state.expenses,m),x=>x.amount)}
+function allFinanceMonths(){return [...new Set([...state.funds.map(x=>x.date?.slice(0,7)),...state.expenses.map(x=>x.date?.slice(0,7)),...Object.keys(state.monthlySettings||{})].filter(Boolean))].sort()}
+function balanceBaseMonth(){const configured=Object.keys(state.monthlySettings||{}).filter(m=>state.monthlySettings[m]&&state.monthlySettings[m].carryOver!=null).sort(),nonZero=configured.filter(m=>n(state.monthlySettings[m]?.carryOver)!==0);return nonZero[0]||configured[0]||allFinanceMonths()[0]||currentMonth()}
+function nextMonth(m){let [y,mo]=m.split('-').map(Number);mo++;if(mo===13){mo=1;y++}return `${y}-${String(mo).padStart(2,'0')}`}
+function openingBalance(m){const base=balanceBaseMonth();if(m<=base)return n(state.monthlySettings[m]?.carryOver);let cur=base,bal=n(state.monthlySettings[base]?.carryOver);let guard=0;while(cur<m&&guard++<240){bal=bal+receiptSum(cur)-expenseSum(cur);cur=nextMonth(cur)}return bal}
+function centralBalance(m){return openingBalance(m)+receiptSum(m)-expenseSum(m)}
+function yearOptions(selected){const cy=Number(isoToday().slice(0,4)),dataYears=[...state.entries,...state.funds,...state.expenses].map(x=>Number(x.date?.slice(0,4))).filter(Number.isFinite),oldest=Math.min(cy-10,...dataYears),ys=[];for(let y=cy;y>=oldest;y--)ys.push(String(y));if(selected&&!ys.includes(String(selected)))ys.push(String(selected));return ys.sort((a,b)=>Number(b)-Number(a)).map(y=>`<option value=\"${y}\" ${String(y)===String(selected)?'selected':''}>${Number(y)+543}</option>`).join('')}
+function monthCutoffDay(m){const [y,mo]=m.split('-').map(Number),last=new Date(y,mo,0).getDate(),today=isoToday();if(m<today.slice(0,7))return last;if(m>today.slice(0,7))return 0;const td=Number(today.slice(8)),hasToday=state.entries.some(x=>x.date===today);return Math.max(0,Math.min(last,hasToday?td:td-1))}
+function weekdayOccurrenceCounts(m){const [y,mo]=m.split('-').map(Number),cut=monthCutoffDay(m),o=Object.fromEntries(WEEK.map(w=>[w,0]));for(let d=1;d<=cut;d++)o[WEEK[new Date(y,mo-1,d).getDay()]]++;return o}
+function chartMonthsForYear(y){const cy=Number(isoToday().slice(0,4)),yy=Number(y);if(yy<cy)return 12;if(yy>cy)return 0;return Number(isoToday().slice(5,7))}
+function staffNames(){return state.staff.map(x=>x.name)}
+function toast(t){const e=document.getElementById('toast');e.textContent=t;e.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('show'),1800)}
+function toggleSide(){document.getElementById('side').classList.toggle('open')}
+const THEME_KEY='barberManagerTheme';
+function loadTheme(){const t=localStorage.getItem(THEME_KEY)||'light';document.body.dataset.theme=t;updateThemeUI()}
+function toggleTheme(){const t=document.body.dataset.theme==='dark'?'light':'dark';document.body.dataset.theme=t;localStorage.setItem(THEME_KEY,t);updateThemeUI();toast(t==='dark'?'เปลี่ยนเป็นโหมดมืดแล้ว':'เปลี่ยนเป็นโหมดสว่างแล้ว')}
+function updateThemeUI(){const dark=document.body.dataset.theme!=='light';const b=document.getElementById('themeToggle');if(b)b.textContent=dark?'☀️ โหมดสว่าง':'🌙 โหมดมืด';const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.setAttribute('content',dark?'#15111e':'#7b61ff')}
+function go(p){page=p;document.getElementById('side').classList.remove('open');render()}
+function renderNav(){const nav=document.getElementById('nav'),menu=orderedPages();nav.innerHTML=menu.map(([p,i,l])=>`<div class="nav-row ${menuReorderMode?'reorder-on':''}" data-page="${p}" draggable="${menuReorderMode?'true':'false'}" ondragstart="menuDragStart(event,'${p}')" ondragover="menuDragOver(event)" ondragleave="menuDragLeave(event)" ondragend="menuDragEnd(event)" ondrop="menuDrop(event,'${p}')"><button data-page="${p}" class="nav-main ${page===p?'active':''}" onclick="menuNavigate('${p}',event)"><span class="nav-icon">${i}</span><span class="nav-text">${l}</span></button>${menuReorderMode?`<div class="menu-order-controls"><button title="เลื่อนขึ้น" onclick="moveMenu('${p}',-1,event)">↑</button><button title="เลื่อนลง" onclick="moveMenu('${p}',1,event)">↓</button></div>`:''}</div>`).join('')+`<div class="menu-reorder-panel"><button class="menu-reorder-toggle ${menuReorderMode?'active':''}" onclick="toggleMenuReorder()">${menuReorderMode?'✓ เสร็จสิ้นการจัดลำดับ':'⇅ จัดลำดับเมนู'}</button>${menuReorderMode?'<button class="menu-reset-btn" onclick="resetMenuOrder()">↺ คืนลำดับเริ่มต้น</button><div class="menu-reorder-help">ลากเมนูขึ้น–ลง หรือกด ↑ ↓ • โปรแกรมจะจำลำดับนี้ไว้</div>':''}</div>`;const bn=document.getElementById('bottomnav');bn.classList.remove('hidden');bn.innerHTML=[['dashboard','🏠','หน้าแรก'],['entry','✂️','บันทึก'],['income','💵','รายรับ'],['expenses','💸','รายจ่าย'],['summary','🧾','สรุป']].map(([p,i,l])=>`<button data-page="${p}" class="${page===p?'active':''}" onclick="go('${p}')"><b class="bn-icon">${i}</b>${l}</button>`).join('')}
+function render(){renderNav();updateThemeUI();document.getElementById('todayPill').textContent=weekday(isoToday())+' '+thDate(isoToday());document.getElementById('pageTitle').textContent=PAGES.find(x=>x[0]===page)?.[2]||'';const shopTop=document.getElementById('shopNameTop');if(shopTop)shopTop.textContent=(state.shopName||'ยังไม่ได้ตั้งชื่อร้าน'); const fn={dashboard:dashboardPage,summary:monthlySummaryPage,annual:annualSummaryPage,entry:entryPage,daily:dailyPage,monthly:monthlyPage,goals:goalsPage,income:incomePage,expenses:expensesPage,funds:fundsPage,analytics:analyticsPage,history:historyPage,staff:staffPage,backup:backupPage}[page]; document.getElementById('content').innerHTML=fn(); bindPage()}
+function bindPage(){if(page==='backup')setTimeout(updateIDBBackupStatus,0);if(page==='daily'){document.getElementById('dailyDate')?.addEventListener('change',()=>{filters.daily=document.getElementById('dailyDate').value;render()})} if(page==='summary'){document.getElementById('summaryMonth')?.addEventListener('change',()=>{filters.summaryMonth=document.getElementById('summaryMonth').value;render()})} if(page==='annual'){document.getElementById('annualYear')?.addEventListener('change',()=>{filters.annualYear=document.getElementById('annualYear').value;render()})} if(page==='monthly'){document.getElementById('monthPick')?.addEventListener('change',()=>{filters.month=document.getElementById('monthPick').value;render()})} if(page==='goals'){document.getElementById('goalMonth')?.addEventListener('change',()=>{filters.goalMonth=document.getElementById('goalMonth').value;render()})} if(page==='analytics'){document.getElementById('anaMonth')?.addEventListener('change',()=>{filters.anaMonth=document.getElementById('anaMonth').value;render()});document.getElementById('anaYear')?.addEventListener('change',()=>{filters.anaYear=document.getElementById('anaYear').value;render()})} }
+function dashboardPage(){const today=isoToday(),m=currentMonth(),te=byDate(state.entries,today),me=byMonth(state.entries,m),mx=byMonth(state.expenses,m),tin=sum(te,x=>x.amount),th=sum(te,x=>x.heads),mi=sum(me,x=>x.amount),mh=sum(me,x=>x.heads),openDays=new Set(me.map(x=>x.date).filter(Boolean)).size,ex=sum(mx,x=>x.amount),rin=receiptSum(m),cb=centralBalance(m),carry=openingBalance(m),prev=prevMonth(m),pme=byMonth(state.entries,prev),pmi=sum(pme,x=>x.amount),pmh=sum(pme,x=>x.heads);const change=(v,p)=>p?((v-p)/p*100):0;const incChange=change(mi,pmi),headChange=change(mh,pmh);return `
+<div class="hero-card">
+ <div class="hero-header"><div><div class="hero-kicker">✂ BARBER MANAGER</div><div class="hero-title">ภาพรวมร้าน • ${monthLabel(m)}</div><div class="hero-meta">สรุปภาพรวมรายได้ ลูกค้า รายรับ รายจ่าย และกองกลางในหน้าหลักแบบอ่านง่ายขึ้น • ข้อมูลใหม่จะยังถูกเก็บในเบราว์เซอร์เครื่องนี้เช่นเดิม</div></div><div class="hero-badges"><span class="hero-chip">👥 ${num(mh)} หัว</span><span class="hero-chip">📅 เปิดร้าน ${num(openDays)} วัน</span></div></div>
+ <div class="hero-stat-grid">
+  <div class="hero-stat"><span>รายได้รวมร้าน</span><b>${money(mi)}</b><small class="${incChange>=0?'good':'bad'}">${pmi?`${incChange>=0?'▲':'▼'} ${Math.abs(incChange).toFixed(1)}% จากเดือนก่อน`:'ยังไม่มีข้อมูลเดือนก่อน'}</small></div>
+  <div class="hero-stat"><span>ลูกค้าเดือนนี้</span><b>${num(mh)} หัว</b><small class="${headChange>=0?'good':'bad'}">${pmh?`${headChange>=0?'▲':'▼'} ${Math.abs(headChange).toFixed(1)}% จากเดือนก่อน`:'ยังไม่มีข้อมูลเดือนก่อน'}</small></div>
+  <div class="hero-stat"><span>รายรับ − รายจ่าย</span><b>${money(rin-ex)}</b><small>รายรับ ${money(rin)} • รายจ่าย <span class="expense-number">${money(ex)}</span></small></div>
+  <div class="hero-stat"><span>กองกลางคงเหลือ</span><b class="balance-number">${money(cb)}</b><small>ยกมา <span class="balance-number">${money(carry)}</span></small></div>
+ </div>
+</div>
+<div class="notice">ข้อมูลเดิมถูกโหลดไว้แล้ว • ${num(state.entries.length)} รายการงาน • ${num(state.expenses.length)} รายจ่าย • ${num(state.funds.length)} รายรับ • พร้อมใช้งานแบบ Offline</div>
+<div class="grid kpis">
+ ${kpi('รายได้รวมร้าน',money(mi),monthLabel(m))}
+ ${kpi('จำนวนวันเปิดร้าน',num(openDays)+' วัน','นับวันที่มีช่างทำงานอย่างน้อย 1 คน')}
+ ${kpi('รายรับเดือนนี้',money(rin),`${num(byMonth(state.funds,m).length)} รายการ`)}
+ ${kpi('รายจ่ายเดือนนี้',money(ex),`${num(mx.length)} รายการ`)}
+ ${kpi('กองกลางคงเหลือยกมา',money(carry),`ยอดคงเหลือจาก ${monthLabel(prev)}`)}
+ ${kpi('กองกลางคงเหลือ',money(cb),`ยกมา ${money(carry)}`)}
+</div><br>
+<div class="grid two"><div class="card"><div class="section-title"><h2>รายงานยอด 7 วันล่าสุด</h2><span class="muted">ยอดเงิน + ลูกค้า</span></div>${bars7(today)}</div><div class="card"><div class="section-title"><h2>ผลงานช่างเดือนนี้</h2><button class="btn small" onclick="go('monthly')">ดูรายงาน</button></div>${staffPerformance(m)}</div></div><br>
+<div class="grid three"><div class="card">${goalMini(m)}</div><div class="card"><div class="section-title"><h3>รายการงานล่าสุด</h3></div>${recentEntries(5)}</div><div class="card"><div class="section-title"><h3>รายจ่ายล่าสุด</h3></div>${recentExpenses(5)}</div></div>`}
+function kpi(l,v,s){const cls=/คงเหลือ/.test(l)?' balance-number':(/รายจ่าย/.test(l)&&!/ผลต่าง/.test(l)?' expense-number':'');return `<div class="card kpi"><div class="label">${l}</div><div class="num${cls}">${v}</div><div class="sub">${s}</div></div>`}
+function bars7(end){const [y,m,d]=end.split('-').map(Number),arr=[];for(let i=6;i>=0;i--){const z=new Date(y,m-1,d-i),s=[z.getFullYear(),String(z.getMonth()+1).padStart(2,'0'),String(z.getDate()).padStart(2,'0')].join('-'),rows=byDate(state.entries,s);arr.push([s,sum(rows,x=>x.amount),sum(rows,x=>x.heads)])}const mx=Math.max(...arr.map(x=>x[1]),1);return `<div class="barlist seven-bars">${arr.map(([d,a,h])=>`<div class="barcol interactive-bar" tabindex="0" onclick="this.classList.toggle('tip-open')" onblur="this.classList.remove('tip-open')" title="${thDate(d)} • ${money(a)} • ${num(h)} ลูกค้า"><div class="bar-tip"><b>${money(a)}</b><span>👥 ${num(h)} ลูกค้า</span></div><div class="bar" style="height:${Math.max(3,a/mx*140)}px"></div><small>${d.slice(8)}</small></div>`).join('')}</div><div class="muted" style="font-size:12px;margin-top:8px">แตะ/ชี้แท่งเพื่อดู <b>ยอดเงินและจำนวนลูกค้า</b> ของวันนั้นพร้อมกัน</div>`}
+function staffPerformance(m){const rows=staffNames().map(s=>{const a=byMonth(state.entries,m).filter(x=>x.staff===s),days=window.BarberOps?BarberOps.workingDays(s,m):new Set(a.map(x=>x.date).filter(Boolean)).size;return [s,sum(a,x=>x.amount),sum(a,x=>x.heads),days]}).sort((a,b)=>b[1]-a[1]);const mx=Math.max(...rows.map(x=>x[1]),1);return rows.map(([s,a,h,days])=>`<div class="staff-row"><b>${esc(s)}</b><div><div class="progress"><i style="width:${a/mx*100}%"></i></div><small class="muted">${num(h)} หัว • ${num(days)} วันทำงาน • ${h?money(a/h)+'/หัว':'—'}</small></div><b>${money(a)}</b></div>`).join('')||'<div class="empty">ไม่มีข้อมูล</div>'}
+function goalMini(m){const g=state.monthlySettings[m]?.goals?.total||{},e=byMonth(state.entries,m),a=sum(e,x=>x.amount),h=sum(e,x=>x.heads),pa=n(g.amount)?Math.min(100,a/n(g.amount)*100):0,ph=n(g.heads)?Math.min(100,h/n(g.heads)*100):0;return `<div class="section-title"><h3>🎯 เป้าหมายเดือนนี้</h3><button class="btn small" onclick="go('goals')">ตั้งค่า</button></div><div class="split"><span>รายได้</span><b>${money(a)} / ${money(g.amount)}</b></div><div class="progress"><i style="width:${pa}%"></i></div><br><div class="split"><span>ลูกค้า</span><b>${num(h)} / ${num(g.heads)} หัว</b></div><div class="progress"><i style="width:${ph}%"></i></div>`}
+function recentEntries(k){return state.entries.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,k).map(x=>`<div class="statline"><span>${esc(x.staff)} <small class="muted">${thDate(x.date)}</small></span><span class="recent-entry-right"><b>${money(x.amount)}</b><small class="recent-heads">👥 ${num(x.heads)} หัว</small></span></div>`).join('')}
+function recentExpenses(k){return state.expenses.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,k).map(x=>`<div class="statline"><span>${esc(x.desc)} <small class="muted">${thDate(x.date)}</small></span><b class="expense-number">${money(x.amount)}</b></div>`).join('')}
+function byYear(arr,y){return arr.filter(x=>x.date?.startsWith(String(y)+'-'))}
+function annualSummaryPage(){
+ const y=String(filters.annualYear||isoToday().slice(0,4)),entries=byYear(state.entries,y),income=byYear(state.funds,y),expenses=byYear(state.expenses,y);
+ const staff=staffNames().map((s,i)=>{const rows=entries.filter(x=>x.staff===s),days=window.BarberOps?BarberOps.workingDays(s,y):new Set(rows.map(x=>x.date).filter(Boolean)).size;return {name:s,amount:sum(rows,x=>x.amount),heads:sum(rows,x=>x.heads),days,idx:i}});
+ const totalAmount=sum(entries,x=>x.amount),totalHeads=sum(entries,x=>x.heads),incomeTotal=sum(income,x=>x.amount),expenseTotal=sum(expenses,x=>x.amount),hasData=entries.length||income.length||expenses.length;
+ return `<div class="annual-toolbar"><div class="field"><label>เลือกปีข้อมูล</label><select id="annualYear">${yearOptions(y)}</select></div><span class="year-badge">📆 ปี ${Number(y)+543}</span></div>
+ <div class="annual-cover"><div class="eyebrow">ANNUAL DATA SUMMARY</div><h2>สรุปข้อมูลประจำปี • ${Number(y)+543}</h2><p>รวมข้อมูลยอดงานช่าง จำนวนหัว รายรับ และรายจ่ายที่บันทึกไว้ในระบบสำหรับปีที่เลือก</p>
+ <div class="annual-kpis"><div class="annual-kpi"><span>ยอดเงินงานช่างรวมทั้งปี</span><b>${money(totalAmount)}</b><small class="muted">รวมช่างทั้งหมด</small></div><div class="annual-kpi"><span>จำนวนหัวรวมทั้งปี</span><b>${num(totalHeads)} หัว</b><small class="muted">รวมช่างทั้งหมด</small></div><div class="annual-kpi"><span>รายรับรวมทั้งปี</span><b class="good">${money(incomeTotal)}</b><small class="muted">${num(income.length)} รายการ</small></div><div class="annual-kpi"><span>รายจ่ายรวมทั้งปี</span><b class="expense-number">${money(expenseTotal)}</b><small class="muted">${num(expenses.length)} รายการ</small></div></div></div><br>
+ ${hasData?`<div class="card"><div class="section-title"><h2>สรุปช่างรายบุคคล</h2><span class="muted">ยอดเงิน + จำนวนหัว + วันทำงานทั้งปี</span></div><div class="annual-staff-grid">${staff.map((s,i)=>`<div class="annual-staff-card"><div class="annual-staff-head"><div class="avatar av${i%8}">${staffAvatar(i,s.name)}</div><div><h3>${esc(s.name)}</h3><small class="muted">สรุปปี ${Number(y)+543}</small></div></div><div class="annual-staff-pair"><span>จำนวนหัวทั้งปี</span><b>${num(s.heads)} หัว</b></div><div class="annual-staff-pair"><span>ยอดเงินทั้งปี</span><b>${money(s.amount)}</b></div><div class="annual-staff-pair"><span>เฉลี่ย/หัว</span><b>${s.heads?money(s.amount/s.heads):'—'}</b></div><div class="annual-staff-pair"><span>วันทำงานทั้งปี</span><b>${num(s.days)} วัน</b></div></div>`).join('')}</div></div><br>
+ <div class="grid two"><div class="card"><div class="section-title"><h2>รวมช่างทั้งหมด</h2><span class="muted">${num(staff.length)} ช่าง</span></div><div class="annual-ledger-total">${money(totalAmount)}</div><div class="statline"><span>จำนวนหัวรวม</span><b>${num(totalHeads)} หัว</b></div><div class="statline"><span>ยอดเงินงานช่างรวม</span><b>${money(totalAmount)}</b></div><div class="statline"><span>เฉลี่ยต่อหัว</span><b>${totalHeads?money(totalAmount/totalHeads):'—'}</b></div></div>
+ <div class="card"><div class="section-title"><h2>รายรับ–รายจ่ายรวมทั้งปี</h2><span class="muted">ปี ${Number(y)+543}</span></div><div class="statline"><span>💵 รายรับรวม</span><b class="good">${money(incomeTotal)}</b></div><div class="statline"><span>💸 รายจ่ายรวม</span><b class="expense-number">${money(expenseTotal)}</b></div><div class="statline"><span>ผลต่างรายรับ − รายจ่าย</span><b class="${incomeTotal-expenseTotal<0?'bad':'good'}">${money(incomeTotal-expenseTotal)}</b></div><div class="tax-note">หมายเหตุ: หน้านี้เป็นการสรุปตัวเลขตามข้อมูลที่บันทึกไว้ใน Barber Manager เพื่อช่วยรวบรวมเอกสารประจำปี ไม่ใช่การคำนวณภาษีหรือการรับรองยอดทางภาษีโดยอัตโนมัติ</div></div></div>`:'<div class="card"><div class="empty">ยังไม่มีข้อมูลในปีที่เลือก</div></div>'}`
+}
+function monthlySummaryPage(){const m=filters.summaryMonth||currentMonth(),prev=prevMonth(m),e=byMonth(state.entries,m),pe=byMonth(state.entries,prev),h=sum(e,x=>x.heads),ph=sum(pe,x=>x.heads),a=sum(e,x=>x.amount),inc=byMonth(state.funds,m).slice().sort((x,y)=>x.date.localeCompare(y.date)),exp=byMonth(state.expenses,m).slice().sort((x,y)=>x.date.localeCompare(y.date)),incTotal=sum(inc,x=>x.amount),expTotal=sum(exp,x=>x.amount),bal=centralBalance(m),pct=ph?((h-ph)/ph*100):0,dir=pct>0?'up':pct<0?'down':'flat',arrow=pct>0?'⬆':pct<0?'⬇':'➡',staff=staffNames().map(s=>{const r=e.filter(x=>x.staff===s),days=window.BarberOps?BarberOps.workingDays(s,m):new Set(r.map(x=>x.date).filter(Boolean)).size;return {name:s,amount:sum(r,x=>x.amount),heads:sum(r,x=>x.heads),days}});return `<div class="summary-toolbar"><div class="field"><label>เดือนสรุป</label><select id="summaryMonth">${monthOptions(m)}</select></div><div><button class="btn primary save-jpg" onclick="saveMonthlySummaryJPG('${m}')">🖼️ Save เป็นภาพ JPG</button><div class="jpg-note">เหมาะสำหรับส่งใน LINE / กลุ่มสมาชิก / เก็บเป็นรายงาน</div></div></div><div class="card share-summary" id="monthlyShareSummary"><div class="summary-cover"><div class="eyebrow">MONTHLY MEMBER SUMMARY</div><h2>สรุปรายเดือน • ${monthLabel(m)}</h2><div class="summary-sub">รายงานข้อมูลสำคัญสำหรับสมาชิก • เปรียบเทียบกับ ${monthLabel(prev)}</div></div><div class="summary-body"><div class="summary-kpis"><div class="summary-kpi"><span>ลูกค้ารวมเดือนนี้</span><b>${num(h)} หัว</b><div class="summary-change ${dir}">${arrow} ${ph?Math.abs(pct).toFixed(1)+'%':'—'} ${pct>0?'เพิ่มขึ้น':pct<0?'ลดลง':'เท่าเดิม'}</div></div><div class="summary-kpi"><span>ยอดเงินรวมทั้งหมด</span><b>${money(a)}</b><small class="muted">จากช่างทั้งหมด ${num(staff.length)} ราย</small></div><div class="summary-kpi"><span>กองกลางคงเหลือ</span><b class="balance-number">${money(bal)}</b><small class="muted">รายรับ ${money(incTotal)} − รายจ่าย <span class="expense-number">${money(expTotal)}</span></small></div></div><div class="summary-divider"></div><div class="section-title"><h2>สรุปช่างรายบุคคล</h2><span class="muted">ลูกค้า + ยอดเงิน + วันทำงาน</span></div><div class="member-staff-grid">${staff.map((s,i)=>`<div class="member-staff-card"><div class="avatar av${i%8}">${staffAvatar(i,s.name)}</div><h3>${esc(s.name)}</h3><div class="pair"><span>ลูกค้า</span><b>${num(s.heads)} หัว</b></div><div class="pair"><span>ยอดเงิน</span><b>${money(s.amount)}</b></div><div class="pair"><span>จำนวนเฉลี่ย/วัน</span><b>${s.days?(s.heads/s.days).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2})+' หัว/วัน':'—'}</b></div><div class="pair"><span>วันทำงาน</span><b>${num(s.days)} วัน</b></div></div>`).join('')}</div><div class="summary-divider"></div><div class="summary-ledgers"><div class="summary-ledger"><div class="section-title"><h3>💵 รายรับ</h3><b class="good">${money(incTotal)}</b></div>${summaryIncomeRows(inc)}</div><div class="summary-ledger"><div class="section-title"><h3>💸 รายจ่าย</h3><b class="expense-number">${money(expTotal)}</b></div>${summaryExpenseRows(exp)}</div></div></div></div>`}
+function summaryIncomeRows(a){return a.length?a.map(x=>`<div class="statline"><span>${thDate(x.date)} • ${esc(x.desc)}</span><b class="good">＋${money(Math.abs(n(x.amount)))}</b></div>`).join(''):'<div class="empty">ไม่มีรายรับในเดือนนี้</div>'}
+function summaryExpenseRows(a){return a.length?a.map(x=>`<div class="statline"><span>${thDate(x.date)} • ${esc(x.desc)} <small class="muted">${esc(x.category||'')}</small></span><b class="expense-number">−${money(Math.abs(n(x.amount)))}</b></div>`).join(''):'<div class="empty">ไม่มีรายจ่ายในเดือนนี้</div>'}
+function roundedRect(ctx,x,y,w,h,r,fill,stroke){ctx.beginPath();ctx.roundRect(x,y,w,h,r);if(fill){ctx.fillStyle=fill;ctx.fill()}if(stroke){ctx.strokeStyle=stroke;ctx.stroke()}}
+function canvasText(ctx,text,x,y,size=28,weight=500,color='#241b32',align='left'){ctx.font=`${weight} ${size}px system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif`;ctx.fillStyle=color;ctx.textAlign=align;ctx.textBaseline='alphabetic';ctx.fillText(String(text),x,y)}
+function canvasMoney(v){return '฿'+n(v).toLocaleString('th-TH',{maximumFractionDigits:0})}
+async function saveMonthlySummaryJPG(m){const prev=prevMonth(m),e=byMonth(state.entries,m),pe=byMonth(state.entries,prev),h=sum(e,x=>x.heads),ph=sum(pe,x=>x.heads),a=sum(e,x=>x.amount),inc=byMonth(state.funds,m).slice().sort((x,y)=>x.date.localeCompare(y.date)),exp=byMonth(state.expenses,m).slice().sort((x,y)=>x.date.localeCompare(y.date)),incTotal=sum(inc,x=>x.amount),expTotal=sum(exp,x=>x.amount),bal=centralBalance(m),pct=ph?((h-ph)/ph*100):0,staff=staffNames().map(s=>{const r=e.filter(x=>x.staff===s);return {name:s,amount:sum(r,x=>x.amount),heads:sum(r,x=>x.heads),days:window.BarberOps?BarberOps.workingDays(s,m):new Set(r.map(x=>x.date).filter(Boolean)).size}});const portraits=await Promise.all(staff.map(s=>window.BarberStaff?.load(s.name)||null));await document.fonts.ready;const W=1400,pad=72,rowH=48,staffRows=Math.max(1,Math.ceil(staff.length/3)),staffH=staffRows*270,ledgerRows=Math.max(inc.length,exp.length,1),ledgerH=120+ledgerRows*rowH,H=740+staffH+ledgerH,canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;const c=canvas.getContext('2d');c.fillStyle='#f5f7fc';c.fillRect(0,0,W,H);const grad=c.createLinearGradient(0,0,W,320);grad.addColorStop(0,'#2455c7');grad.addColorStop(.5,'#2455c7');grad.addColorStop(1,'#2455c7');roundedRect(c,0,0,W,330,0,grad);roundedRect(c,pad,50,36,56,12,'#ffffff');c.save();c.beginPath();c.rect(pad,55,36,46);c.clip();c.strokeStyle='#d72e45';c.lineWidth=9;for(let k=0;k<3;k++){c.beginPath();c.moveTo(pad-8,70+k*21);c.lineTo(pad+44,45+k*21);c.stroke()}c.restore();canvasText(c,'Barber Manager System By SORA',pad+52,75,22,800,'#ffffff');canvasText(c,(state.shopName||'รายงานร้านตัดผม').slice(0,70),pad+52,110,25,650,'#ffffff');canvasText(c,`สรุปรายเดือน • ${monthLabel(m)}`,pad,155,48,850,'#ffffff');canvasText(c,`รายงานสำหรับสมาชิก • เปรียบเทียบกับ ${monthLabel(prev)}`,pad,205,23,500,'rgba(255,255,255,.82)');const pctText=ph?`${pct>0?'↑':pct<0?'↓':'→'} ${Math.abs(pct).toFixed(1)}% ${pct>0?'เพิ่มขึ้น':pct<0?'ลดลง':'เท่าเดิม'}`:'— ไม่มีข้อมูลเดือนก่อน';canvasText(c,`${num(h)} ลูกค้า`,pad,280,38,850,'#ffffff');canvasText(c,pctText,pad+300,280,25,800,pct>0?'#ffffff':pct<0?'#ffd2dd':'#ffffff');const cards=[['ยอดเงินรวมทั้งหมด',canvasMoney(a),''],['รายรับ / รายจ่าย',`${canvasMoney(incTotal)} / ${canvasMoney(expTotal)}`,''],['กองกลางคงเหลือ',canvasMoney(bal),'']];let cx=pad,cy=370,cw=(W-pad*2-28*2)/3;cards.forEach(([l,v])=>{roundedRect(c,cx,cy,cw,128,24,'#ffffff','#d6e0ef');canvasText(c,l,cx+22,cy+38,18,650,'#566b87');canvasText(c,v,cx+22,cy+88,31,850,'#182b49');cx+=cw+28});let y=540;canvasText(c,'สรุปช่างรายบุคคล',pad,y,32,850,'#182b49');y+=35;const cols=Math.min(3,Math.max(1,staff.length)),gap=22,sw=(W-pad*2-gap*(cols-1))/cols;staff.forEach((s,i)=>{const col=i%cols,row=Math.floor(i/cols),x=pad+col*(sw+gap),yy=y+row*270;roundedRect(c,x,yy,sw,242,22,'#ffffff','#d6e0ef');const avatarColors=[['#2455c7','#2455c7'],['#cc2941','#cc2941'],['#182b49','#182b49'],['#456fab','#456fab'],['#983447','#456fab'],['#456fab','#456fab'],['#182b49','#182b49'],['#cc2941','#2455c7']],ac=avatarColors[i%avatarColors.length],g=c.createLinearGradient(x,yy,x+52,yy+52);g.addColorStop(0,ac[0]);g.addColorStop(1,ac[1]);roundedRect(c,x+22,yy+20,50,50,15,g);if(portraits[i]){c.save();c.beginPath();c.arc(x+47,yy+45,25,0,Math.PI*2);c.clip();c.drawImage(portraits[i],x+22,yy+20,50,50);c.restore()}else{canvasText(c,STAFF_AVATARS[i%STAFF_AVATARS.length],x+47,yy+55,26,850,'#fff','center')};c.save();c.beginPath();c.rect(x+84,yy+20,sw-100,48);c.clip();canvasText(c,s.name,x+88,yy+52,25,800,'#182b49');c.restore();canvasText(c,`ลูกค้า  ${num(s.heads)} หัว`,x+22,yy+105,20,650,'#566b87');canvasText(c,`ยอดเงิน  ${canvasMoney(s.amount)}`,x+22,yy+140,22,800,'#182b49');canvasText(c,`จำนวนเฉลี่ย/วัน  ${s.days?(s.heads/s.days).toFixed(2)+' หัว/วัน':'—'}`,x+22,yy+177,18,650,'#566b87');canvasText(c,`วันทำงาน  ${num(s.days)} วัน`,x+22,yy+212,20,650,'#566b87')});y+=Math.ceil(staff.length/cols)*270+30;canvasText(c,'รายละเอียดรายรับ–รายจ่าย',pad,y,32,850,'#182b49');y+=34;const half=(W-pad*2-gap)/2;const drawLedger=(x,title,total,rows,isIncome)=>{const hh=90+Math.max(rows.length,1)*rowH;roundedRect(c,x,y,half,hh,22,'#ffffff','#d6e0ef');canvasText(c,title,x+22,y+38,24,800,isIncome?'#2455c7':'#cc2941');canvasText(c,canvasMoney(total),x+half-22,y+38,24,850,isIncome?'#2455c7':'#cc2941','right');if(!rows.length){canvasText(c,'ไม่มีรายการในเดือนนี้',x+22,y+85,18,500,'#566b87');return}rows.forEach((r,i)=>{const yy=y+82+i*rowH;canvasText(c,`${r.date.slice(8)}/${r.date.slice(5,7)}  ${r.desc}`,x+22,yy,17,550,'#182b49');canvasText(c,`${isIncome?'+':'−'}${canvasMoney(Math.abs(n(r.amount)))}`,x+half-22,yy,18,750,isIncome?'#2455c7':'#cc2941','right')})};drawLedger(pad,'รายรับ',incTotal,inc,true);drawLedger(pad+half+gap,'รายจ่าย',expTotal,exp,false);const footY=H-65;canvasText(c,`สร้างจาก Barber Manager • ${new Date().toLocaleString('th-TH')}`,pad,footY,16,500,'#566b87');const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',.94));if(!blob){alert('ไม่สามารถสร้างไฟล์ JPG ได้');return}const name=`barber_summary_${m}.jpg`;if('showSaveFilePicker' in window){try{const handle=await window.showSaveFilePicker({id:'barber-summary-jpg',suggestedName:name,types:[{description:'JPEG Image',accept:{'image/jpeg':['.jpg','.jpeg']}}]});const writable=await handle.createWritable();await writable.write(blob);await writable.close();toast('บันทึกภาพสรุปรายเดือนแล้ว');return}catch(err){if(err?.name==='AbortError'){toast('ยกเลิกการบันทึกภาพ');return}}}const u=URL.createObjectURL(blob),link=document.createElement('a');link.href=u;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(u),1000);toast('บันทึกภาพ JPG แล้ว')}
+
+function entryPage(){const d=filters.entryDate||isoToday();return `<div class="card"><div class="section-title"><h2>บันทึกงานช่าง</h2><button class="btn alt-sage" onclick="openEntryModal()">＋ เพิ่มรายการ</button></div><div class="toolbar"><div class="field"><label>วันที่</label><input id="entryDate" type="date" value="${d}" onchange="filters.entryDate=this.value;render()"></div><div style="align-self:end" class="muted">${weekday(d)}</div></div>${entryTable(byDate(state.entries,d))}</div>`}
+function entryTable(arr){if(!arr.length)return '<div class="empty">ยังไม่มีรายการในวันที่เลือก</div>';return `<div class="tablewrap"><table><thead><tr><th>ช่าง</th><th class="num">รายได้</th><th class="num">ลูกค้า</th><th class="num">เฉลี่ย/หัว</th><th>หมายเหตุ</th><th></th></tr></thead><tbody>${arr.map(x=>`<tr><td><b>${esc(x.staff)}</b></td><td class="num">${money(x.amount)}</td><td class="num">${num(x.heads)}</td><td class="num">${x.heads?money(x.amount/x.heads):'—'}</td><td>${esc(x.notes||'')}</td><td><div class="actions"><button class="btn small" onclick="openEntryModal('${x.id}')">แก้ไข</button><button class="btn small danger" onclick="del('entries','${x.id}')">ลบ</button></div></td></tr>`).join('')}</tbody></table></div><div class="split" style="margin-top:12px"><b>รวม ${num(sum(arr,x=>x.heads))} ลูกค้า</b><b class="bigmoney" style="font-size:24px">${money(sum(arr,x=>x.amount))}</b></div>`}
+function openEntryModal(i=''){const x=state.entries.find(x=>x.id===i)||{id:'',date:filters.entryDate||isoToday(),staff:staffNames()[0]||'',amount:'',heads:'',notes:''};modal(`<div class="modalhead"><h3>${i?'แก้ไข':'เพิ่ม'}รายการงาน</h3><button class="close" onclick="closeModal()">✕</button></div><form onsubmit="saveEntry(event,'${i}')"><div class="formgrid"><div class="field"><label>วันที่</label><input name="date" type="date" required value="${x.date}"></div><div class="field"><label>ช่าง</label><select name="staff" required>${staffNames().map(s=>`<option ${s===x.staff?'selected':''}>${esc(s)}</option>`).join('')}</select></div><div class="field"><label>รายได้ (บาท)</label><input name="amount" type="number" min="0" step="1" required value="${x.amount}"></div><div class="field"><label>จำนวนลูกค้า</label><input name="heads" type="number" min="0" step="1" required value="${x.heads}"></div><div class="field span4"><label>หมายเหตุ</label><textarea name="notes" placeholder="เช่น ฟรี 1 / ลูกค้าประจำ">${esc(x.notes||'')}</textarea></div><div class="span4 actions"><button class="btn alt-sage">บันทึก</button><button type="button" class="btn" onclick="closeModal()">ยกเลิก</button></div></div></form>`)}
+function saveEntry(e,i){e.preventDefault();const f=new FormData(e.target),o={id:i||id(),date:f.get('date'),weekday:weekday(f.get('date')),staff:f.get('staff'),amount:n(f.get('amount')),heads:n(f.get('heads')),notes:String(f.get('notes')||'')};if(i){state.entries[state.entries.findIndex(x=>x.id===i)]=o}else state.entries.push(o);filters.entryDate=o.date;closeModal();save('บันทึกงานแล้ว')}
+function dailyPage(){const d=filters.daily||isoToday(),e=byDate(state.entries,d),x=byDate(state.expenses,d),a=sum(e,z=>z.amount),h=sum(e,z=>z.heads),ex=sum(x,z=>z.amount);return `<div class="toolbar"><div class="field"><label>เลือกวันที่</label><input id="dailyDate" type="date" value="${d}"></div></div><div class="grid kpis">${kpi('รายได้',money(a),`${num(e.length)} รายการ`)}${kpi('ลูกค้า',num(h)+' หัว',h?`เฉลี่ย ${money(a/h)}/หัว`:'—')}${kpi('รายจ่าย',money(ex),`${num(x.length)} รายการ`)}${kpi('ผลต่างงานช่าง−รายจ่าย',money(a-ex),'รายได้งานช่าง − รายจ่ายร้าน')}</div><br><div class="grid two"><div class="card"><div class="section-title"><h2>${weekday(d)} ${thDate(d,true)}</h2></div>${entryTable(e)}</div><div class="card"><div class="section-title"><h2>รายจ่ายวันนี้</h2></div>${expenseMini(x)}</div></div>`}
+function monthOptions(selected){const ms=new Set([...state.entries.map(x=>x.date.slice(0,7)),...state.funds.map(x=>x.date.slice(0,7)),...state.expenses.map(x=>x.date.slice(0,7)),...Object.keys(state.monthlySettings),currentMonth()]);return [...ms].sort().reverse().map(m=>`<option value="${m}" ${m===selected?'selected':''}>${monthLabel(m)}</option>`).join('')}
+function monthlyPage(){const m=filters.month||currentMonth(),e=byMonth(state.entries,m),x=byMonth(state.expenses,m),a=sum(e,z=>z.amount),h=sum(e,z=>z.heads),ex=sum(x,z=>z.amount);const days=[...new Set(e.map(z=>z.date))].length;return `<div class="toolbar"><div class="field"><label>เดือน</label><select id="monthPick">${monthOptions(m)}</select></div><button class="btn" onclick="exportMonthCSV('${m}')">⬇ Export CSV</button></div><div class="grid kpis">${kpi('รายได้รวม',money(a),monthLabel(m))}${kpi('ลูกค้ารวม',num(h)+' หัว',h?`เฉลี่ย ${money(a/h)}/หัว`:'—')}${kpi('รายจ่าย',money(ex),`${x.length} รายการ`)}${kpi('ผลต่างงานช่าง−รายจ่าย',money(a-ex),'ก่อนค่าแรง/คอมมิชชัน')}${kpi('วันมีรายการ',num(days)+' วัน',days?`เฉลี่ย ${money(a/days)}/วัน`:'—')}</div><br><div class="grid two"><div class="card"><div class="section-title"><h2>ผลงานช่าง</h2></div>${staffPerformance(m)}</div><div class="card"><div class="section-title"><h2>สรุปรายจ่าย</h2></div>${expenseCategorySummary(m)}</div></div><br><div class="card"><div class="section-title"><h2>รายการรายวัน</h2><button class="btn ghost detail-toggle-btn" onclick="toggleAnnualDetail('monthlyDailyDetails',this,'รายการ')"><span class="toggle-arrow">▼</span>แสดงรายการ</button></div><div id="monthlyDailyDetails" hidden>${monthlyDaysTable(m)}</div></div>`}
+function monthlyDaysTable(m){const map={};byMonth(state.entries,m).forEach(x=>{map[x.date]??={a:0,h:0};map[x.date].a+=n(x.amount);map[x.date].h+=n(x.heads)});const arr=Object.entries(map).sort((a,b)=>b[0].localeCompare(a[0]));if(!arr.length)return '<div class="empty">ไม่มีข้อมูล</div>';return `<div class="tablewrap"><table><thead><tr><th>วันที่</th><th>วัน</th><th class="num">รายได้</th><th class="num">ลูกค้า</th><th class="num">เฉลี่ย/หัว</th></tr></thead><tbody>${arr.map(([d,v])=>`<tr><td>${thDate(d)}</td><td>${weekday(d)}</td><td class="num"><b>${money(v.a)}</b></td><td class="num">${num(v.h)}</td><td class="num">${v.h?money(v.a/v.h):'—'}</td></tr>`).join('')}</tbody></table></div>`}
+function expenseCategorySummary(m){const map={};byMonth(state.expenses,m).forEach(x=>map[x.category||'ยังไม่จัดหมวด']=(map[x.category||'ยังไม่จัดหมวด']||0)+n(x.amount));const arr=Object.entries(map).sort((a,b)=>b[1]-a[1]),tot=sum(arr,x=>x[1]);return arr.length?arr.map(([k,v])=>`<div class="statline"><span>${esc(k)} <small class="muted">${tot?Math.round(v/tot*100):0}%</small></span><b class="expense-number">${money(v)}</b></div>`).join(''):'<div class="empty">ไม่มีรายจ่าย</div>'}
+function goalsPage(){const m=filters.goalMonth||currentMonth(),s=state.monthlySettings[m]||{},g=s.goals||{total:{amount:0,heads:0},staff:{}},e=byMonth(state.entries,m),a=sum(e,x=>x.amount),h=sum(e,x=>x.heads);return `<div class="toolbar"><div class="field"><label>เดือน</label><select id="goalMonth">${monthOptions(m)}</select></div></div><div class="card"><div class="section-title"><h2>ตั้งเป้าหมาย • ${monthLabel(m)}</h2></div><form onsubmit="saveGoals(event,'${m}')"><div class="formgrid"><div class="field"><label>เป้ารายได้รวม</label><input name="totalAmount" type="number" value="${n(g.total?.amount)}"></div><div class="field"><label>เป้าลูกค้ารวม</label><input name="totalHeads" type="number" value="${n(g.total?.heads)}"></div><div></div><div></div>${staffNames().map((st,i)=>`<div class="field"><label>${esc(st)} • เป้ารายได้</label><input name="sa${i}" type="number" value="${n(g.staff?.[st]?.amount)}"></div><div class="field"><label>${esc(st)} • เป้าลูกค้า</label><input name="sh${i}" type="number" value="${n(g.staff?.[st]?.heads)}"></div>`).join('')}<div class="span4 actions"><button class="btn primary">บันทึกเป้าหมาย</button></div></div></form></div><br><div class="card"><div class="section-title"><h2>ความคืบหน้า</h2></div>${goalProgressBlock(m,a,h,g)}</div>`}
+function goalProgressBlock(m,a,h,g){const pct=(v,t)=>n(t)>0?Math.max(0,Math.min(100,n(v)/n(t)*100)):0,fmtPct=v=>(Math.round(v*10)/10).toLocaleString('th-TH',{maximumFractionDigits:1})+'%';const block=(name,aa,hh,gg,store=false)=>{const pa=pct(aa,gg?.amount),ph=pct(hh,gg?.heads);return `<div class="goal-progress-card ${store?'goal-store':''}"><div class="goal-progress-head"><div class="name">${store?'🏪 ':''}${esc(name)}</div><div class="muted">${money(aa)} • ${num(hh)} ลูกค้า</div></div><div class="goal-progress-metrics"><div class="goal-metric"><div class="goal-metric-top"><span><b>รายได้</b> <span class="value">${money(aa)} / ${money(gg?.amount)}</span></span><span class="goal-percent money">${n(gg?.amount)>0?fmtPct(pa):'—'}</span></div><div class="goal-bar money"><i style="width:${pa}%"></i></div></div><div class="goal-metric"><div class="goal-metric-top"><span><b>จำนวนลูกค้า</b> <span class="value">${num(hh)} / ${num(gg?.heads)} หัว</span></span><span class="goal-percent heads">${n(gg?.heads)>0?fmtPct(ph):'—'}</span></div><div class="goal-bar heads"><i style="width:${ph}%"></i></div></div></div></div>`};const rows=staffNames().map(st=>{const x=byMonth(state.entries,m).filter(e=>e.staff===st),aa=sum(x,z=>z.amount),hh=sum(x,z=>z.heads),gg=g.staff?.[st]||{};return block(st,aa,hh,gg,false)}).join('');return block('รวมร้าน',a,h,g.total||{},true)+rows}
+function saveGoals(e,m){e.preventDefault();const f=new FormData(e.target),staff={};staffNames().forEach((s,i)=>staff[s]={amount:n(f.get('sa'+i)),heads:n(f.get('sh'+i))});state.monthlySettings[m]={...(state.monthlySettings[m]||{}),goals:{total:{amount:n(f.get('totalAmount')),heads:n(f.get('totalHeads'))},staff}};save('บันทึกเป้าหมายแล้ว')}
+function toggleAnnualDetail(id,btn,label='รายละเอียด'){const box=document.getElementById(id);if(!box)return;const willShow=box.hasAttribute('hidden');if(willShow)box.removeAttribute('hidden');else box.setAttribute('hidden','');if(btn){btn.classList.toggle('is-open',willShow);btn.innerHTML=`<span class="toggle-arrow">▼</span>${willShow?'ซ่อน':'แสดง'}${label}`}}
+function expensesPage(){const m=filters.expMonth||currentMonth(),arr=byMonth(state.expenses,m).slice().sort((a,b)=>b.date.localeCompare(a.date)),y=String(filters.expYear||isoToday().slice(0,4)),yearArr=byYear(state.expenses,y).slice().sort((a,b)=>b.date.localeCompare(a.date)),yearTotal=sum(yearArr,x=>x.amount);return `<div class="card"><div class="section-title"><h2>รายจ่ายร้าน</h2><button class="btn primary" onclick="openExpenseModal()">＋ เพิ่มรายจ่าย</button></div><div class="toolbar"><div class="field"><label>เดือน</label><select onchange="filters.expMonth=this.value;render()">${monthOptions(m)}</select></div><b class="expense-number">รวม ${money(sum(arr,x=>x.amount))}</b></div>${expenseTable(arr)}</div><br><div class="card"><div class="section-title"><h2>สรุปรายจ่ายรวมทั้งปี</h2><span class="muted">เรียกดูข้อมูลย้อนหลังตามปี</span></div><div class="toolbar"><div class="field"><label>ปีรายจ่าย</label><select onchange="filters.expYear=this.value;render()">${yearOptions(y)}</select></div><span class="pill">📆 ปี ${Number(y)+543}</span></div><div class="grid kpis"><div class="kpi"><div class="label">รายจ่ายรวมทั้งปี</div><div class="num expense-number">${money(yearTotal)}</div><div class="sub">ปี ${Number(y)+543}</div></div><div class="kpi"><div class="label">จำนวนรายการทั้งปี</div><div class="num">${num(yearArr.length)} รายการ</div><div class="sub">กดปุ่มด้านล่างเพื่อดูรายละเอียด</div></div></div><div class="annual-detail-toggle"><button class="btn ghost detail-toggle-btn" onclick="toggleAnnualDetail('annualExpenseDetails',this)"><span class="toggle-arrow">▼</span>แสดงรายละเอียด</button></div><div id="annualExpenseDetails" class="annual-detail-wrap" hidden><div class="section-title"><h3>รายละเอียดรายจ่ายทั้งปี</h3><b class="expense-number">รวม ${money(yearTotal)}</b></div>${expenseTable(yearArr,'ไม่มีรายจ่ายในปีที่เลือก')}</div></div>`}
+function expenseTable(a,emptyText='ไม่มีรายจ่ายในเดือนนี้'){if(!a.length)return `<div class="empty">${emptyText}</div>`;return `<div class="tablewrap"><table><thead><tr><th>วันที่</th><th>รายการ</th><th>หมวด</th><th class="num">จำนวน</th><th></th></tr></thead><tbody>${a.map(x=>`<tr><td>${thDate(x.date)}</td><td>${esc(x.desc)}</td><td><span class="pill">${esc(x.category||'ยังไม่จัดหมวด')}</span></td><td class="num expense-number"><b>${money(x.amount)}</b></td><td><div class="actions"><button class="btn small" onclick="openExpenseModal('${x.id}')">แก้ไข</button><button class="btn small danger" onclick="del('expenses','${x.id}')">ลบ</button></div></td></tr>`).join('')}</tbody></table></div>`}
+function openExpenseModal(i=''){const x=state.expenses.find(x=>x.id===i)||{date:isoToday(),desc:'',amount:'',category:state.expenseCategories[0]};modal(`<div class="modalhead"><h3>${i?'แก้ไข':'เพิ่ม'}รายจ่าย</h3><button class="close" onclick="closeModal()">✕</button></div><form onsubmit="saveExpense(event,'${i}')"><div class="formgrid"><div class="field"><label>วันที่</label><input name="date" type="date" required value="${x.date}"></div><div class="field span2"><label>รายการ</label><input name="desc" required value="${esc(x.desc)}"></div><div class="field"><label>จำนวนเงิน</label><input name="amount" type="number" min="0" required value="${x.amount}"></div><div class="field span2"><label>หมวด</label><select name="category">${[...new Set(['ยังไม่จัดหมวด',...state.expenseCategories])].map(c=>`<option ${c===(x.category||'ยังไม่จัดหมวด')?'selected':''}>${esc(c)}</option>`).join('')}</select></div><div class="span4 actions"><button class="btn alt-sage">บันทึก</button><button type="button" class="btn" onclick="closeModal()">ยกเลิก</button></div></div></form>`)}
+function saveExpense(e,i){e.preventDefault();const f=new FormData(e.target),o={id:i||id(),date:f.get('date'),desc:String(f.get('desc')),amount:n(f.get('amount')),category:String(f.get('category'))};if(i)state.expenses[state.expenses.findIndex(x=>x.id===i)]=o;else state.expenses.push(o);closeModal();save('บันทึกรายจ่ายแล้ว')}
+function incomePage(){const m=filters.incomeMonth||currentMonth(),a=byMonth(state.funds,m).slice().sort((a,b)=>b.date.localeCompare(a.date)),y=String(filters.incomeYear||isoToday().slice(0,4)),yearArr=byYear(state.funds,y).slice().sort((a,b)=>b.date.localeCompare(a.date)),yearTotal=sum(yearArr,x=>x.amount);return `<div class="card"><div class="section-title"><h2>รายรับ</h2><button class="btn primary" onclick="openIncomeModal()">＋ เพิ่มรายรับ</button></div><div class="toolbar"><div class="field"><label>เดือน</label><select onchange="filters.incomeMonth=this.value;render()">${monthOptions(m)}</select></div><b>รวม ${money(sum(a,x=>x.amount))}</b></div><div class="notice">รายการกองกลางเดิมถูกนำมาใช้เป็น “รายรับ” เพื่อให้ข้อมูลเก่ายังคงต่อเนื่องกับสูตรกองกลางคงเหลือ</div>${incomeTable(a)}</div><br><div class="card"><div class="section-title"><h2>สรุปรายรับรวมทั้งปี</h2><span class="muted">เรียกดูข้อมูลย้อนหลังตามปี</span></div><div class="toolbar"><div class="field"><label>ปีรายรับ</label><select onchange="filters.incomeYear=this.value;render()">${yearOptions(y)}</select></div><span class="pill">📆 ปี ${Number(y)+543}</span></div><div class="grid kpis"><div class="kpi"><div class="label">รายรับรวมทั้งปี</div><div class="num good">${money(yearTotal)}</div><div class="sub">ปี ${Number(y)+543}</div></div><div class="kpi"><div class="label">จำนวนรายการทั้งปี</div><div class="num">${num(yearArr.length)} รายการ</div><div class="sub">กดปุ่มด้านล่างเพื่อดูรายละเอียด</div></div></div><div class="annual-detail-toggle"><button class="btn ghost detail-toggle-btn" onclick="toggleAnnualDetail('annualIncomeDetails',this)"><span class="toggle-arrow">▼</span>แสดงรายละเอียด</button></div><div id="annualIncomeDetails" class="annual-detail-wrap" hidden><div class="section-title"><h3>รายละเอียดรายรับทั้งปี</h3><b class="good">รวม ${money(yearTotal)}</b></div>${incomeTable(yearArr,'ไม่มีรายรับในปีที่เลือก')}</div></div>`}
+function incomeTable(a,emptyText='ไม่มีรายรับในเดือนนี้'){if(!a.length)return `<div class="empty">${emptyText}</div>`;return `<div class="tablewrap"><table><thead><tr><th>วันที่</th><th>รายการ</th><th class="num">จำนวน</th><th></th></tr></thead><tbody>${a.map(x=>`<tr><td>${thDate(x.date)}</td><td>${esc(x.desc)}</td><td class="num good"><b>＋${money(Math.abs(n(x.amount)))}</b></td><td><div class="actions"><button class="btn small" onclick="openIncomeModal('${x.id}')">แก้ไข</button><button class="btn small danger" onclick="del('funds','${x.id}')">ลบ</button></div></td></tr>`).join('')}</tbody></table></div>`}
+function openIncomeModal(i=''){const x=state.funds.find(x=>x.id===i)||{date:isoToday(),desc:'',amount:''};modal(`<div class="modalhead"><h3>${i?'แก้ไข':'เพิ่ม'}รายรับ</h3><button class="close" onclick="closeModal()">✕</button></div><form onsubmit="saveIncome(event,'${i}')"><div class="formgrid"><div class="field"><label>วันที่</label><input name="date" type="date" required value="${x.date}"></div><div class="field span2"><label>รายการ</label><input name="desc" required value="${esc(x.desc)}" placeholder="เช่น เพิ่มกองกลาง / ค่าสี"></div><div class="field"><label>จำนวนเงิน</label><input name="amount" type="number" min="0" step="1" required value="${Math.abs(n(x.amount))||''}"></div><div class="span4 actions"><button class="btn alt-sage">บันทึก</button><button type="button" class="btn" onclick="closeModal()">ยกเลิก</button></div></div></form>`)}
+function saveIncome(e,i){e.preventDefault();const f=new FormData(e.target),o={id:i||id(),date:f.get('date'),desc:String(f.get('desc')),amount:Math.abs(n(f.get('amount')))};if(i)state.funds[state.funds.findIndex(x=>x.id===i)]=o;else state.funds.push(o);closeModal();save('บันทึกรายรับแล้ว')}
+function expenseMini(a){return a.length?a.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(x=>`<div class="statline"><span>${esc(x.desc)} <small class="muted">${thDate(x.date)}</small></span><b class="expense-number">−${money(Math.abs(n(x.amount)))}</b></div>`).join(''):'<div class="empty">ไม่มีรายจ่าย</div>'}
+function fundsPage(){const m=filters.fundMonth||currentMonth(),open=openingBalance(m),inc=receiptSum(m),ex=expenseSum(m),bal=centralBalance(m);return `<div class="toolbar"><div class="field"><label>เดือน</label><select onchange="filters.fundMonth=this.value;render()">${monthOptions(m)}</select></div></div><div class="card"><div class="section-title"><h2>กองกลางคงเหลือ • ${monthLabel(m)}</h2><button class="btn" onclick="go('income')">ดูรายรับ</button></div><div class="bigmoney balance-number">${money(bal)}</div><div class="muted">คำนวณอัตโนมัติตามสูตร: รายรับ − รายจ่าย + กองกลางคงเหลือเดือนก่อนหน้า</div><br><div class="formula-grid"><div class="formula-box"><div class="label">กองกลางคงเหลือเดือนก่อนหน้า</div><div class="value balance-number">${money(open)}</div></div><div class="formula-box"><div class="label">＋ รายรับเดือนนี้</div><div class="value good">${money(inc)}</div></div><div class="formula-box"><div class="label">− รายจ่ายเดือนนี้</div><div class="value expense-number">${money(ex)}</div></div><div class="formula-box"><div class="label">＝ กองกลางคงเหลือ</div><div class="value balance-number">${money(bal)}</div></div></div></div><br><div class="grid two"><div class="card"><div class="section-title"><h2>รายรับเดือนนี้</h2><span class="muted">${num(byMonth(state.funds,m).length)} รายการ</span></div>${incomeMini(byMonth(state.funds,m))}</div><div class="card"><div class="section-title"><h2>รายจ่ายเดือนนี้</h2><span class="muted">${num(byMonth(state.expenses,m).length)} รายการ</span></div>${expenseMini(byMonth(state.expenses,m))}</div></div><br><div class="card"><div class="section-title"><h2>รายการเคลื่อนไหวกองกลาง</h2></div>${centralLedger(m)}</div>`}
+function incomeMini(a){return a.length?a.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(x=>`<div class="statline"><span>${esc(x.desc)} <small class="muted">${thDate(x.date)}</small></span><b class="good">＋${money(Math.abs(n(x.amount)))}</b></div>`).join(''):'<div class="empty">ไม่มีรายรับ</div>'}
+function centralLedger(m){const rows=[...byMonth(state.funds,m).map(x=>({...x,type:'รายรับ',signed:Math.abs(n(x.amount))})),...byMonth(state.expenses,m).map(x=>({...x,type:'รายจ่าย',signed:-Math.abs(n(x.amount))}))].sort((a,b)=>b.date.localeCompare(a.date));if(!rows.length)return '<div class="empty">ไม่มีรายการในเดือนนี้</div>';return `<div class="tablewrap income-expense-ledger"><table><thead><tr><th>วันที่</th><th>ประเภท</th><th>รายการ</th><th class="num">จำนวน</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${thDate(x.date)}</td><td><span class="pill">${x.type}</span></td><td>${esc(x.desc)}</td><td class="num ${x.signed>=0?'good':'bad'}"><b>${x.signed>=0?'＋':'−'}${money(Math.abs(x.signed))}</b></td></tr>`).join('')}</tbody></table></div>`}
+function fundTable(a){return incomeTable(a)}
+function openFundModal(i=''){openIncomeModal(i)}
+function saveFund(e,i){saveIncome(e,i)}
+function analyticsPage(){const m=filters.anaMonth||currentMonth(),y=filters.anaYear||m.slice(0,4),e=byMonth(state.entries,m),a=sum(e,x=>x.amount),h=sum(e,x=>x.heads),prev=prevMonth(m),pe=byMonth(state.entries,prev),pa=sum(pe,x=>x.amount),ph=sum(pe,x=>x.heads);const change=(v,p)=>p?((v-p)/p*100):0;return `<div class="toolbar"><div class="field"><label>เดือนวิเคราะห์</label><select id="anaMonth">${monthOptions(m)}</select></div><div class="field"><label>ปีของกราฟเปรียบเทียบ</label><select id="anaYear">${yearOptions(y)}</select></div></div><div class="grid kpis">${kpi('รายได้งานช่าง',money(a),`${change(a,pa)>=0?'▲':'▼'} ${Math.abs(change(a,pa)).toFixed(1)}% จากเดือนก่อน`)}${kpi('ลูกค้า',num(h)+' หัว',`${change(h,ph)>=0?'▲':'▼'} ${Math.abs(change(h,ph)).toFixed(1)}% จากเดือนก่อน`)}${kpi('เฉลี่ย/ลูกค้า',h?money(a/h):'—',monthLabel(m))}${kpi('เดือนก่อน',money(pa),monthLabel(prev))}</div><br><div class="grid two"><div class="card"><div class="section-title"><h2>วันเฉลี่ยที่มีลูกค้ามากที่สุด → น้อยที่สุด</h2></div>${weekdayAverageRanking(m)}</div><div class="card"><div class="section-title"><h2>ค่าเฉลี่ยจำนวนลูกค้าต่อวันของช่าง</h2></div>${staffWorkingDayAverage(m)}</div></div><br><div class="card"><div class="section-title"><h2>เปรียบเทียบจำนวนลูกค้าของช่างรายเดือน • ปี ${Number(y)+543}</h2><span class="muted">ม.ค. – ${chartMonthsForYear(y)===12?'ธ.ค.':monthShort(chartMonthsForYear(y))}</span></div>${customerLineChart(y)}</div><br><div class="grid two"><div class="card"><div class="section-title"><h2>สรุปวันในสัปดาห์</h2></div>${weekdayAnalytics(m)}</div><div class="card"><div class="section-title"><h2>อันดับช่างตามรายได้</h2></div>${staffRanking(m)}</div></div><br><div class="card"><div class="section-title"><h2>10 อันดับวันทำยอดสูงสุด</h2><span class="muted">แสดงสูงสุด 10 อันดับ</span></div>${topDays(m)}</div>`}
+function prevMonth(m){let [y,mo]=m.split('-').map(Number);mo--;if(!mo){mo=12;y--}return `${y}-${String(mo).padStart(2,'0')}`}
+function weekdayAverageRanking(m){const occ=weekdayOccurrenceCounts(m),em=byMonth(state.entries,m);const rows=WEEK.map(w=>{const total=sum(em.filter(x=>(x.weekday||weekday(x.date))===w),x=>x.heads),days=occ[w]||0;return {w,total,days,avg:days?total/days:0}}).filter(x=>x.days).sort((a,b)=>b.avg-a.avg||b.total-a.total);return rows.length?`<div>${rows.map((r,i)=>`<div class="avg-rank"><div class="badge">${i+1}</div><div><b>${r.w}</b><div class="muted">ลูกค้ารวม ${num(r.total)} หัว ÷ ${num(r.days)} ${r.w}</div></div><b>${r.avg.toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2})} หัว/วัน</b></div>`).join('')}</div><div class="notice" style="margin-top:12px">คำนวณแยกเฉพาะ ${monthLabel(m)} และนับจำนวนวันจริงของแต่ละวันในสัปดาห์; เดือนปัจจุบันจะไม่นับวันที่ยังมาไม่ถึง</div>`:'<div class="empty">ไม่มีข้อมูลสำหรับเดือนนี้</div>'}
+function staffWorkingDayAverage(m){const rows=staffNames().map(s=>{const z=byMonth(state.entries,m).filter(x=>x.staff===s),h=sum(z,x=>x.heads),days=window.BarberOps?BarberOps.workingDays(s,m):new Set(z.map(x=>x.date).filter(Boolean)).size;return {s,h,days,avg:days?h/days:0}}).filter(x=>x.days>0).sort((a,b)=>b.avg-a.avg||b.h-a.h);return rows.length?rows.map((r,i)=>`<div class="avg-rank"><div class="badge">${i+1}</div><div><b>${esc(r.s)}</b><div class="muted">ลูกค้ารวม ${num(r.h)} หัว ÷ วันทำงาน ${num(r.days)} วัน</div></div><b>${r.avg.toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2})} หัว/วัน</b></div>`).join('')+'<div class="notice" style="margin-top:12px">สูตร: จำนวนลูกค้ารวมของช่างในเดือน ÷ จำนวนวันทำงานจริงของช่างในเดือนนั้น นับวันที่มีรายการงานหรือยืนยันมาทำงานแบบไม่ซ้ำกัน รวมวันมาทำงานที่ไม่มีลูกค้า</div>':'<div class="empty">ไม่มีข้อมูลวันทำงานของช่างในเดือนนี้</div>'}
+function weekdayAnalytics(m){const occ=weekdayOccurrenceCounts(m),rows=WEEK.map(w=>{const z=byMonth(state.entries,m).filter(x=>(x.weekday||weekday(x.date))===w),a=sum(z,x=>x.amount),h=sum(z,x=>x.heads),d=occ[w]||0;return [w,a,h,d,d?h/d:0]}).filter(x=>x[3]);return `<div class="weekgrid">${rows.map(([w,a,h,d,av])=>`<div class="weekday"><span>${w}</span><b>${av.toLocaleString('th-TH',{minimumFractionDigits:1,maximumFractionDigits:1})} หัว/วัน</b><small class="muted">รวม ${num(h)} หัว • ${d} วัน<br>${money(a)}</small></div>`).join('')}</div>`}
+function staffRanking(m){const r=staffNames().map(s=>{const z=byMonth(state.entries,m).filter(x=>x.staff===s);return [s,sum(z,x=>x.amount),sum(z,x=>x.heads)]}).sort((a,b)=>b[1]-a[1]);return r.map(([s,a,h],i)=>`<div class="rank"><div class="badge">${i+1}</div><div><b>${esc(s)}</b><div class="muted">${num(h)} ลูกค้า • ${h?money(a/h)+'/หัว':'—'}</div></div><b>${money(a)}</b></div>`).join('')}
+function monthShort(m){return ['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'][Number(m)]||''}
+function customerLineChart(y){const count=chartMonthsForYear(y);if(!count)return '<div class="empty">ไม่มีเดือนที่ผ่านมาสำหรับปีนี้</div>';const months=Array.from({length:count},(_,i)=>i+1),names=staffNames(),yearEntries=state.entries.filter(x=>x.date?.startsWith(`${y}-`));if(!yearEntries.length)return `<div class="empty">ยังไม่มีข้อมูลลูกค้าในปี ${Number(y)+543}</div>`;const data=names.map(s=>months.map(m=>sum(state.entries.filter(x=>x.staff===s&&x.date?.startsWith(`${y}-${String(m).padStart(2,'0')}`)),x=>x.heads))),max=Math.max(1,...data.flat()),W=980,H=410,L=60,R=28,T=42,B=54,pw=W-L-R,ph=H-T-B,steps=5,colors=['var(--chart-1)','var(--chart-2)','var(--chart-3)','var(--chart-4)','var(--chart-5)','var(--chart-6)'];const x=i=>L+(months.length===1?pw/2:i*pw/(months.length-1)),yy=v=>T+ph-(v/max*ph),grid=Array.from({length:steps+1},(_,i)=>{const v=max*i/steps,Y=yy(v);return `<line x1="${L}" y1="${Y}" x2="${W-R}" y2="${Y}" stroke="var(--line)" stroke-width="1"/><text x="${L-10}" y="${Y+4}" text-anchor="end" font-size="11" fill="var(--muted)">${Math.round(v)}</text>`}).join(''),labels=months.map((m,i)=>`<text x="${x(i)}" y="${H-18}" text-anchor="middle" font-size="11" fill="var(--muted)">${monthShort(m)}</text>`).join(''),offsets=[-11,17,-25,29,-39,41],lines=data.map((vals,si)=>{const c=colors[si%colors.length],pts=vals.map((v,i)=>`${x(i)},${yy(v)}`).join(' '),points=vals.map((v,i)=>{const px=x(i),py=yy(v),dy=offsets[si%offsets.length],labelY=Math.max(13,Math.min(H-B-5,py+dy));return `<circle cx="${px}" cy="${py}" r="4.5" fill="${c}"><title>${names[si]} • ${monthShort(months[i])} ${Number(y)+543}: ${num(v)} หัว</title></circle><text class="point-value" x="${px}" y="${labelY}" text-anchor="middle" fill="${c}">${num(v)}</text>`}).join('');return `<polyline points="${pts}" fill="none" stroke="${c}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${points}`}).join(''),legend=names.map((s,i)=>`<span class="legend-item"><i class="legend-dot" style="background:${colors[i%colors.length]}"></i>${esc(s)}</span>`).join('');return `<div class="chart-wrap"><svg class="linechart" viewBox="0 0 ${W} ${H}" role="img" aria-label="กราฟเปรียบเทียบจำนวนลูกค้าของช่างรายเดือน">${grid}<line x1="${L}" y1="${T}" x2="${L}" y2="${H-B}" stroke="var(--muted)"/><line x1="${L}" y1="${H-B}" x2="${W-R}" y2="${H-B}" stroke="var(--muted)"/>${labels}${lines}<text x="16" y="${T+ph/2}" transform="rotate(-90 16 ${T+ph/2})" text-anchor="middle" font-size="12" fill="var(--muted)">จำนวนลูกค้า (หัว)</text></svg></div><div class="chart-legend">${legend}</div><div class="muted" style="font-size:12px;margin-top:8px">ตัวเลขบนแต่ละจุดคือจำนวนลูกค้ารวมของช่างรายนั้นในเดือนนั้น • เลือกปีจากด้านบนเพื่อดูย้อนหลัง</div>`}
+function topDays(m){const map={};byMonth(state.entries,m).forEach(x=>{map[x.date]??={a:0,h:0};map[x.date].a+=n(x.amount);map[x.date].h+=n(x.heads)});const a=Object.entries(map).sort((a,b)=>b[1].a-a[1].a).slice(0,10);return a.length?`<div class="tablewrap"><table><thead><tr><th>อันดับ</th><th>วันที่</th><th>วัน</th><th class="num">รายได้ + จำนวนหัว</th></tr></thead><tbody>${a.map(([d,v],i)=>`<tr><td>${i+1}</td><td>${thDate(d)}</td><td>${weekday(d)}</td><td class="num"><div style="display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap"><b>${money(v.a)}</b><span class="pill">👥 ${num(v.h)} หัว</span></div></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">ไม่มีข้อมูล</div>'}
+function historyPage(){const q=(filters.q||'').toLowerCase(),st=filters.histStaff||'',m=filters.histMonth||'';let a=state.entries.slice().sort((a,b)=>b.date.localeCompare(a.date));if(q)a=a.filter(x=>`${x.date} ${x.staff} ${x.notes||''}`.toLowerCase().includes(q));if(st)a=a.filter(x=>x.staff===st);if(m)a=a.filter(x=>x.date.startsWith(m));return `<div class="card"><div class="section-title"><h2>ประวัติงานทั้งหมด</h2><span class="muted">${num(a.length)} รายการ</span></div><div class="toolbar"><input placeholder="ค้นหา วันที่ / ช่าง / หมายเหตุ" value="${esc(filters.q||'')}" oninput="filters.q=this.value;render()"><select onchange="filters.histStaff=this.value;render()"><option value="">ช่างทั้งหมด</option>${staffNames().map(s=>`<option ${s===st?'selected':''}>${esc(s)}</option>`).join('')}</select><select onchange="filters.histMonth=this.value;render()"><option value="">ทุกเดือน</option>${monthOptions(m)}</select></div>${historyTable(a.slice(0,500))}${a.length>500?'<div class="notice" style="margin-top:12px">แสดง 500 รายการแรกตามตัวกรอง เพื่อให้โปรแกรมทำงานลื่น</div>':''}</div>`}
+function historyTable(a){if(!a.length)return '<div class="empty">ไม่พบข้อมูล</div>';return `<div class="tablewrap"><table><thead><tr><th>วันที่</th><th>วัน</th><th>ช่าง</th><th class="num">รายได้</th><th class="num">ลูกค้า</th><th>หมายเหตุ</th><th></th></tr></thead><tbody>${a.map(x=>`<tr><td>${thDate(x.date)}</td><td>${weekday(x.date)}</td><td><b>${esc(x.staff)}</b></td><td class="num">${money(x.amount)}</td><td class="num">${num(x.heads)}</td><td>${esc(x.notes||'')}</td><td><button class="btn small" onclick="openEntryModal('${x.id}')">แก้ไข</button></td></tr>`).join('')}</tbody></table></div>`}
+function staffPage(){const hasShop=!!String(state.shopName||'').trim();return `<div class="grid two"><div class="card"><div class="section-title"><h2>รายชื่อช่าง</h2><button class="btn primary" onclick="addStaff()">＋ เพิ่มช่าง</button></div>${state.staff.map((s,i)=>`<div class="staff-row"><b>${esc(s.name)}</b><div class="muted">${num(state.entries.filter(x=>x.staff===s.name).length)} รายการประวัติ</div><div class="actions"><button class="btn small" onclick="renameStaff(${i})">เปลี่ยนชื่อ</button><button class="btn small danger" onclick="removeStaff(${i})">ลบ</button></div></div>`).join('')}</div><div class="card shop-settings"><div class="section-title"><h2>จัดการร้าน</h2></div><div class="shop-name-card"><div class="muted">ชื่อร้านที่แสดงบนแถบด้านบน</div><div class="current-shop-name">${hasShop?esc(state.shopName):'ยังไม่ได้ตั้งชื่อร้าน'}</div><div class="actions"><button class="btn primary" onclick="editShopName()">${hasShop?'✏️ แก้ไขชื่อร้าน':'＋ เพิ่มชื่อร้าน'}</button>${hasShop?'<button class="btn ghost" onclick="clearShopName()">ล้างชื่อร้าน</button>':''}</div></div><div><h3>การจัดการชื่อช่างและร้าน</h3><p class="muted">การเปลี่ยนชื่อช่างจะอัปเดตประวัติรายการงานและเป้าหมายรายเดือนให้ตรงกันทั้งหมด ส่วนการลบรายชื่อช่างจะไม่ลบประวัติเก่า ชื่อร้านจะถูกเก็บพร้อมข้อมูลโปรแกรมและรวมอยู่ใน Backup JSON</p></div></div></div>`}
+function addStaff(){const name=prompt('ชื่อช่างใหม่');if(!name?.trim())return;if(staffNames().includes(name.trim()))return toast('มีชื่อนี้แล้ว');state.staff.push({name:name.trim()});save('เพิ่มช่างแล้ว')}
+function renameStaff(i){const old=state.staff[i].name,nn=prompt('เปลี่ยนชื่อช่าง',old);if(!nn?.trim()||nn.trim()===old)return;if(staffNames().includes(nn.trim()))return toast('มีชื่อนี้แล้ว');state.staff[i].name=nn.trim();state.entries.forEach(x=>{if(x.staff===old)x.staff=nn.trim()});Object.values(state.monthlySettings).forEach(s=>{if(s.goals?.staff?.[old]){s.goals.staff[nn.trim()]=s.goals.staff[old];delete s.goals.staff[old]}});save('เปลี่ยนชื่อแล้ว')}
+function removeStaff(i){const s=state.staff[i].name;if(!confirm(`ลบ ${s} ออกจากรายชื่อช่าง? ประวัติงานเดิมจะยังอยู่`))return;state.staff.splice(i,1);save('ลบรายชื่อแล้ว')}
+function editShopName(){const current=String(state.shopName||'');const v=prompt(current?'แก้ไขชื่อร้าน':'เพิ่มชื่อร้าน',current);if(v===null)return;const name=String(v).trim();if(!name){alert('กรุณากรอกชื่อร้าน');return}state.shopName=name;save('บันทึกชื่อร้านแล้ว')}
+function clearShopName(){if(!confirm('ล้างชื่อร้านที่แสดงอยู่หรือไม่?'))return;state.shopName='';save('ล้างชื่อร้านแล้ว')}
+function backupPage(){const dup=duplicateCount();return `<div class="grid two"><div class="card"><div class="section-title"><h2>สำรอง / นำเข้าข้อมูล</h2></div><p class="muted">ข้อมูลใช้งานหลักเก็บในเบราว์เซอร์เครื่องนี้ และสามารถสร้าง Snapshot สำรองไว้ใน IndexedDB ได้ฟรี</p><div class="actions"><button class="btn primary" onclick="createIDBSnapshot(true)">🗄️ สำรองลง IndexedDB</button><button class="btn" onclick="restoreLatestIDBSnapshot()">↩️ กู้คืน Snapshot ล่าสุด</button><button class="btn" onclick="saveBackupAs()">💾 Export JSON</button><label class="btn">⬆ นำเข้า JSON<input type="file" accept=".json,application/json" onchange="importJSON(this.files[0])" hidden></label><button class="btn" onclick="exportAllCSV()">📊 Export CSV</button></div><br><div class="notice"><b>IndexedDB Snapshot:</b> เก็บข้อมูลสำรองไว้ภายในเบราว์เซอร์/อุปกรณ์นี้ สูงสุด 20 ชุด และไม่ส่งข้อมูลร้านขึ้น GitHub</div><br><div class="notice"><b>สำคัญ:</b> IndexedDB ไม่ซิงก์ข้ามเครื่องอัตโนมัติ หากต้องการย้ายข้อมูลระหว่างมือถือกับคอมให้ใช้ Export JSON → Import JSON</div></div><div class="card"><div class="section-title"><h2>ตรวจสุขภาพข้อมูล</h2></div>${healthRow('รายการงาน',state.entries.length)}${healthRow('รายจ่าย',state.expenses.length)}${healthRow('รายรับ',state.funds.length)}${healthRow('รายการวันที่+ช่างซ้ำ',dup,dup?'warn':'good')}<div style="margin-top:14px" class="muted" id="idbBackupStatus">กำลังตรวจ IndexedDB…</div></div></div><br><div class="card dangerzone"><div class="section-title"><h2>รีเซ็ตโปรแกรม</h2></div><p class="muted">รีเซ็ตเป็นข้อมูลว่างสำหรับเว็บ ก่อนรีเซ็ตระบบจะสร้าง Snapshot ลง IndexedDB ให้อัตโนมัติ</p><button class="btn danger" onclick="resetSeedWeb()">ล้างข้อมูลในเครื่องนี้</button></div><div class="footer">Barber Manager V1.10.8.1 Web • Base V1.10.7 • PWA + IndexedDB Snapshot</div>`}
+function healthRow(l,v,c=''){return `<div class="statline"><span>${l}</span><b class="${c}">${num(v)}</b></div>`}
+function duplicateCount(){const m=new Map;state.entries.forEach(x=>{const k=x.date+'|'+x.staff;m.set(k,(m.get(k)||0)+1)});return [...m.values()].filter(n=>n>1).length}
+function del(k,i){if(!confirm('ยืนยันลบรายการนี้?'))return;state[k]=state[k].filter(x=>x.id!==i);save('ลบแล้ว')}
+function modal(h){const box=document.getElementById('modalbox'),overlay=document.getElementById('modal');box.innerHTML=h;box.scrollTop=0;overlay.classList.add('open');document.body.classList.add('modal-open');requestAnimationFrame(()=>{overlay.scrollTop=0;box.scrollTop=0})} function closeModal(){document.getElementById('modal').classList.remove('open');document.body.classList.remove('modal-open')}
+const IDB_DB='barberManagerWebBackups';
+const IDB_STORE='snapshots';
+const IDB_MAX=20;
+function openBackupDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(IDB_DB,1);req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(IDB_STORE))db.createObjectStore(IDB_STORE,{keyPath:'id',autoIncrement:true})};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})}
+async function createIDBSnapshot(showToast=false){try{const db=await openBackupDB();const tx=db.transaction(IDB_STORE,'readwrite'),store=tx.objectStore(IDB_STORE);store.add({createdAt:new Date().toISOString(),data:clone(state),version:'1.10.8'});await new Promise((res,rej)=>{tx.oncomplete=res;tx.onerror=()=>rej(tx.error)});const tx2=db.transaction(IDB_STORE,'readwrite'),s2=tx2.objectStore(IDB_STORE),all=await new Promise((res,rej)=>{const r=s2.getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)});if(all.length>IDB_MAX){all.sort((a,b)=>a.id-b.id).slice(0,all.length-IDB_MAX).forEach(x=>s2.delete(x.id))}await new Promise((res,rej)=>{tx2.oncomplete=res;tx2.onerror=()=>rej(tx2.error)});db.close();if(showToast)toast('สำรอง Snapshot ลง IndexedDB แล้ว');updateIDBBackupStatus();return true}catch(e){console.error(e);if(showToast)alert('ไม่สามารถสำรอง IndexedDB ได้ในเบราว์เซอร์นี้');return false}}
+async function latestIDBSnapshot(){const db=await openBackupDB();const tx=db.transaction(IDB_STORE,'readonly'),store=tx.objectStore(IDB_STORE);const all=await new Promise((res,rej)=>{const r=store.getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)});db.close();return all.sort((a,b)=>b.id-a.id)[0]||null}
+async function restoreLatestIDBSnapshot(){try{const snap=await latestIDBSnapshot();if(!snap){alert('ยังไม่มี Snapshot ใน IndexedDB');return}if(!confirm(`กู้คืน Snapshot วันที่ ${new Date(snap.createdAt).toLocaleString('th-TH')} และแทนที่ข้อมูลปัจจุบันหรือไม่?`))return;state=upgrade(clone(snap.data));localStorage.setItem(STORAGE,JSON.stringify(state));toast('กู้คืน Snapshot สำเร็จ');render()}catch(e){console.error(e);alert('กู้คืน Snapshot ไม่สำเร็จ')}}
+async function updateIDBBackupStatus(){const el=document.getElementById('idbBackupStatus');if(!el)return;try{const db=await openBackupDB();const tx=db.transaction(IDB_STORE,'readonly'),store=tx.objectStore(IDB_STORE);const all=await new Promise((res,rej)=>{const r=store.getAll();r.onsuccess=()=>res(r.result||[]);r.onerror=()=>rej(r.error)});db.close();if(!all.length){el.textContent='IndexedDB: ยังไม่มี Snapshot';return}all.sort((a,b)=>b.id-a.id);el.textContent=`IndexedDB: ${all.length} Snapshot • ล่าสุด ${new Date(all[0].createdAt).toLocaleString('th-TH')}`}catch(e){el.textContent='IndexedDB: ไม่พร้อมใช้งาน'}}
+async function resetSeedWeb(){if(!confirm('ล้างข้อมูลทั้งหมดในเบราว์เซอร์เครื่องนี้จริงหรือไม่?'))return;await createIDBSnapshot(false);state=upgrade(clone(SEED));localStorage.removeItem(STORAGE);save('ล้างข้อมูลในเครื่องนี้แล้ว')}
+function download(name,text,type='application/json'){const b=new Blob([text],{type}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
+async function saveBackupAs(){
+ const out={...state,appMeta:{app:'Barber Manager V1.10.8.1 Web — Base V1.10.7',exportedAt:new Date().toISOString()}};
+ const name=`barber_backup_${isoToday()}.json`;
+ const text=JSON.stringify(out,null,2);
+ if('showSaveFilePicker' in window){
   try{
-    if(typeof DecompressionStream==='undefined') throw new Error('เบราว์เซอร์นี้ไม่รองรับ DecompressionStream กรุณาใช้ Chrome, Edge หรือเบราว์เซอร์รุ่นใหม่');
-    const chunks=[];
-    for(let i=0;i<parts.length;i++){
-      msg.textContent=`กำลังโหลดโปรแกรม ${i+1}/${parts.length}`;
-      const r=await fetch(parts[i]);
-      if(!r.ok) throw new Error(`โหลดไฟล์ ${parts[i]} ไม่สำเร็จ (${r.status})`);
-      chunks.push((await r.text()).replace(/\s+/g,''));
-    }
-    msg.textContent='กำลังเริ่มโปรแกรม…';
-    const b64=chunks.join('');
-    const raw=atob(b64);
-    const bytes=new Uint8Array(raw.length);
-    for(let i=0;i<raw.length;i++) bytes[i]=raw.charCodeAt(i);
-    const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
-    const html=await new Response(stream).text();
-    if(!html.includes('Barber Manager')) throw new Error('ไฟล์โปรแกรมไม่สมบูรณ์');
-    document.open();
-    document.write(html);
-    document.close();
+   const handle=await window.showSaveFilePicker({
+    id:'barber-manager-backup',
+    suggestedName:name,
+    types:[{description:'Barber Manager Backup (JSON)',accept:{'application/json':['.json']}}],
+    excludeAcceptAllOption:false
+   });
+   const writable=await handle.createWritable();
+   await writable.write(new Blob([text],{type:'application/json'}));
+   await writable.close();
+   toast('บันทึก Backup เรียบร้อยแล้ว');
+   return;
   }catch(err){
-    console.error(err);
-    msg.className='error';
-    msg.textContent='เปิดโปรแกรมไม่สำเร็จ: '+(err&&err.message?err.message:String(err));
+   if(err && err.name==='AbortError'){toast('ยกเลิกการบันทึก Backup');return;}
+   console.warn('Save picker unavailable, falling back to download:',err);
   }
-})();
+ }
+ download(name,text);
+ toast('เบราว์เซอร์นี้ใช้หน้าต่างเลือกที่เก็บไม่ได้ จึงดาวน์โหลด Backup แบบปกติแทน');
+}
+function downloadBackup(){return saveBackupAs()}
+function importJSON(file){if(!file)return;const r=new FileReader;r.onload=async()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.entries)||!Array.isArray(d.staff))throw Error('รูปแบบไม่ตรง');if(confirm(`พบ ${d.entries.length} รายการงาน ต้องการแทนที่ข้อมูลปัจจุบันหรือไม่?`)){await createIDBSnapshot(false);state=upgrade(d);save('นำเข้าข้อมูลสำเร็จ')}}catch(e){alert('นำเข้าไม่ได้: ไฟล์ JSON ไม่ใช่รูปแบบข้อมูลร้านที่รองรับ')}};r.readAsText(file,'utf-8')}
+function csvCell(v){v=String(v??'');return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}
+function csv(rows){return '\ufeff'+rows.map(r=>r.map(csvCell).join(',')).join('\r\n')}
+function exportAllCSV(){const rows=[['วันที่','วัน','ช่าง','รายได้','จำนวนลูกค้า','หมายเหตุ'],...state.entries.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(x=>[x.date,weekday(x.date),x.staff,x.amount,x.heads,x.notes||''])];download(`barber_entries_${isoToday()}.csv`,csv(rows),'text/csv;charset=utf-8');toast('Export CSV แล้ว')}
+function exportMonthCSV(m){const rows=[['วันที่','วัน','ช่าง','รายได้','จำนวนลูกค้า','หมายเหตุ'],...byMonth(state.entries,m).sort((a,b)=>a.date.localeCompare(b.date)).map(x=>[x.date,weekday(x.date),x.staff,x.amount,x.heads,x.notes||''])];download(`barber_${m}.csv`,csv(rows),'text/csv;charset=utf-8')}
+function resetSeed(){if(!confirm('คืนค่าข้อมูลต้นฉบับจริงหรือไม่?'))return;state=upgrade(clone(SEED));localStorage.removeItem(STORAGE);save('คืนค่าข้อมูลต้นฉบับแล้ว')}
+
+if('serviceWorker' in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(console.warn));
+if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
+loadTheme();
+render();
 </script>
-</body>
-</html>
+<script src="./staff-photos.js"></script><script src="./shop-enhancements.js"></script><script src="./staff-days-off.js"></script><script src="./firebase-config.js"></script><script src="./cloud-merge.js"></script><script src="./cloud-sync.js"></script><script src="./hair-catalogue.js"></script><script src="./learning-center.js"></script><script src="./navigation-groups.js"></script></body></html>

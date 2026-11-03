@@ -12,11 +12,11 @@
   function merge(base, local, remote, path = '') {
     if (equal(local, base)) return copy(remote);
     if (equal(remote, base) || equal(local, remote)) return copy(local);
-    if (Array.isArray(base) && Array.isArray(local) && Array.isArray(remote)) {
+    if ((base === undefined || Array.isArray(base)) && Array.isArray(local) && Array.isArray(remote)) {
       const keyed = array => array.every(x => plain(x) && typeof x.id === 'string' && x.id) && new Set(array.map(x => x.id)).size === array.length;
-      if ([base, local, remote].every(keyed)) {
-        const maps = [base, local, remote].map(array => new Map(array.map(x => [x.id, x])));
-        const ids = [...new Set([...remote, ...local, ...base].map(x => x.id))];
+      if ([base || [], local, remote].every(keyed)) {
+        const maps = [base || [], local, remote].map(array => new Map(array.map(x => [x.id, x])));
+        const ids = [...new Set([...remote, ...local, ...(base || [])].map(x => x.id))];
         return ids.map(id => merge(...maps.map(m => m.get(id)), `${path}/${id}`)).filter(x => x !== undefined);
       }
     }

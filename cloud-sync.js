@@ -20,6 +20,15 @@
   let auth, db, api, user, unsubscribe, reference;
   let base = null, remote = null, pending = null, ready = false, busy = false, remoteLoaded = false;
   let status = 'กำลังเชื่อมต่อบริการ', problem = '';
+  let lastSynced = null;
+  function refreshSyncBadge() {
+    const top=document.querySelector('.top');if(!top)return;
+    let badge=document.getElementById('syncBadge');
+    if(!badge){badge=document.createElement('button');badge.id='syncBadge';badge.className='btn small sync-badge';badge.onclick=()=>go('cloud');badge.setAttribute('aria-live','polite');top.append(badge)}
+    const offline=!navigator.onLine;
+    const message=!user?'ยังไม่เข้าสู่ระบบ':problem?'ซิงก์ต้องตรวจสอบ':offline?(pending?'ออฟไลน์ · มีข้อมูลรอส่ง':'ออฟไลน์'):busy?'กำลังซิงก์…':pending?'มีข้อมูลรอส่ง':!ready?'ยังไม่เชื่อมข้อมูลร้าน':!remoteLoaded?'กำลังตรวจข้อมูลออนไลน์':lastSynced?'ซิงก์แล้ว '+new Date(lastSynced).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}):'กำลังตรวจสถานะ';
+    badge.textContent='☁ '+message;badge.dataset.status=problem?'error':offline||pending||!ready?'pending':'ready';badge.title=(problem||status)+(lastSynced?' • ตรวจล่าสุด '+new Date(lastSynced).toLocaleString('th-TH'):'');
+  }
   let resetSending = false, resetNotice = '';
   const gate = document.createElement('main');
   gate.id = 'authGate';
@@ -52,7 +61,7 @@
     return data;
   }
   function decode(value) { return value ? valid(JSON.parse(value.payload)) : null; }
-  function note(message) { status = message; refreshGate(); if (page === 'cloud') render(); }
+  function note(message) { status = message;if(user&&ready&&!pending&&!problem&&['ซิงก์เรียบร้อย','นำข้อมูลขึ้นออนไลน์แล้ว'].includes(message))lastSynced=new Date().toISOString();refreshGate();refreshSyncBadge(); if (page === 'cloud') render(); }
   function backupLocal() { localStorage.setItem('barberBeforeCloudV1', JSON.stringify(state)); }
   function apply(data) { state = upgrade(copy(data)); localStorage.setItem(STORAGE, JSON.stringify(state)); rememberBase(state); }
   function editing() { return document.getElementById('modal')?.classList.contains('open') || ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName); }
@@ -64,6 +73,7 @@
   const originalRender = render;
   PAGES.push(['cloud', '☁', 'ซิงก์ออนไลน์']);
   render = function () {
+    refreshSyncBadge();
     if (page !== 'cloud') return originalRender();
     renderNav(); updateThemeUI();
     document.getElementById('pageTitle').textContent = 'ซิงก์ออนไลน์';
@@ -87,13 +97,14 @@
   });
   const originalSave = save;
   save = function (message) {
-    if (!user) { note('กรุณาเข้าสู่ระบบก่อนใช้งาน'); return; }
+    if (!user) { note('กรุณาเข้าสู่ระบบก่อนใช้งาน'); return false; }
     if (ready) {
       try { persistPending({ uid: OWNER, base: pending ? pending.base : copy(base), data: copy(state) }); }
-      catch (_) { alert('บันทึกรายการรอซิงก์ไม่ได้ กรุณาสำรองข้อมูลและเพิ่มพื้นที่ว่าง'); return; }
+      catch (_) { alert('บันทึกรายการรอซิงก์ไม่ได้ กรุณาสำรองข้อมูลและเพิ่มพื้นที่ว่าง'); return false; }
     }
     originalSave(ready ? 'บันทึกในเครื่องแล้ว กำลังซิงก์' : message);
     if (ready) flush();
+    return true;
   };
   // Snapshot restoration bypasses save in the original app.
   const originalRestore = restoreLatestIDBSnapshot;
@@ -194,8 +205,11 @@
       }, () => { problem = 'เข้าถึงฐานข้อมูลไม่ได้ กรุณาตรวจสิทธิ์และอินเทอร์เน็ต'; note('เชื่อมต่อไม่สำเร็จ'); });
     });
     setInterval(receiveLatest, 2000);
-    window.addEventListener('online', () => { problem = ''; flush(); });
+    window.addEventListener('online', () => { problem = ''; flush(); refreshSyncBadge(); });
+    window.addEventListener('offline', refreshSyncBadge);
     note('พร้อมเข้าสู่ระบบ');
   } catch (_) { user = null; problem = 'โหลดบริการเข้าสู่ระบบไม่ได้ กรุณาตรวจอินเทอร์เน็ตแล้วรีเฟรช'; note('ยังไม่สามารถเปิดข้อมูลร้านได้'); }
+  window.BarberCloudNavigationReady = true;
+  window.dispatchEvent(new Event('barber-cloud-navigation-ready'));
   render();
 })();
