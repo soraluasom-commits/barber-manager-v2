@@ -8,10 +8,10 @@
   attendance().filter(a=>a.staff===name&&a.status==='work'&&a.date?.startsWith(period)&&a.date<=isoToday()).forEach(a=>dates.add(a.date));
   return dates.size;
  }
- function commit(change,message){
+ async function commit(change,message,onError=error=>toast(error.message||'บันทึกไม่สำเร็จ')){
   const before=clone(state);
-  try{change();if(save(message)===false)throw Error('บันทึกไม่สำเร็จ');return true}
-  catch(err){state=before;toast('บันทึกไม่สำเร็จ ข้อมูลเดิมยังอยู่');return false}
+  try{change();return (await save(message,onError))!==false}
+  catch(error){state=before;onError(error);return false}
  }
  function dayStatus(name,date){const explicit=attendance().find(a=>a.staff===name&&a.date===date)?.status;return explicit&&explicit!=='unknown'?explicit:(state.entries.some(e=>e.staff===name&&e.date===date)?'work':'off')}
  function attendancePanel(){
@@ -31,6 +31,14 @@
   const row=key?state.entries.find(e=>e.id===key):null;if(key&&!row)return toast('ไม่พบรายการนี้แล้ว');openOriginal(key);editBaseline=row?clone(row):null;
   const form=document.querySelector('#modalbox form');if(!form)return;
   const notice=document.createElement('div');notice.className='notice duplicate-notice';notice.hidden=true;form.prepend(notice);
+  const actions=form.querySelector('.actions');
+  actions.querySelector('button').type='submit';
+  const problem=document.createElement('p');
+  problem.className='span4 notice bad';
+  problem.dataset.entryError='';
+  problem.setAttribute('role','alert');
+  problem.hidden=true;
+  actions.before(problem);
   function check(){const f=new FormData(form),rows=state.entries.filter(e=>e.id!==key&&e.staff===f.get('staff')&&e.date===f.get('date'));notice.hidden=!rows.length;notice.replaceChildren();if(!rows.length)return;
    const p=document.createElement('p');p.textContent=`มี ${rows.length} รายการในวันนี้แล้ว รวม ${sum(rows,e=>e.heads)} คน / ${money(sum(rows,e=>e.amount))} เลือกแก้รายการเดิม หรือยืนยันเพิ่มรายการแยก`;notice.append(p);
    rows.forEach(row=>{const b=document.createElement('button');b.type='button';b.className='btn small';b.textContent=`แก้รายการเดิม ${num(row.heads)} คน / ${money(row.amount)}`;b.onclick=()=>openEntryModal(row.id);notice.append(b)});
@@ -39,19 +47,42 @@
   form.elements.date.addEventListener('change',check);form.elements.staff.addEventListener('change',check);check();
   if(key){const b=document.createElement('button');b.type='button';b.className='btn danger';b.textContent='ลบรายการนี้';b.onclick=()=>remove(key);form.querySelector('.actions').append(b)}
  };
- saveEntry=function(event,key=''){
-  event.preventDefault();const form=event.target,f=new FormData(form),current=key?state.entries.find(e=>e.id===key):null;
-  if(key&&(!current||JSON.stringify(current)!==JSON.stringify(editBaseline)))return toast('รายการเปลี่ยนแล้ว กรุณาปิดและเปิดใหม่ก่อนแก้ไข');
+ saveEntry=async function(event,key=''){
+  event.preventDefault();
+  const form=event.target,button=form.querySelector('button[type="submit"]'),problem=form.querySelector('[data-entry-error]');
+  if(button.disabled)return;
+  const fail=text=>{problem.textContent=text;problem.hidden=false};
+  problem.hidden=true;
+  const f=new FormData(form),current=key?state.entries.find(e=>e.id===key):null;
+  if(key&&(!current||JSON.stringify(current)!==JSON.stringify(editBaseline)))return fail('รายการเปลี่ยนแล้ว กรุณาปิดและเปิดใหม่ก่อนแก้ไข');
   const next={id:key||id(),date:String(f.get('date')),staff:String(f.get('staff')),amount:n(f.get('amount')),heads:n(f.get('heads')),notes:String(f.get('notes')||'')};next.weekday=weekday(next.date);if(window.StaffIdentity){const sid=StaffIdentity.selected(next.staff);if(sid)next.staffId=sid;}
-  if(window.WorkDetails){try{Object.assign(next,WorkDetails.read(form))}catch(e){return toast(e.message)}}
-  if(!next.staff||!/^\d{4}-\d{2}-\d{2}$/.test(next.date)||next.amount<0||next.heads<0||!Number.isInteger(next.heads))return toast('ตรวจชื่อ วันที่ รายได้ และจำนวนลูกค้า');
+  if(window.WorkDetails){try{Object.assign(next,WorkDetails.read(form))}catch(error){return fail(error.message)}}
+  if(!next.staff||!/^\d{4}-\d{2}-\d{2}$/.test(next.date)||next.amount<0||next.heads<0||!Number.isInteger(next.heads))return fail('ตรวจชื่อ วันที่ รายได้ และจำนวนลูกค้า');
   const same=state.entries.filter(e=>e.id!==key&&e.staff===next.staff&&e.date===next.date);
-  if(same.length&&!f.has('confirmSeparate'))return toast('มีรายการวันเดียวกันแล้ว กรุณาเลือกแก้เดิมหรือยืนยันเพิ่มแยก');
-  if(['off','leave'].includes(attendance().find(a=>a.staff===next.staff&&a.date===next.date)?.status))return toast('วันนี้ระบุหยุด/ลา กรุณาเปลี่ยนสถานะเป็นมาทำงานก่อน');
-  if(commit(()=>{if(key)state.entries[state.entries.findIndex(e=>e.id===key)]=next;else state.entries.push(next);log(key?'แก้ไข':'เพิ่ม',current,next)},'บันทึกงานแล้ว')){filters.entryDate=next.date;closeModal()}
+  if(same.length&&!f.has('confirmSeparate'))return fail('มีรายการวันเดียวกันแล้ว กรุณาเลือกแก้เดิมหรือยืนยันเพิ่มแยก');
+  if(['off','leave'].includes(attendance().find(a=>a.staff===next.staff&&a.date===next.date)?.status))return fail('วันนี้ระบุหยุด/ลา กรุณาเปลี่ยนสถานะเป็นมาทำงานก่อน');
+  const label=button.textContent;
+  button.disabled=true;
+  button.textContent='กำลังบันทึก…';
+  try {
+    const saved=await commit(()=>{
+      if(key)state.entries[state.entries.findIndex(e=>e.id===key)]=next;
+      else state.entries.push(next);
+      log(key?'แก้ไข':'เพิ่ม',current,next);
+    },'บันทึกงานแล้ว',error=>{
+      const detail=error.name==='QuotaExceededError'?'พื้นที่เก็บข้อมูลในเบราว์เซอร์เต็ม':error.message;
+      if(form.isConnected)fail(detail||'บันทึกไม่สำเร็จ กรุณาลองอีกครั้ง');
+      else toast(detail||'บันทึกไม่สำเร็จ');
+    });
+    if(saved){
+      filters.entryDate=next.date;
+      if(form.isConnected)closeModal();
+      render();
+    }
+  }finally{button.disabled=false;button.textContent=label}
  };
- function remove(key){const row=state.entries.find(e=>e.id===key);if(!row||!confirm(`ลบงาน ${row.staff} วันที่ ${row.date} จำนวน ${num(row.heads)} คน? กู้คืนได้ในประวัติการแก้ไข`))return;
-  if(commit(()=>{state.entries=state.entries.filter(e=>e.id!==key);log('ลบ',row,null)},'ลบแล้ว กู้คืนได้ในประวัติการแก้ไข'))closeModal();
+ async function remove(key){const row=state.entries.find(e=>e.id===key);if(!row||!confirm(`ลบงาน ${row.staff} วันที่ ${row.date} จำนวน ${num(row.heads)} คน? กู้คืนได้ในประวัติการแก้ไข`))return;
+  if(await commit(()=>{state.entries=state.entries.filter(e=>e.id!==key);log('ลบ',row,null)},'ลบแล้ว กู้คืนได้ในประวัติการแก้ไข'))closeModal();
  }
  const oldDelete=del;del=function(collection,key){return collection==='entries'?remove(key):oldDelete(collection,key)};
  function restore(auditId){const item=journal().find(a=>a.id===auditId);if(!item||item.action!=='ลบ'||!item.before)return;
@@ -71,7 +102,7 @@
  const personalKey=x=>x.id||'library:'+encodeURIComponent(x.en);
  function personal(x){return state.learningNotes?.[personalKey(x)]||{}}
  function personalHTML(x){const p=personal(x);return `<div class="learning-personal"><button class="btn small" data-personal="${esc(personalKey(x))}">${p.favorite?'★ รายการโปรด':'☆ บันทึกของร้าน'}</button><span class="learn-review">${p.reviewed?'✓ ช่างตรวจแล้ว':'รอตรวจ'+(x.image?'ภาพ':'ข้อมูล')}</span>${p.note?`<p>${esc(p.note)}</p>`:''}</div>`}
- function editPersonal(key){const p=state.learningNotes?.[key]||{};modal(`<div class="modalhead"><h3>บันทึกของร้าน</h3><button class="close" data-csp-click="close-modal">✕</button></div><form id="personalForm"><label class="check-row"><input type="checkbox" name="favorite" ${p.favorite?'checked':''}> รายการโปรด</label><label class="check-row"><input type="checkbox" name="reviewed" ${p.reviewed?'checked':''}> ฉันตรวจเทียบภาพ/ข้อมูลแล้ว</label><div class="field"><label for="personalNote">หมายเหตุช่าง</label><textarea id="personalNote" name="note" maxlength="2000">${esc(p.note||'')}</textarea></div><p class="muted">การยืนยันนี้มาจากผู้ใช้บัญชีร้าน ไม่ใช่การรับรองโดย AI</p><div class="actions"><button class="btn primary">บันทึก</button><button type="button" class="btn" data-csp-click="close-modal">ยกเลิก</button></div></form>`);document.getElementById('personalForm').onsubmit=e=>{e.preventDefault();const f=new FormData(e.target);if(commit(()=>{state.learningNotes??={};state.learningNotes[key]={favorite:f.has('favorite'),reviewed:f.has('reviewed'),note:String(f.get('note')||'').slice(0,2000),updatedAt:new Date().toISOString()}},'บันทึกของร้านแล้ว'))closeModal()}}
+ function editPersonal(key){const p=state.learningNotes?.[key]||{};modal(`<div class="modalhead"><h3>บันทึกของร้าน</h3><button class="close" data-csp-click="close-modal">✕</button></div><form id="personalForm"><label class="check-row"><input type="checkbox" name="favorite" ${p.favorite?'checked':''}> รายการโปรด</label><label class="check-row"><input type="checkbox" name="reviewed" ${p.reviewed?'checked':''}> ฉันตรวจเทียบภาพ/ข้อมูลแล้ว</label><div class="field"><label for="personalNote">หมายเหตุช่าง</label><textarea id="personalNote" name="note" maxlength="2000">${esc(p.note||'')}</textarea></div><p class="muted">การยืนยันนี้มาจากผู้ใช้บัญชีร้าน ไม่ใช่การรับรองโดย AI</p><div class="actions"><button class="btn primary">บันทึก</button><button type="button" class="btn" data-csp-click="close-modal">ยกเลิก</button></div></form>`);document.getElementById('personalForm').onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);if(await commit(()=>{state.learningNotes??={};state.learningNotes[key]={favorite:f.has('favorite'),reviewed:f.has('reviewed'),note:String(f.get('note')||'').slice(0,2000),updatedAt:new Date().toISOString()}},'บันทึกของร้านแล้ว'))closeModal()}}
  document.addEventListener('click',e=>{const b=e.target.closest('[data-personal]');if(b)editPersonal(b.dataset.personal)});
  function backfillPlan(){
   const cutoff=isoToday().slice(0,7)+'-01',dates=state.entries.map(e=>e.date).filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d)&&d<cutoff).sort();
@@ -84,7 +115,7 @@
   commit(()=>{const before=clone(attendance()),after=[...before.filter(a=>a.date<p.start||a.date>=p.cutoff),...p.rows];state.attendanceBackfillBackup={before,after:clone(after),start:p.start,cutoff:p.cutoff,at:new Date().toISOString()};state.attendance=after},'ปรับข้อมูลย้อนหลังแล้ว');
  }
  function undoBackfill(){const b=state.attendanceBackfillBackup;if(!b)return;const range=a=>a.date>=b.start&&a.date<b.cutoff;if(JSON.stringify(attendance().filter(range))!==JSON.stringify(b.after.filter(range)))return toast('มีการแก้สถานะย้อนหลังเพิ่มแล้ว จึงไม่ย้อนทับข้อมูลใหม่');if(!confirm('คืนสถานะย้อนหลังเป็นก่อนปรับ โดยคงเดือนนี้ไว้?'))return;commit(()=>{state.attendance=[...attendance().filter(a=>!range(a)),...b.before.filter(range)];delete state.attendanceBackfillBackup},'คืนสถานะเดิมแล้ว')}
- function leaveReason(index){const name=state.staff[index]?.name,date=filters.attendanceDate||isoToday(),row=attendance().find(a=>a.staff===name&&a.date===date);if(row?.status!=='leave')return;modal(`<h3>เหตุผลการลา · ${esc(name)}</h3><form id="leaveReasonForm"><div class="field"><label for="leaveReason">เหตุผลการลา (ไม่บังคับ)</label><textarea id="leaveReason" maxlength="1000">${esc(row.reason||'')}</textarea></div><div class="actions"><button class="btn primary">บันทึกเหตุผล</button><button type="button" class="btn" data-csp-click="close-modal">ยกเลิก</button></div></form>`);document.getElementById('leaveReasonForm').onsubmit=e=>{e.preventDefault();const reason=document.getElementById('leaveReason').value.trim();if(commit(()=>{const current=attendance().find(a=>a.staff===name&&a.date===date);if(current?.status!=='leave')throw Error();current.reason=reason},'บันทึกเหตุผลแล้ว'))closeModal()}}
+ function leaveReason(index){const name=state.staff[index]?.name,date=filters.attendanceDate||isoToday(),row=attendance().find(a=>a.staff===name&&a.date===date);if(row?.status!=='leave')return;modal(`<h3>เหตุผลการลา · ${esc(name)}</h3><form id="leaveReasonForm"><div class="field"><label for="leaveReason">เหตุผลการลา (ไม่บังคับ)</label><textarea id="leaveReason" maxlength="1000">${esc(row.reason||'')}</textarea></div><div class="actions"><button class="btn primary">บันทึกเหตุผล</button><button type="button" class="btn" data-csp-click="close-modal">ยกเลิก</button></div></form>`);document.getElementById('leaveReasonForm').onsubmit=async e=>{e.preventDefault();const reason=document.getElementById('leaveReason').value.trim();if(await commit(()=>{const current=attendance().find(a=>a.staff===name&&a.date===date);if(current?.status!=='leave')throw Error();current.reason=reason},'บันทึกเหตุผลแล้ว'))closeModal()}}
  const attendanceStaffPage=staffPage;staffPage=()=>{let html=attendanceStaffPage();const p=backfillPlan(),b=state.attendanceBackfillBackup;html+=`<section class="card"><h2>ปรับสถานะย้อนหลัง</h2><p class="muted">มีรายการงาน = มาทำงาน · ไม่มีรายการ = หยุด รวมชื่อช่างในประวัติ ไม่เปลี่ยนข้อมูลเดือนนี้หรือรายการเงิน</p>${p?`<p>ช่วง ${esc(p.start)} ถึงก่อน ${esc(p.cutoff)} · ${p.rows.length} วัน-คน</p><button class="btn primary" data-csp-click="attendance-backfill">ปรับข้อมูลย้อนหลังตามรายการงาน</button>`:'<p>ไม่มีรายการก่อนเดือนนี้</p>'}${b?`<p role="status">ปรับย้อนหลังแล้ว ${esc(b.start)} ถึงก่อน ${esc(b.cutoff)}</p><button class="btn" data-csp-click="attendance-undo">ย้อนคืนสถานะก่อนปรับ</button>`:''}</section>`;const date=filters.attendanceDate||isoToday();html+=state.staff.map((s,i)=>{const a=attendance().find(a=>a.staff===s.name&&a.date===date&&a.status==='leave');return a?`<section class="card"><b>${esc(s.name)} · ลา</b><p>${esc(a.reason||'ยังไม่ได้ระบุเหตุผล')}</p><button class="btn small" data-csp-click="leave-reason" data-csp-arg="${esc(i)}">เพิ่ม / แก้เหตุผลการลา</button></section>`:''}).join('');return html};
  const setStatus=setAttendance;setAttendance=function(index,status){const old=attendance().find(a=>a.staff===state.staff[index]?.name&&a.date===(filters.attendanceDate||isoToday()));if(old?.status===status){if(status==='leave')leaveReason(index);return}setStatus(index,status);if(status==='leave')leaveReason(index)};
  window.BarberOps={workingDays,setAttendance,personal,personalHTML,restore,backfill,backfillPlan,undoBackfill,leaveReason};

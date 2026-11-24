@@ -81,19 +81,21 @@ async function recoverShop(target) {
   finally{recoveryCommit=null;recoveryTarget=null;}
 }
 function bindSaving() {
-  save=function(text='บันทึกแล้ว') {
-    if(!access.canWrite()) {
-      state=upgrade(workspaceData(lastVaultState,lastVaultState));render();
-      toast(access.recoveryPending?'กรุณาจัดการกู้คืนที่ค้างก่อนบันทึก':'สิทธิ์ปัจจุบันไม่อนุญาตให้บันทึก');
-      return false;
-    }
-    window.StaffIdentity?.sync(state);
-    for(const row of state.staffDirectory||[])row.active=state.staff.some(s=>s.id===row.id&&s.status!=='inactive');
-    WorkspaceStorage.setItem(STORAGE,JSON.stringify(state));
-    return WorkspaceStorage.flush().then(async()=>{await loadData();toast(text);render();return true;}).catch(async e=>{
+  save=async function(text='บันทึกแล้ว',onError=showError) {
+    try {
+      window.StaffIdentity?.sync(state);
+      for(const row of state.staffDirectory||[])row.active=state.staff.some(s=>s.id===row.id&&s.status!=='inactive');
+      const draft=JSON.stringify(state);
+      await authorize();
+      if(!access.canWrite())throw Error(access.recoveryPending?'กรุณาจัดการกู้คืนที่ค้างก่อนบันทึก':'สิทธิ์ปัจจุบันไม่อนุญาตให้บันทึก');
+      WorkspaceStorage.setItem(STORAGE,draft);
+      await WorkspaceStorage.flush();
+    } catch(error) {
       try{await loadData();}catch{state=upgrade(workspaceData(lastVaultState,lastVaultState));WorkspaceStorage.seed(JSON.stringify(state));}
-      render();showError(e);return false;
-    });
+      render();onError(error);return false;
+    }
+    try{await loadData();}catch(error){showError(error);return true;}
+    toast(text);render();return true;
   };
   for(const name of ['save','restore','removeImage','rollback']) {
     const original=repo[name];
