@@ -1,0 +1,48 @@
+.owner-connected { font-family: Prompt, sans-serif; overflow-wrap: anywhere; }
+.owner-connected .facts { display: grid; grid-template-columns: repeat(2, minmax(0px, 1fr)); gap: 12px 24px; }
+.owner-connected .facts > div { border-bottom: 1px solid var(--line); padding: 10px 0px; min-width: 0px; }
+.owner-connected dt { font-size: 12px; color: var(--muted); }
+.owner-connected dd { margin: 4px 0px; }
+.owner-connected button { border: 0px; border-radius: 999px; padding: 9px 16px; margin: 4px; font: inherit; background: rgb(36, 84, 186); color: white; cursor: pointer; }
+.owner-connected button:disabled { opacity: 0.5; }
+.owner-connected input,  .owner-connected select { font: inherit; max-width: 100%; width: 100%; padding: 10px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); color: inherit; box-sizing: border-box; }
+.owner-connected label { display: grid; gap: 7px; }
+.owner-connected .notice { padding: 12px 16px; background: rgb(237, 242, 255); color: rgb(23, 61, 123); border-left: 3px solid rgb(36, 84, 186); border-radius: 10px; }
+.owner-connected .warning { background: rgb(255, 240, 243); color: rgb(156, 25, 52); border-color: rgb(207, 35, 65); }
+.owner-connected .device,  .owner-connected .payment-order { padding: 18px 0px; border-top: 1px solid var(--line); }
+.owner-connected .business-form { display: grid; grid-template-columns: repeat(2, minmax(0px, 1fr)); gap: 14px 20px; padding: 18px; border: 1px solid var(--line); border-radius: 14px; margin: 18px 0px; }
+.owner-connected .business-form > h3,  .owner-connected .hair-fields { grid-column: 1 / -1; }
+.owner-connected .business-form > button { justify-self: start; }
+.owner-connected .business-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 20px 0px; }
+.owner-connected .business-tabs a { padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); text-decoration: none; color: inherit; }
+.owner-connected .business-tabs a[aria-current] { background: rgb(36, 84, 186); color: white; }
+.owner-connected .hair-row { display: grid; gap: 10px; margin: 12px 0px; }
+.owner-connected .staff-photo { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; }
+.owner-connected .payment-options { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.owner-connected .payment-placeholder { display: grid; place-content: center; gap: 8px; text-align: center; max-width: 260px; aspect-ratio: 1.3 / 1; background: rgb(237, 242, 255); color: rgb(23, 61, 123); border: 2px dashed rgb(36, 84, 186); border-radius: 16px; margin: 18px 0px; }
+.owner-connected .payment-placeholder strong { font-size: 36px; color: rgb(207, 35, 65); }
+.owner-connected .payment-reference { font-size: 12px; overflow-wrap: anywhere; }
+.owner-connected .payment-self-service { border-top: 3px solid rgb(207, 35, 65); padding-top: 20px; }
+.owner-connected .payment-status { font-weight: 600; }
+.owner-connected button:focus-visible,  .owner-connected input:focus-visible { outline: rgb(207, 35, 65) solid 3px; outline-offset: 3px; }
+.owner-connected details { padding: 12px; border: 1px solid var(--line); border-radius: 12px; margin: 12px 0px; }
+.owner-connected summary { cursor: pointer; font-weight: 600; }
+body[data-theme="dark"] .owner-connected .notice { background: rgb(37, 61, 96); color: rgb(222, 235, 255); }
+body[data-theme="dark"] .owner-connected .warning { background: rgb(73, 39, 58); color: rgb(255, 216, 224); }
+@media (max-width: 650px) {
+.owner-connected .facts,  .owner-connected .business-form,  .owner-connected .payment-options { grid-template-columns: 1fr; }
+.owner-connected .business-form > h3,  .owner-connected .hair-fields { grid-column: auto; }
+}
+.owner-home-link { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: inherit; cursor: pointer; }
+.owner-home-link:focus-visible { outline: rgb(36, 84, 186) solid 3px; outline-offset: 4px; border-radius: 16px; }
+.owner-connected .business-form > .hair-add { place-self: center start; grid-column: 1 / -1; min-height: 38px; width: auto; max-width: max-content; padding: 8px 17px; background: var(--panel); border: 1px solid rgb(36, 84, 186); color: rgb(23, 61, 123); font-size: 13px; line-height: 1.5; }
+.owner-connected .hair-row { grid-template-columns: minmax(0px, 2fr) minmax(100px, 1fr) auto; align-items: end; }
+.owner-connected .hair-row button { font-size: 12px; padding: 9px 13px; min-height: 38px; align-self: end; }
+.owner-connected pre { max-height: 260px; overflow: auto; white-space: pre-wrap; font-size: 12px; }
+.owner-connected .business-tabs { align-items: center; }
+body[data-theme="dark"] .owner-connected .business-form > .hair-add { color: rgb(220, 232, 255); }
+@media (max-width: 650px) {
+.owner-connected .hair-row { grid-template-columns: minmax(0px, 1.7fr) minmax(90px, 1fr); }
+.owner-connected .hair-row button { grid-column: 1 / -1; justify-self: start; }
+.owner-connected .business-form > .hair-add { grid-column: 1; }
+}

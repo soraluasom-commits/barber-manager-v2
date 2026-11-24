@@ -20,11 +20,12 @@ jobs:
       - uses: actions/checkout@v4
       - name: Prepare approved release
         run: |
+          set -euo pipefail
           mkdir -p site
-          cp index.html sw.js manifest.webmanifest icon.svg site/
-          cp staff-photos.js shop-enhancements.js staff-days-off.js firebase-config.js cloud-merge.js cloud-sync.js hair-catalogue.js learning-center.js navigation-groups.js site/
-          cp theme-fix.css auth-gate.css ui-refresh.css login-barbershop.webp hair-standard.png hair-fade.png hair-street.png hair-asian.png hair-classic.png hair-long.png hair-texture.png hair-mod-warrior.png site/
-          grep -q '2026-11-03-approved' site/index.html
+          cp -R published-shop/. site/
+          cp firebase-config.js site/
+          (cd site && sha256sum --strict -c FILES.sha256)
+          rm site/FILES.sha256 site/.gitattributes
           touch site/.nojekyll
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

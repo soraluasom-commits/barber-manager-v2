@@ -1,0 +1,99 @@
+:root { --review-offset: 48px; }
+#review-banner { position: relative; z-index: 1000; min-height: var(--review-offset); padding: 10px 16px; background: rgb(255, 255, 255); color: rgb(0, 51, 160); border-bottom: 3px solid rgb(230, 0, 18); font: 500 13px / 1.7 Prompt, sans-serif; display: flex; align-items: center; justify-content: center; text-align: center; }
+html body.ui-refresh .top { position: relative !important; top: 0px !important; }
+html body.ui-refresh .side { top: var(--review-offset) !important; height: calc(100dvh - var(--review-offset)) !important; }
+button:disabled { cursor: not-allowed; opacity: 0.6; }
+@media (max-width: 600px) {
+:root { --review-offset: 72px; }
+#review-banner { font-size: 11px; padding: 8px 12px; }
+}
+.review-management-card { margin-bottom: 18px; }
+.review-management-card h2 { font-size: 21px; }
+.review-management-card p { line-height: 1.9; max-width: 78ch; }
+.review-management-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.review-status { display: inline-block; padding: 7px 12px; border-radius: 8px; background: rgb(237, 242, 255); color: rgb(0, 51, 160); font-size: 13px; border-left: 3px solid rgb(230, 0, 18); }
+.review-link { align-items: center; margin: 12px 0px 0px; display: inline-flex !important; text-decoration: none !important; border-radius: 99px !important; padding: 11px 20px !important; }
+.review-link:focus-visible { outline: rgb(230, 0, 18) solid 3px; outline-offset: 4px; }
+@media (max-width: 800px) {
+.review-management-grid { grid-template-columns: 1fr; }
+.review-management-card h2 { font-size: 18px; }
+}
+html body.ui-refresh[data-theme="dark"] .side { background: rgb(28, 41, 62) !important; border-right: 1px solid rgb(52, 73, 104) !important; }
+html body.ui-refresh[data-theme="dark"] .side .brand-text,  html body.ui-refresh[data-theme="dark"] #nav .nav-main { color: rgb(228, 237, 252) !important; }
+#review-banner { flex-wrap: wrap; gap: 6px; }
+.review-nav-heading { padding: 12px 14px 5px; color: rgb(36, 84, 186); font-size: 13px; font-weight: 600; }
+.review-nav-caption { font-size: 11px; line-height: 1.6; margin: 0px 14px 8px; color: rgb(99, 113, 139); }
+html body.ui-refresh .side { overflow-y: auto !important; padding-bottom: 28px !important; }
+html body.ui-refresh[data-theme="dark"] .review-nav-heading { color: rgb(157, 187, 255); }
+html body.ui-refresh[data-theme="dark"] .review-nav-caption { color: rgb(180, 195, 220); }
+@media (max-width: 600px) {
+:root { --review-offset: 108px; }
+#review-banner { font-size: 10px; }
+}
+@media (max-width: 900px) {
+html body.ui-refresh[data-theme] #side.side.open { left: 0px !important; transform: none !important; z-index: 60 !important; }
+html body.ui-refresh[data-theme] #side.side { transition: left 0.15s; }
+}
+html body.ui-refresh[data-theme] button,  html body.ui-refresh[data-theme] a.btn,  html body.ui-refresh[data-theme] input[type="button"],  html body.ui-refresh[data-theme] input[type="submit"],  html body.ui-refresh[data-theme] .page-tabs button,  html body.ui-refresh[data-theme] #nav button,  html body.ui-refresh[data-theme] #bottomnav button { min-height: 36px; border-radius: 999px !important; font-family: Prompt, Poppins, sans-serif !important; line-height: 1.5 !important; box-shadow: none !important; }
+html body.ui-refresh[data-theme] button:focus-visible,  html body.ui-refresh[data-theme] a.btn:focus-visible { outline: rgb(36, 84, 186) solid 3px !important; outline-offset: 3px !important; }
+#review-banner { min-height: 48px !important; }
+html body.ui-refresh[data-theme] .brand.review-brand { justify-content: center; align-items: center; overflow: hidden; display: flex !important; padding: 6px 16px 14px !important; }
+html body.ui-refresh[data-theme] .review-brand-logo { display: block; max-width: 100%; object-fit: contain; object-position: center center; border-radius: 0px; background: transparent; flex: 0 0 auto; width: 180px !important; height: 102px !important; image-rendering: auto !important; }
+html body.ui-refresh[data-theme="dark"] .brand.review-brand { background: rgb(255, 255, 255) !important; border-radius: 0px !important; }
+html body.ui-refresh[data-theme] #todayPill { display: inline-flex; align-items: center; justify-content: center; min-height: 36px; line-height: 1.5; font-weight: 500; white-space: nowrap; border-radius: 999px !important; padding: 7px 15px !important; border: 1px solid rgb(211, 222, 247) !important; background: rgb(237, 242, 255) !important; color: rgb(24, 59, 120) !important; }
+html body.ui-refresh[data-theme="dark"] #todayPill { background: rgb(35, 56, 83) !important; border-color: rgb(60, 84, 120) !important; color: rgb(227, 237, 255) !important; }
+@media (max-width: 600px) {
+
+}
+.review-drawer-close { display: none; }
+@media (max-width: 900px) {
+html body.ui-refresh[data-theme] .review-drawer-close { display: block; margin: 0px 0px 8px auto; padding: 6px 14px; border: 0px; font-size: 12px; background: rgb(36, 84, 186) !important; color: rgb(255, 255, 255) !important; }
+}
+html body.ui-refresh[data-theme] #content button,  html body.ui-refresh[data-theme] #content .page-tabs button,  html body.ui-refresh[data-theme] #content a.btn { border-radius: 999px !important; }
+html body.ui-refresh[data-theme] #side.side { flex-direction: column; display: flex !important; padding: 0px !important; overflow: hidden !important; }
+html body.ui-refresh[data-theme] #side .brand.review-brand { flex: 0 0 auto; flex-direction: column; gap: 9px; position: relative; display: flex !important; margin: 0px !important; padding: 18px 20px 16px !important; background: rgb(255, 255, 255) !important; border-bottom: 1px solid rgb(228, 234, 245) !important; }
+html body.ui-refresh[data-theme] #side .brand.review-brand::after { display: none !important; }
+.review-brand-caption { font: 400 11px / 1.5 Prompt, sans-serif; color: rgb(99, 117, 145); letter-spacing: 0px; white-space: nowrap; }
+html body.ui-refresh[data-theme] #side #nav.nav { flex-direction: column; flex: 1 1 auto; min-height: 0px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; display: flex !important; padding: 10px 14px 20px !important; gap: 4px !important; }
+html body.ui-refresh[data-theme] #nav .review-nav-heading { padding: 10px 12px 7px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+.review-nav-heading::before { content: ""; width: 6px; height: 6px; flex: 0 0 6px; background: rgb(36, 84, 186); border-radius: 50%; }
+html body.ui-refresh[data-theme] #nav .review-nav-caption { margin: -5px 12px 7px 26px; font-size: 10px; line-height: 1.6; }
+html body.ui-refresh[data-theme] #nav button.nav-main { align-items: center; gap: 12px; flex: 0 0 auto; text-align: left; display: flex !important; padding: 9px 12px !important; min-height: 40px !important; margin: 0px !important; font-size: 13px !important; font-weight: 500 !important; }
+.review-menu-icon { display: block; width: 19px; height: 19px; flex: 0 0 19px; fill: none; stroke: currentcolor; stroke-width: 1.65; stroke-linecap: round; stroke-linejoin: round; }
+.review-menu-label { display: block; line-height: 1.6; min-width: 0px; }
+@media (max-width: 900px) {
+html body.ui-refresh[data-theme] #side .review-drawer-close { flex: 0 0 auto; margin: 10px 12px 0px auto; padding: 5px 12px; font-size: 11px; min-height: 32px; }
+html body.ui-refresh[data-theme] #side .brand.review-brand { padding-top: 12px !important; padding-bottom: 12px !important; }
+}
+@media (max-width: 900px) {
+html body.ui-refresh:has(#side.open) #bottomnav { visibility: hidden !important; pointer-events: none !important; }
+}
+.review-example-control { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 20px 0px 14px; font-size: 13px; color: var(--muted); }
+html body.ui-refresh[data-theme] .review-example-control select { padding: 8px 15px; background: rgb(237, 242, 255); color: rgb(24, 59, 120); border: 1px solid rgb(203, 217, 248); max-width: 100%; border-radius: 999px !important; }
+.review-membership-notice { padding: 14px 16px; border-radius: 12px; line-height: 1.8; font-size: 14px; border-left: 3px solid rgb(36, 84, 186); background: rgb(237, 242, 255); color: rgb(23, 61, 123); margin: 0px 0px 22px; }
+.review-membership-notice.expiring,  .review-membership-notice.expired { border-color: rgb(207, 35, 65); background: rgb(255, 240, 243); color: rgb(160, 25, 50); }
+.review-account-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 0px 28px; margin: 0px; }
+.review-account-facts > div { padding: 14px 0px; border-bottom: 1px solid var(--line); min-width: 0px; }
+.review-account-facts dt,  .review-device-list dt { font-size: 12px; color: var(--muted); line-height: 1.7; }
+.review-account-facts dd { margin: 4px 0px 0px; font-size: 15px; line-height: 1.7; font-weight: 500; overflow-wrap: anywhere; }
+.review-account-note { font-size: 12px; color: var(--muted); line-height: 1.8 !important; }
+.review-device-total { font-size: 18px; font-weight: 600; color: rgb(36, 84, 186); }
+.review-device-list { list-style: none; margin: 0px; padding: 0px; }
+.review-device-list > li { border-top: 1px solid var(--line); padding: 18px 0px; }
+.review-device-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.review-device-heading h3 { font-size: 16px; margin: 0px; }
+.review-device-heading + .review-device-list p { margin-top: 5px; }
+.review-device-status { font-size: 11px; padding: 4px 10px; background: rgb(237, 242, 255); color: rgb(24, 59, 120); border-radius: 999px; }
+.review-device-list p { font-size: 12px; color: var(--muted); margin: 6px 0px 12px; }
+.review-device-list dl { display: grid; grid-template-columns: repeat(3, minmax(0px, 1fr)); gap: 12px; margin: 0px; }
+.review-device-list dd { font-size: 13px; margin: 4px 0px 0px; line-height: 1.7; }
+html body.ui-refresh[data-theme="dark"] .review-membership-notice { background: rgb(36, 60, 96); color: rgb(220, 233, 255); }
+html body.ui-refresh[data-theme="dark"] .review-membership-notice.expiring,  html body.ui-refresh[data-theme="dark"] .review-membership-notice.expired { background: rgb(73, 39, 58); color: rgb(255, 215, 223); }
+html body.ui-refresh[data-theme="dark"] .review-device-total { color: rgb(170, 198, 255); }
+@media (max-width: 600px) {
+.review-account-facts { grid-template-columns: 1fr; }
+.review-device-list dl { grid-template-columns: 1fr; }
+.review-device-list dl > div { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.review-device-list dd { text-align: right; }
+.review-membership-notice { font-size: 13px; }
+}

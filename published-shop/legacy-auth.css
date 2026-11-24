@@ -1,0 +1,11 @@
+html:not([data-legacy-unlocked]) body > :not(#legacy-auth):not(script) { display:none!important }
+html[data-legacy-unlocked] #legacy-auth { display:none }
+#legacy-auth { display:grid; min-height:100dvh; place-items:center; padding:clamp(16px,4vw,48px); background:var(--bg); }
+.legacy-sign-in { width:min(100%,420px); background:var(--panel); color:var(--text); padding:clamp(20px,5vw,36px); border:1px solid var(--line); border-radius:20px; }
+.legacy-sign-in img { display:block; max-width:156px; width:65%; margin:0 auto 16px; }
+.legacy-sign-in h1 { font-size:clamp(21px,5vw,26px); margin:0 0 16px; }
+.legacy-sign-in form { display:grid; gap:8px; }
+.legacy-sign-in input { width:100%; min-height:44px; }
+.legacy-sign-in form button { margin-top:8px; min-height:44px; }
+.legacy-sign-in #legacy-login-status { margin:14px 0 0; min-height:1.5em; color:var(--muted); }
+.legacy-sign-in input:focus-visible,.legacy-sign-in button:focus-visible { outline:3px solid #5686eb; outline-offset:2px; }

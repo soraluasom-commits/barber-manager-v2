@@ -1,0 +1,34 @@
+/* The release's white-canvas overrides apply to both modes. Scope the correction. */
+body[data-theme="light"] { color-scheme: light; }
+body[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #141617; --panel: #202426; --panel2: #292e30;
+  --text: #f0f2f1; --muted: #b9c1be; --line: #41494b;
+  --good: #99d5ac; --bad: #ff9ca5; --warn: #efcf91;
+  --shadow: 0 10px 24px rgba(0,0,0,.2);
+  background: var(--bg) !important; color: var(--text) !important;
+}
+body[data-theme="dark"] :is(.app,.main,.wrap) { background: var(--bg) !important; }
+body[data-theme="dark"] :is(.top,.bottomnav,.side) {
+  background: #1b1e20 !important; border-color: var(--line) !important; color: var(--text) !important;
+}
+body[data-theme="dark"] :is(.card,.modalbox,.tablewrap,.member-staff-card,.goal-progress-card,.goal-store,.formula-box,.weekday,.hero-card,.summary-cover,.hero-stat,.kpi,table) {
+  background: var(--panel) !important; border-color: var(--line) !important;
+  color: var(--text) !important; box-shadow: var(--shadow) !important;
+}
+body[data-theme="dark"] :is(.notice,.hero-pill,.pill,.close,.toast,.btn,.btn.ghost,input,select,textarea,th) {
+  background: var(--panel2) !important; border-color: var(--line) !important; color: var(--text) !important;
+}
+body[data-theme="dark"] :is(td,.staff-row,.rank,.avg-rank,.statline) { border-color: var(--line) !important; }
+body[data-theme="dark"] :is(h1,h2,h3,h4,.hero-title,.hero-stat b,.kpi .num,.bigmoney,.formula-box .value,.shop-name-top b) { color: var(--text) !important; }
+body[data-theme="dark"] :is(.muted,.label,.sub,.eyebrow,.brand-kicker,.shop-name-label,.field label,.barcol small,.footer) { color: var(--muted) !important; }
+body[data-theme="dark"] :is(.nav button,.bottomnav button) { color: #c8d0cd !important; }
+body[data-theme="dark"] :is(.nav button.active,.nav button:hover,.bottomnav button.active) { background: #343b3d !important; color: #fff !important; }
+body[data-theme="dark"] :is(.btn.primary,.save-jpg) { background: #d69a6c !important; border-color: #d69a6c !important; color: #201b17 !important; }
+body[data-theme="dark"] :is(.btn.alt-sage,.themebtn) { background: #a8b89f !important; color: #182018 !important; }
+body[data-theme="dark"] :is(.progress,.goal-bar) { background: #41494b !important; }
+body[data-theme="dark"] :is(.bad,.expense-number,.summary-change.down) { color: #ff9ca5 !important; }
+body[data-theme="dark"] :is(.good,.summary-change.up) { color: #99d5ac !important; }
+body[data-theme="dark"] .balance-number { color: #95c5ff !important; }
+body[data-theme="dark"] .point-value { stroke: #202426; }
+body[data-theme="dark"] input::placeholder,body[data-theme="dark"] textarea::placeholder { color: #a7b1ad; }

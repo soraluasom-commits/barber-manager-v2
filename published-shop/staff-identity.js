@@ -1,0 +1,9 @@
+/* Stable local identities. Migration is explicit; no business records or attendance are invented. */
+(() => {
+ const rows=d=>[...(d.entries||[]),...(d.attendance||[]),...(d.entryAudit||[]).flatMap(x=>[x.before,x.after].filter(Boolean))];
+ function sync(d){if(!Array.isArray(d.staffDirectory))return;const registry=d.staffDirectory;for(const s of d.staff){if(!s.id)s.id=crypto.randomUUID();let r=registry.find(x=>x.id===s.id);if(!r){r={id:s.id,name:s.name,aliases:[],active:true};registry.push(r)}if(r.name!==s.name){r.aliases=[...new Set([...r.aliases,r.name])];r.name=s.name}r.active=true}for(const r of registry)r.active=d.staff.some(s=>s.id===r.id);}
+ function selected(name){const a=state.staff.filter(s=>s.name===name&&s.id);return a.length===1?a[0].id:null}
+ function prepare(){if(!window.CommercialLicense?.canWrite())return toast('กรุณาตรวจสิทธิ์ก่อนกำหนดรหัสช่าง');if(!confirm('เพิ่มรหัสช่างถาวรและเชื่อมรายการเก่าที่ชื่อไม่กำกวม โดยไม่เปลี่ยนยอดเงิน วันที่ หรือสถานะวันทำงาน? ชื่อเก่าที่พิสูจน์ว่าเป็นคนเดียวกันไม่ได้จะแยกไว้'))return;const old=clone(state);try{state.staffDirectory=state.staffDirectory||[];sync(state);const reg=state.staffDirectory;for(const name of new Set(rows(state).filter(x=>!x.staffId).map(x=>x.staff).filter(Boolean))){let candidates=reg.filter(x=>x.name===name||x.aliases.includes(name));if(!candidates.length){const r={id:crypto.randomUUID(),name,aliases:[],active:false};reg.push(r);candidates=[r]}if(candidates.length===1)for(const r of rows(state))if(!r.staffId&&r.staff===name)r.staffId=candidates[0].id;}if(save('กำหนดรหัสช่างแล้ว')===false)state=old;}catch{state=old;toast('บันทึกไม่ได้ ข้อมูลเดิมยังอยู่')}render();}
+ const originalSave=save;save=function(...args){sync(state);return originalSave(...args)};
+ window.StaffIdentity={sync,selected,prepare};
+})();
