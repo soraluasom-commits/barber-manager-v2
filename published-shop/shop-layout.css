@@ -1,10 +1,9 @@
-:root { --review-offset: 48px; }
+:root { --review-offset: 0px; }
 #review-banner { position: relative; z-index: 1000; min-height: var(--review-offset); padding: 10px 16px; background: rgb(255, 255, 255); color: rgb(0, 51, 160); border-bottom: 3px solid rgb(230, 0, 18); font: 500 13px / 1.7 Prompt, sans-serif; display: flex; align-items: center; justify-content: center; text-align: center; }
 html body.ui-refresh .top { position: relative !important; top: 0px !important; }
 html body.ui-refresh .side { top: var(--review-offset) !important; height: calc(100dvh - var(--review-offset)) !important; }
 button:disabled { cursor: not-allowed; opacity: 0.6; }
 @media (max-width: 600px) {
-:root { --review-offset: 72px; }
 #review-banner { font-size: 11px; padding: 8px 12px; }
 }
 .review-management-card { margin-bottom: 18px; }
@@ -27,7 +26,6 @@ html body.ui-refresh .side { overflow-y: auto !important; padding-bottom: 28px !
 html body.ui-refresh[data-theme="dark"] .review-nav-heading { color: rgb(157, 187, 255); }
 html body.ui-refresh[data-theme="dark"] .review-nav-caption { color: rgb(180, 195, 220); }
 @media (max-width: 600px) {
-:root { --review-offset: 108px; }
 #review-banner { font-size: 10px; }
 }
 @media (max-width: 900px) {

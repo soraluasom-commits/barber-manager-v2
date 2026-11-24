@@ -3,7 +3,7 @@ import { recoveryMatches } from './store/recovery-compare.js';
 import { recoveryDiagnostics } from './recovery-diagnostics.js';
 import { categoryStyles, categoryOptions, manageExpenseCategories } from './store/expense-categories.js';
 import { manualFormsPage } from './store/manual-forms/ui.js';
-import { mountLegacyImport } from './legacy-json.js';
+import { mountLegacyImport } from './legacy-json.js?v=20261125.2';
 
 const host=window.BarberStoreHost;
 let me,vault,revision,lastVaultState,recoveryWarning='',recoveryWrite=false,recoveryCommit=null,recoveryTarget=null;
@@ -144,7 +144,7 @@ function bindPages(){
     if(page==='learnForms')manualFormsPage(content,{readShop:()=>({shopName:state.shopName,staff:state.staff})}).catch(showError);
     if(page==='sync'){
       const mount=document.createElement('div');
-      content.replaceChildren(mount);
+      content.append(mount);
       host.showAccount(mount);
     }
   };

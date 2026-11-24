@@ -1,15 +1,16 @@
 /* Presentation-only navigation: original page renderers and calculations remain intact. */
 (() => {
   document.body.classList.add('ui-refresh');
-  function installNavigation() {
-  const cloudMenu = PAGES.find(item => item[0] === 'cloud');
-  if (cloudMenu) cloudMenu[2] = 'บัญชีและซิงก์ออนไลน์';
+  const shopLabels = {staff:'ข้อมูลร้านและช่าง',backup:'สำรองและกู้คืน'};
+  for (const item of PAGES) {
+    if (shopLabels[item[0]]) item[2] = shopLabels[item[0]];
+  }
   const groups = [
     ['overview', 'ภาพรวม', ['dashboard']],
     ['service', 'งานบริการ', ['entry', 'history']],
     ['finance', 'การเงิน', ['income', 'expenses']],
     ['reports', 'รายงาน', ['daily', 'monthly', 'summary', 'annual', 'analytics', 'personal', 'goals']],
-    ['shop', 'จัดการร้าน', ['staff', 'subscription', 'sync', 'backup']],
+    ['shop', 'จัดการร้าน', ['staff', 'sync', 'backup']],
     ['learning', 'ศูนย์เรียนรู้', ['learnHair', 'learnTools', 'learnBrands', 'learnForms']]
   ];
   const remembered = {};
@@ -34,7 +35,7 @@
       const label = card.querySelector('.label')?.textContent || '';
       card.dataset.tone = /รายจ่าย/.test(label) ? 'expense' : /กองกลาง|คงเหลือ|กำไร/.test(label) ? 'balance' : /รายรับ|รายได้/.test(label) ? 'income' : 'info';
     });
-    if (page === 'cloud') document.getElementById('pageTitle').textContent = 'บัญชีและซิงก์ออนไลน์';
+    if (groupForPage()[0] === 'learning') document.getElementById('pageTitle').textContent = 'ศูนย์เรียนรู้';
     renderTabs();
   };
   function renderTabs() {
@@ -56,13 +57,10 @@
     });
     document.getElementById('content').prepend(tabs);
   }
+  window.ShopNavigation = Object.freeze({renderTabs});
   window.addEventListener('barber-content-rendered', renderTabs);
   const brand = document.querySelector('.brand');
   if (brand) brand.innerHTML = `<span class="barber-emblem" aria-hidden="true"><img src="./brand-logo.png" width="48" height="48" alt="" decoding="async"></span><span class="brand-text">Barber Manager<small>System By SORA</small></span>`;
   brand?.setAttribute('aria-label','Barber Manager System By SORA');
   render();
-  }
-  if (window.BARBER_FIREBASE_CONFIG && !window.BarberCloudNavigationReady) {
-    window.addEventListener('barber-cloud-navigation-ready', installNavigation, {once:true});
-  } else installNavigation();
 })();

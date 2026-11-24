@@ -1,10 +1,11 @@
-const cacheName='barber-manager-v2-shop-20261125-r1';
+const cacheName='barber-manager-v2-shop-20261125-r2';
 const cachePrefix='barber-manager-v2-shop-';
 const base=new URL(self.registration.scope);
 const core=['./index.html','./manifest.webmanifest','./legacy-auth.css','./legacy-host.js',
   './legacy-firebase.js','./firebase-config.js','./cloud-merge.js','./storefront-storage.js',
-  './shop-core.js','./storefront-runtime.js','./storefront-nav.js','./legacy-json.js',
-  './shop-layout.css','./shop-panels.css','./review-logo-transparent.png'];
+  './shop-core.js','./navigation-groups.js?v=20261125.2','./storefront-runtime.js?v=20261125.2',
+  './storefront-nav.js?v=20261125.2','./legacy-json.js?v=20261125.2',
+  './shop-layout.css?v=20261125.2','./shop-panels.css','./review-logo-transparent.png'];
 const assetTypes=/\.(?:js|css|png|webp|svg|ttf|woff2|webmanifest|html)$/i;
 self.addEventListener('install',event=>event.waitUntil(caches.open(cacheName).then(cache=>cache.addAll(core))));
 self.addEventListener('activate',event=>event.waitUntil(

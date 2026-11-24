@@ -62,12 +62,8 @@
       document.getElementById('pageTitle').textContent=accountRoutes[page];
       document.getElementById('shopNameTop').textContent=state.shopName||'ยังไม่ได้ตั้งชื่อร้าน';
       document.getElementById('content').replaceChildren();
+      window.ShopNavigation.renderTabs();
     } else originalRender();
-    const title={staff:'ข้อมูลร้านและช่าง',subscription:'บัญชีและสมาชิก',sync:'ซิงก์ข้อมูล',backup:'สำรองและกู้คืน'};
-    for(const button of document.querySelectorAll('.page-tabs [data-destination]')) {
-      if(button.dataset.destination==='subscription')button.remove();
-      else if(title[button.dataset.destination])button.textContent=title[button.dataset.destination];
-    }
     for(const notice of document.querySelectorAll('.top > .notice'))notice.remove();
   };
   go=function(destination) {

@@ -2,17 +2,19 @@ import {workspaceData} from './store/workspace-data.js';
 
 export function mountLegacyImport(content,host,refresh) {
   const oldImport=content.querySelector('input[data-csp-change="import-json"]');
+  const tabs=content.querySelector(':scope > .page-tabs');
+  const add=section=>{if(tabs)tabs.after(section);else content.prepend(section);};
   if(host.releaseMode){
     oldImport?.closest('label')?.remove();
     for(const action of ['reset-shop','restore-snapshot'])content.querySelector('[data-csp-click="'+action+'"]')?.remove();
     const open=document.createElement('a');open.className='btn';open.href='?review-copy=1#backup';
     open.textContent='ทดสอบนำเข้า JSON ในสำเนาร้าน';
-    content.prepend(open);
+    add(open);
     return;
   }
   const card=document.createElement('section');card.className='card';
   card.innerHTML='<h2>นำเข้า JSON จากเว็บร้านเดิม</h2><p>ตรวจจำนวนรายการและยอดเงินก่อนนำเข้า พื้นที่นี้ใช้ตรวจการกู้คืน</p><label class="field">ไฟล์ JSON รุ่นเดิม<input type="file" accept=".json,application/json"></label><div class="actions"><button class="btn" type="button">ตรวจไฟล์</button><button class="btn primary" type="button" disabled>ยืนยันนำเข้า</button></div><p role="status" aria-live="polite"></p>';
-  content.prepend(card);
+  add(card);
   const file=card.querySelector('input'),[inspect,apply]=card.querySelectorAll('button'),status=card.querySelector('[role="status"]');
   let prepared,busy=false;
   const setBusy=active=>{
