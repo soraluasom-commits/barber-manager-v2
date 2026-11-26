@@ -19,17 +19,21 @@
   items.map((x,i)=>({i,f:x.count/total*1000-units[i]})).sort((a,b)=>b.f-a.f||a.i-b.i).slice(0,remainder).forEach(x=>units[x.i]++);
   return {covered,missing,total,items:items.map((x,i)=>({...x,percent:units[i]/10,color:colors[i%colors.length]}))};
  }
- let selected=[],catalog=[];
+ const selectedByForm=new WeakMap();
+ let catalog=[];
  async function refresh(form){try{catalog=LearningRepo.merged(await LearningRepo.read()).filter(x=>x.type==='learnHair'&&!x.deleted&&!x.hidden);if(!form.isConnected)return;form.querySelector('#workStyles').innerHTML=catalog.map(x=>`<option value="${esc(x.name)}"></option>`).join('')}catch{toast('อ่านคลังไม่ได้ ยังพิมพ์ชื่อทรงเองได้')}}
- function list(form){const node=form.querySelector('.work-selected');node.replaceChildren();selected.forEach((x,i)=>{const row=document.createElement('div');row.className='actions';const label=document.createElement('span');label.textContent=x.name;const input=document.createElement('input');input.type='number';input.min='1';input.step='1';input.value=x.count;input.setAttribute('aria-label','จำนวนคน '+x.name);input.oninput=()=>{selected[i].count=Number(input.value)};const b=document.createElement('button');b.type='button';b.className='btn small danger';b.textContent='ลบ';b.onclick=()=>{selected.splice(i,1);list(form)};row.append(label,input,document.createTextNode(' คน '),b);node.append(row)})}
+ function list(form){const selected=selectedByForm.get(form);const node=form.querySelector('.work-selected');node.replaceChildren();selected.forEach((x,i)=>{const row=document.createElement('div');row.className='actions';const label=document.createElement('span');label.textContent=x.name;const input=document.createElement('input');input.type='number';input.min='1';input.step='1';input.value=x.count;input.setAttribute('aria-label','จำนวนคน '+x.name);input.oninput=()=>{selected[i].count=Number(input.value)};const b=document.createElement('button');b.type='button';b.className='btn small danger';b.textContent='ลบ';b.onclick=()=>{selected.splice(i,1);list(form)};row.append(label,input,document.createTextNode(' คน '),b);node.append(row)})}
  const oldOpen=openEntryModal;
- openEntryModal=function(key=''){oldOpen(key);const form=document.querySelector('#modalbox form');if(!form)return;const record=state.entries.find(x=>x.id===key);selected=structuredClone(record?.haircuts||[]);const grid=form.querySelector('.formgrid');grid.classList.add('work-entry-grid');document.querySelector('#modalbox').classList.add('work-entry-modal');
+ openEntryModal=function(key=''){oldOpen(key);const form=document.querySelector('#modalbox form');if(!form)return;const record=state.entries.find(x=>x.id===key);const selected=structuredClone(record?.haircuts||[]);selectedByForm.set(form,selected);const grid=form.querySelector('.formgrid');grid.classList.add('work-entry-grid');document.querySelector('#modalbox').classList.add('work-entry-modal');
   const heads=form.elements.heads.closest('.field');heads.querySelector('label').textContent='จำนวนลูกค้า (คน)';
   heads.insertAdjacentHTML('afterend',`<div class="field"><label for="workCash">เงินสด (คน)</label><input id="workCash" name="cashPeople" type="number" min="0" step="1" value="${record?.paymentCounts?.cash??''}"></div><div class="field"><label for="workTransfer">เงินโอน (คน)</label><input id="workTransfer" name="transferPeople" type="number" min="0" step="1" value="${record?.paymentCounts?.transfer??''}"></div><div class="field"><label for="workStyle">ทรงผม</label><input id="workStyle" list="workStyles" maxlength="200" placeholder="ค้นหาหรือพิมพ์ชื่อทรง"><datalist id="workStyles"></datalist></div><div class="field"><label for="workCount">จำนวน (คน)</label><input id="workCount" type="number" min="1" step="1"></div><button type="button" class="btn" id="workAdd">+ เพิ่มทรง</button><div class="work-selected" aria-live="polite"></div>`);
-  form.elements.date.closest('.field').classList.add('work-date');form.querySelector('#workAdd').onclick=async()=>{await refresh(form);const name=form.querySelector('#workStyle').value.trim(),count=Number(form.querySelector('#workCount').value);if(!name||!integer(count)||!count)return toast('กรอกชื่อทรงและจำนวนเต็มมากกว่า 0');const style=catalog.find(x=>x.name===name),styleId=style?.id??null,existing=selected.find(x=>x.styleId===styleId&&x.name===name);if(existing)existing.count+=count;else selected.push({styleId,name,count});list(form);form.querySelector('#workStyle').value='';form.querySelector('#workCount').value=''};
+  form.elements.date.closest('.field').classList.add('work-date');form.querySelector('#workAdd').onclick=async()=>{await refresh(form);if(!form.isConnected)return;const name=form.querySelector('#workStyle').value.trim(),count=Number(form.querySelector('#workCount').value);if(!name||!integer(count)||!count)return toast('กรอกชื่อทรงและจำนวนเต็มมากกว่า 0');const style=catalog.find(x=>x.name===name),styleId=style?.id??null,existing=selected.find(x=>x.styleId===styleId&&x.name===name);if(existing)existing.count+=count;else selected.push({styleId,name,count});list(form);form.querySelector('#workStyle').value='';form.querySelector('#workCount').value=''};
   form.querySelector('#workStyle').addEventListener('focus',()=>refresh(form));refresh(form);list(form);
  };
- function read(form){const cash=form.elements.cashPeople.value,transfer=form.elements.transferPeople.value;if(form.querySelector('#workStyle').value.trim()||form.querySelector('#workCount').value)throw Error('กด + เพิ่มทรง หรือเคลียร์ช่องทรงที่ยังไม่ได้เพิ่มก่อนบันทึก');const detail={paymentCounts:cash===''&&transfer===''?null:{cash:cash===''?NaN:Number(cash),transfer:transfer===''?NaN:Number(transfer)},haircuts:selected.length?structuredClone(selected):null};validate({...detail,heads:Number(form.elements.heads.value)});return detail}
+ function read(form){
+  const selected=selectedByForm.get(form);
+  if(!selected||!form.elements.cashPeople||!form.elements.transferPeople||!form.querySelector('#workStyle')||!form.querySelector('#workCount'))throw Error('ฟอร์มรายละเอียดงานโหลดไม่ครบ กรุณาเปิดแบบฟอร์มใหม่ก่อนบันทึก');
+  const cash=form.elements.cashPeople.value,transfer=form.elements.transferPeople.value;if(form.querySelector('#workStyle').value.trim()||form.querySelector('#workCount').value)throw Error('กด + เพิ่มทรง หรือเคลียร์ช่องทรงที่ยังไม่ได้เพิ่มก่อนบันทึก');const detail={paymentCounts:cash===''&&transfer===''?null:{cash:cash===''?NaN:Number(cash),transfer:transfer===''?NaN:Number(transfer)},haircuts:selected.length?structuredClone(selected):null};validate({...detail,heads:Number(form.elements.heads.value)});return detail}
 
  const pct=x=>x.percent.toFixed(1)+'%';
  function glyphs(name){return typeof Intl.Segmenter==='function'?[...new Intl.Segmenter('th',{granularity:'grapheme'}).segment(name)].map(x=>x.segment):Array.from(name)}
@@ -85,5 +89,18 @@ for(const row of jpgLegend(d,c)){
  detailY+=row.height;
 }
 canvasText(c,'รวม '+num(d.total)+' คน',x,detailY+8,20,700,'#182b49');if(d.missing)canvasText(c,'คำนวณเฉพาะรายการที่บันทึกข้อมูลครบ',x,detailY+38,17,500,'#566b87')}}
- window.WorkDetails={chart,validate,read,aggregate,refresh,report,displayItems,donutModel,jpgHeight,drawJPG,setStaff(value){reportStaff=value;render()}};
+ function entryBreakdown(row){
+  const payment=row.paymentCounts,styles=row.haircuts;
+  let payText='ยังไม่ได้บันทึก',hairText='ยังไม่ได้บันทึก';
+  if(payment!=null){
+   try{validate({heads:row.heads,paymentCounts:payment});payText='เงินสด '+num(payment.cash)+' คน · เงินโอน '+num(payment.transfer)+' คน';}
+   catch{payText='ข้อมูลไม่สอดคล้องกับจำนวนลูกค้า';}
+  }
+  if(styles!=null){
+   try{validate({heads:row.heads,haircuts:styles});hairText=styles.map(style=>esc(style.name)+' '+num(style.count)+' คน').join(' · ');}
+   catch{hairText='ข้อมูลไม่สอดคล้องกับจำนวนลูกค้า';}
+  }
+  return '<details class="entry-breakdown"><summary>วิธีชำระและทรงผม</summary><div>วิธีชำระ · '+payText+'</div><div>ทรงผม · '+hairText+'</div></details>';
+ }
+ window.WorkDetails={chart,validate,entryBreakdown,read,aggregate,refresh,report,displayItems,donutModel,jpgHeight,drawJPG,setStaff(value){reportStaff=value;render()}};
 })();

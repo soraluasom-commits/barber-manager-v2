@@ -37,6 +37,46 @@
     localStorage.setItem(key,JSON.stringify(next));
     record=next;
   }
+  // Older writers reconstruct entries without these keys. An explicit null from
+  // a newer form is an intentional clear. Never reconstruct a deleted entry.
+  function preserveBreakdowns(before,incoming) {
+    const ids=new Map();
+    for(const row of before.entries)if(row?.id)ids.set(row.id,ids.has(row.id)?null:row);
+    let changed=false;
+    const entries=incoming.entries.map(row=>{
+      const old=ids.get(row?.id);
+      if(!old)return row;
+      const missing=['paymentCounts','haircuts'].filter(k=>!Object.hasOwn(row,k)&&old[k]!=null);
+      if(!missing.length)return row;
+      const added=Object.fromEntries(missing.map(k=>[k,old[k]]));
+      try{
+        if(Number(row.heads)!==Number(old.heads))throw Error();
+        window.WorkDetails.validate({heads:Number(row.heads),...added});
+      }catch{
+        const error=Error('จำนวนลูกค้าหรือรายละเอียดเดิมไม่ตรงกับข้อมูลจากอีกเครื่อง');
+        error.code='sync/conflict';throw error;
+      }
+      changed=true;
+      return {...row,...clone(added)};
+    });
+    return changed?{...incoming,entries}:incoming;
+  }
+  function receiveClean(previous,remote) {
+    let data;
+    try{data=preserveBreakdowns(previous.data,remote.data);}
+    catch(error){
+      if(error.code!=='sync/conflict')throw error;
+      record=previous;
+      dirtyError='พบรายละเอียดงานขัดแย้งกับอีกเครื่อง · เก็บข้อมูลในเครื่องไว้ให้ตรวจสอบ';
+      refreshStatus();return false;
+    }
+    // Keep the actual upstream baseline for the next user-initiated save.
+    // Merely opening an account must not upload historical shop data.
+    writeLocal({...previous,version:previous.version+1,base:clone(remote.data),data:clone(data),dirty:false});
+    dirtyError=data===remote.data?'':'รายละเอียดงานบางรายการยังอยู่เฉพาะในเครื่องนี้';
+    refreshStatus();
+    return true;
+  }
   function requireAccount(){
     if(account?.uid!==owner)throw Error('กรุณาเข้าสู่ระบบด้วยบัญชีร้านเดิม');
   }
@@ -99,8 +139,11 @@
         const source=previousClient(online);
         writeLocal({scope,version:1,base:clone(source),data:clone(source),dirty:false});
       } else if(!copy && online && !stored.dirty && !equal(stored.base,online.data)) {
-        writeLocal({...stored,version:stored.version+1,base:clone(online.data),data:clone(online.data)});
-      } else record=stored;
+        receiveClean(stored,online);
+      } else {
+        record=stored;
+        if(!copy&&!stored.dirty&&!equal(stored.data,stored.base))dirtyError='รายละเอียดงานบางรายการยังอยู่เฉพาะในเครื่องนี้';
+      }
       started=true;
       document.documentElement.dataset.legacyUnlocked='';
       ready.resolve();
@@ -117,7 +160,19 @@
     const result=decode(await connector.transact(wire=>{
       if(account?.uid!==owner || !wire)return undefined;
       const remote=decode(wire);
-      const combined=merge(job.base,job.data,remote.data);
+      const local=preserveBreakdowns(job.base,job.data);
+      const incoming=preserveBreakdowns(job.base,remote.data);
+      const combined=merge(job.base,local,incoming);
+      // A merge can combine one writer's customer total with the other's
+      // breakdown. Reject that combination while both originals still exist.
+      const oldRows=new Map(job.base.entries.map(row=>[row.id,row]));
+      for(const row of combined.entries){
+        const old=oldRows.get(row.id);
+        if(!old||row.heads===old.heads&&equal(row.paymentCounts,old.paymentCounts)&&equal(row.haircuts,old.haircuts))continue;
+        if(row.paymentCounts==null&&row.haircuts==null)continue;
+        try{window.WorkDetails.validate({...row,heads:Number(row.heads)});}
+        catch{const error=Error('รายละเอียดงานจากสองเครื่องไม่ตรงกับจำนวนลูกค้า');error.code='sync/conflict';throw error;}
+      }
       if(equal(combined,remote.data))return wire;
       return { ...wire, payload:JSON.stringify(combined),revision:wire.revision+1 };
     }));
@@ -135,6 +190,19 @@
         : 'เก็บรายการรอซิงก์ไว้ · กดซิงก์อีกครั้งเมื่อเชื่อมต่อได้';
     }).finally(refreshStatus);
   }
+  async function syncFromButton(){
+    if(!record.dirty)await checkOnline();
+    if(!record.dirty&&!equal(record.data,record.base)){
+      requireAccount();
+      writeLocal({...record,dirty:true});
+    }
+    if(!record.dirty)return;
+    try{await flush();}
+    catch(error){
+      dirtyError=error.code==='sync/conflict'?'พบรายละเอียดงานขัดแย้งกับอีกเครื่อง · เก็บรายการรอซิงก์ไว้':'เก็บรายการรอซิงก์ไว้ · กรุณากดซิงก์เมื่อเชื่อมต่อได้';
+    }
+    refreshStatus();
+  }
   async function checkOnline() {
     requireAccount();
     if(copy)return;
@@ -144,12 +212,11 @@
     if(editing || !navigator.onLine)return;
     const remote=decode(await connector.read());
     requireAccount();
-    if(equal(remote.data,record.data))return;
+    if(equal(remote.data,record.base))return;
     // Recheck after the network request so an open editor keeps its original revision.
     if(document.getElementById('modal')?.classList.contains('open') || document.querySelector('dialog[open]') ||
       ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName))return;
-    writeLocal({...record,version:record.version+1,base:clone(remote.data),data:clone(remote.data)});
-    window.dispatchEvent(new Event('legacy-shop-remote-change'));
+    if(receiveClean(record,remote))window.dispatchEvent(new Event('legacy-shop-remote-change'));
   }
   function showAccount(container) {
     const heading=document.createElement('h2');heading.textContent='บัญชีร้านและซิงก์';
@@ -161,7 +228,7 @@
       element.addEventListener('click',()=>Promise.resolve().then(handler).catch(()=>{status.textContent='ทำรายการไม่สำเร็จ กรุณาลองอีกครั้ง';}));
       return element;
     };
-    if(!copy)actions.append(button('ซิงก์อีกครั้ง',()=>serialized(checkOnline)));
+    if(!copy)actions.append(button('ซิงก์อีกครั้ง',()=>serialized(syncFromButton)));
     actions.append(button('เปลี่ยนรหัสผ่าน',async()=>{
       requireAccount();
       if(!confirm('ส่งลิงก์เปลี่ยนรหัสผ่านไปยังอีเมลบัญชีร้านหรือไม่?'))return;

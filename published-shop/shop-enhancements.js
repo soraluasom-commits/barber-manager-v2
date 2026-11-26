@@ -55,8 +55,14 @@
   problem.hidden=true;
   const f=new FormData(form),current=key?state.entries.find(e=>e.id===key):null;
   if(key&&(!current||JSON.stringify(current)!==JSON.stringify(editBaseline)))return fail('รายการเปลี่ยนแล้ว กรุณาปิดและเปิดใหม่ก่อนแก้ไข');
-  const next={id:key||id(),date:String(f.get('date')),staff:String(f.get('staff')),amount:n(f.get('amount')),heads:n(f.get('heads')),notes:String(f.get('notes')||'')};next.weekday=weekday(next.date);if(window.StaffIdentity){const sid=StaffIdentity.selected(next.staff);if(sid)next.staffId=sid;}
-  if(window.WorkDetails){try{Object.assign(next,WorkDetails.read(form))}catch(error){return fail(error.message)}}
+  const next={...current,id:key||id(),date:String(f.get('date')),staff:String(f.get('staff')),amount:n(f.get('amount')),heads:n(f.get('heads')),notes:String(f.get('notes')||'')};next.weekday=weekday(next.date);if(current&&current.staff!==next.staff)delete next.staffId;if(window.StaffIdentity){const sid=StaffIdentity.selected(next.staff);if(sid)next.staffId=sid;}
+  if(typeof window.WorkDetails?.read!=='function')return fail('โหลดระบบรายละเอียดงานไม่ครบ กรุณาเปิดหน้านี้ใหม่ก่อนบันทึก');
+  try{
+   const details=WorkDetails.read(form);
+   for(const [key,value] of Object.entries(details)){
+    if(value!==null||!current||Object.hasOwn(current,key))next[key]=value;
+   }
+  }catch(error){return fail(error.message)}
   if(!next.staff||!/^\d{4}-\d{2}-\d{2}$/.test(next.date)||next.amount<0||next.heads<0||!Number.isInteger(next.heads))return fail('ตรวจชื่อ วันที่ รายได้ และจำนวนลูกค้า');
   const same=state.entries.filter(e=>e.id!==key&&e.staff===next.staff&&e.date===next.date);
   if(same.length&&!f.has('confirmSeparate'))return fail('มีรายการวันเดียวกันแล้ว กรุณาเลือกแก้เดิมหรือยืนยันเพิ่มแยก');
