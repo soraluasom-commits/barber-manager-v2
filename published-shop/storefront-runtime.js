@@ -3,7 +3,7 @@ import { recoveryMatches } from './store/recovery-compare.js';
 import { recoveryDiagnostics } from './recovery-diagnostics.js';
 import { categoryStyles, categoryOptions, manageExpenseCategories } from './store/expense-categories.js';
 import { manualFormsPage } from './store/manual-forms/ui.js';
-import { mountLegacyImport } from './legacy-json.js?v=20261126.1';
+import { mountLegacyImport } from './legacy-json.js?v=20261128.1';
 
 const host=window.BarberStoreHost;
 let me,vault,revision,lastVaultState,recoveryWarning='',recoveryWrite=false,recoveryCommit=null,recoveryTarget=null;
@@ -142,7 +142,7 @@ function bindPages(){
     base();
     const content=document.getElementById('content');
     if(recoveryWarning)content.prepend(message('มีการกู้คืนค้างอยู่ ข้อมูลเดิมยังอยู่ กรุณาตรวจที่ “สำรองและกู้คืน”'));
-    if(page==='backup')mountLegacyImport(content,host,refresh);
+    if(page==='backup')mountLegacyImport(content,host);
     if(page==='learnForms')manualFormsPage(content,{readShop:()=>({shopName:state.shopName,staff:state.staff})}).catch(showError);
     if(page==='sync'){
       const mount=document.createElement('div');
