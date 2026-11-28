@@ -1,7 +1,7 @@
-const cacheName='barber-manager-v2-shop-20261128-r2';
+const cacheName='barber-manager-v2-shop-20261128-r3';
 const cachePrefix='barber-manager-v2-shop-';
 const base=new URL(self.registration.scope);
-const core=['./index.html','./manifest.webmanifest','./legacy-auth.css','./legacy-host.js?v=20261126.1',
+const core=['./index.html','./manifest.webmanifest','./legacy-auth.css','./legacy-host.js?v=20261128.3',
   './legacy-firebase.js','./firebase-config.js','./cloud-merge.js','./storefront-storage.js',
   './shop-core.js?v=20261126.1','./shop-enhancements.js?v=20261126.1','./navigation-groups.js?v=20261125.2','./storefront-runtime.js?v=20261128.1',
   './storefront-nav.js?v=20261125.2','./legacy-json.js?v=20261128.1',

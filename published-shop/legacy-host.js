@@ -16,7 +16,27 @@
   const required=['staff','entries','expenses','funds'];
   let connector,record,account,queue=Promise.resolve(),dirtyError='',started=false,authGeneration=0;
   let workspaceData,screen,notice,form,enter;
-  let releaseTab;
+  let releaseTab, tabRequest;
+  async function claimTab() {
+    if(releaseTab)return;
+    if(!navigator.locks)throw Error('เบราว์เซอร์นี้เปิดร้านไม่ได้ กรุณาเปิดด้วย Edge รุ่นปัจจุบัน');
+    tabRequest?.abort();
+    const request=new AbortController();
+    tabRequest=request;
+    notice.textContent='กำลังเปิดร้าน หากร้านเปิดอยู่ในแท็บอื่น ให้ปิดแท็บนั้นเพื่อใช้งานที่นี่';
+    await new Promise((resolve,reject)=>{
+      navigator.locks.request(tag,{signal:request.signal},()=>new Promise(done=>{
+        releaseTab=done;
+        resolve();
+      })).catch(reject);
+    });
+  }
+  function leaveTab() {
+    tabRequest?.abort();
+    tabRequest=null;
+    releaseTab?.();
+    releaseTab=null;
+  }
   const ready=Promise.withResolvers();
   const serialized=operation=>{
     const next=queue.catch(()=>{}).then(operation);
@@ -118,15 +138,18 @@
   async function openAccount(user) {
     const generation=++authGeneration;
     account=null;
-    if(!user){disconnected();notice.textContent='เข้าสู่ระบบด้วยบัญชีของร้าน';return;}
+    if(!user){if(!started)leaveTab();disconnected();notice.textContent='เข้าสู่ระบบด้วยบัญชีของร้าน';return;}
     if(user.uid!==owner){
       notice.textContent='บัญชีนี้ไม่ได้รับสิทธิ์เข้าร้าน';
       await connector.logout();
       notice.textContent='บัญชีนี้ไม่ได้รับสิทธิ์เข้าร้าน';
       return;
     }
-    account=user;
     try{
+      await claimTab();
+      if(generation!==authGeneration)return;
+      account=user;
+      notice.textContent='กำลังโหลดข้อมูลร้าน…';
       const stored=restoreJournal();
       let online;
       if(!copy || !stored) {
@@ -149,8 +172,13 @@
       ready.resolve();
       scheduleSync();
     } catch (error) {
+      if(generation!==authGeneration)return;
       account=null;
+      if(!started)leaveTab();
       notice.textContent=error.message||'เปิดข้อมูลร้านไม่ได้';
+      enter.textContent='ลองเปิดร้านอีกครั้ง';
+      enter.type='button';
+      enter.onclick=()=>location.reload();
     }
   }
   async function flush() {
@@ -269,25 +297,44 @@
   });
   async function start() {
     screen=document.createElement('main');screen.id='legacy-auth';
-    screen.innerHTML='<section class="legacy-sign-in"><img src="./review-logo-transparent.png" alt="Barber Manager"><h1>เข้าสู่ระบบร้าน</h1><form id="legacy-login-form"><label for="legacy-email">อีเมลบัญชีร้าน</label><input id="legacy-email" type="email" autocomplete="username" required><label for="legacy-password">รหัสผ่าน</label><input id="legacy-password" type="password" autocomplete="current-password" required><button class="btn primary" type="submit" disabled>เข้าสู่ระบบ</button></form><p id="legacy-login-status" role="status">กำลังเชื่อมต่อระบบบัญชีเดิม…</p></section>';
+    screen.innerHTML='<section class="legacy-sign-in"><img src="./review-logo-transparent.png" alt="Barber Manager"><h1>เข้าสู่ระบบร้าน</h1><form id="legacy-login-form"><label for="legacy-email">อีเมลบัญชีร้าน</label><input id="legacy-email" type="email" autocomplete="username" required><label for="legacy-password">รหัสผ่าน</label><input id="legacy-password" type="password" autocomplete="current-password" required><button class="btn primary" type="submit">เข้าสู่ระบบ</button></form><p id="legacy-login-status" role="status">กำลังเชื่อมต่อระบบบัญชีเดิม…</p></section>';
     document.body.prepend(screen);
     form=screen.querySelector('form');enter=form.querySelector('button');notice=screen.querySelector('[role="status"]');
     if(copy)screen.querySelector('h1').textContent='เข้าสู่ระบบเพื่อเปิดสำเนาร้าน';
-    const lock=await new Promise(resolve=>{
-      navigator.locks.request(tag,{ifAvailable:true},lease=>{
-        resolve(!!lease);
-        if(lease)return new Promise(done=>{releaseTab=done;});
-      }).catch(()=>resolve(false));
-    });
-    if(!lock)throw Error('ร้านเปิดอยู่ในอีกแท็บ กรุณาปิดแท็บนั้นแล้วรีเฟรช');
-    if(releaseTab)window.addEventListener('pagehide',releaseTab,{once:true});
+    window.addEventListener('pagehide',leaveTab,{once:true});
     window.addEventListener('pageshow',event=>{if(event.persisted)location.reload();});
-    const adapter=await import(isolatedTest?'./qa-firebase.js':'./legacy-firebase.js');
-    ({workspaceData}=await import('./store/workspace-data.js'));
-    connector=await adapter.connect(owner,{writable:!copy});
-    if(acceptedCheck)await import('./account-copy-check.js');
+    let restartNeeded=false;
+    const init=async()=>{
+      const adapter=await import(isolatedTest?'./qa-firebase.js':'./legacy-firebase.js');
+      ({workspaceData}=await import('./store/workspace-data.js'));
+      connector=await adapter.connect(owner,{writable:!copy});
+      if(acceptedCheck)await import('./account-copy-check.js');
+      if(restartNeeded)return;
+      connector.watch(user=>openAccount(user).catch(()=>{notice.textContent='เปิดบัญชีร้านไม่ได้';}));
+    };
+    let timeout;
+    const connecting=Promise.race([
+      init(),
+      new Promise((_,reject)=>{timeout=setTimeout(()=>reject(Error('AUTH_CONNECT_TIMEOUT')),20000);})
+    ]).finally(()=>clearTimeout(timeout));
+    const retry=()=>{
+      restartNeeded=true;
+      notice.textContent='เชื่อมต่อระบบบัญชีไม่ได้ กรุณาตรวจอินเทอร์เน็ตแล้วกดลองเชื่อมต่ออีกครั้ง';
+      enter.textContent='ลองเชื่อมต่ออีกครั้ง';
+      enter.type='button';
+      enter.disabled=false;
+      enter.onclick=()=>location.reload();
+    };
+    connecting.catch(retry);
+    form.addEventListener('invalid',event=>{
+      notice.textContent=event.target.type==='email'?'กรุณากรอกอีเมลบัญชีร้านให้ถูกต้อง':'กรุณากรอกรหัสผ่าน';
+    },true);
     form.addEventListener('submit',async event=>{
-      event.preventDefault();enter.disabled=true;
+      event.preventDefault();
+      if(enter.disabled)return;
+      enter.disabled=true;
+      notice.textContent='กำลังเชื่อมต่อระบบบัญชี…';
+      try{await connecting;}catch{return;}
       const secret=screen.querySelector('#legacy-password'),email=screen.querySelector('#legacy-email').value.trim();
       const password=secret.value;secret.value='';
       notice.textContent='กำลังเข้าสู่ระบบ…';
@@ -295,8 +342,6 @@
       catch {notice.textContent='เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจอีเมล รหัสผ่าน และการเชื่อมต่อ';}
       finally {enter.disabled=false;}
     });
-    connector.watch(user=>openAccount(user).catch(()=>{notice.textContent='เปิดบัญชีร้านไม่ได้';}));
-    enter.disabled=false;
     window.addEventListener('online',scheduleSync);
     setInterval(()=>{if(started&&account)serialized(checkOnline).catch(()=>{});},12000);
   }
