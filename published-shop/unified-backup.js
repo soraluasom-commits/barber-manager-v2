@@ -49,8 +49,9 @@
  }
  function checkBackupStore(context,source) {
   const sameStore=source?.storeId===context.storeId;
-  const shopToReview=source?.storeId==='barber-v2'&&context.storeId==='barber-v2-review';
-  if(source?.accountId!==context.accountId||!(sameStore||shopToReview))throw Error('ไฟล์สำรองนี้ระบุบัญชีหรือร้านอื่น');
+  const shopAndReview=['barber-v2','barber-v2-review'];
+  const pairedStore=shopAndReview.includes(source?.storeId)&&shopAndReview.includes(context.storeId);
+  if(source?.accountId!==context.accountId||!(sameStore||pairedStore))throw Error('ไฟล์สำรองนี้ระบุบัญชีหรือร้านอื่น');
  }
  async function create(password=''){await WorkspaceStorage.flush();
   const revision=(await R.read()).revision, original=JSON.stringify(state),shop=await shopData(state),learningCenter=await R.bundle();
